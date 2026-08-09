@@ -172,8 +172,8 @@ def check_database() -> None:
         if category_count != 12:
             error(f"Expected 12 program categories, found {category_count}")
         client_count = con.execute("SELECT COUNT(*) FROM clients WHERE is_active=1").fetchone()[0]
-        if client_count != 20:
-            error(f"Expected 20 active clients/partners, found {client_count}")
+        if client_count != 42:
+            error(f"Expected 42 active clients/partners, found {client_count}")
 
         problems = con.execute("""
             SELECT p.id, p.title

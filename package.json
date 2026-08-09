@@ -6,7 +6,8 @@
 	"scripts": {
 		"build:css": "node tools/build-css.mjs",
 		"check:css": "node tools/build-css.mjs --check",
-		"qa": "python3 tools/qa.py",
+		"qa": "node tools/audit_suite.mjs",
+		"test": "node tools/audit_suite.mjs",
 		"dev": "npx serve . -l 8080",
 		"start": "npx serve . -l 8080"
 	},
