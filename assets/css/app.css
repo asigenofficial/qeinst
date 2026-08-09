@@ -1076,9 +1076,6 @@ nav.main-nav a.active::after {
 	margin-bottom: 1.25rem;
 }
 
-.footer-links {
-	list-style: none;
-}
 
 .footer-links li {
 	margin-bottom: 0.75rem;
@@ -1183,13 +1180,13 @@ nav.main-nav a.active::after {
 	}
 }
 
-/* Screenshot-matched header, 404 and footer */
+/* Screenshot-matched header for 404 page — scoped to .page-404-view */
 
 .page-404-view {
 	background: #fff;
 }
 
-.site-header {
+.page-404-view .site-header {
 	position: relative;
 	background: #fff;
 	border-bottom: 1px solid #eef1f4;
@@ -1197,14 +1194,14 @@ nav.main-nav a.active::after {
 	backdrop-filter: none;
 }
 
-.nav-wrap {
+.page-404-view .nav-wrap {
 	height: 76px;
 	max-width: 1360px;
 	padding-inline: 38px;
 	gap: 28px;
 }
 
-.brand {
+.page-404-view .brand {
 	gap: 7px;
 	font-family: Arial, sans-serif;
 	font-size: 22px;
@@ -1212,26 +1209,26 @@ nav.main-nav a.active::after {
 	flex: 0 0 auto;
 }
 
-.brand svg {
+.page-404-view .brand svg {
 	width: 34px;
 	height: 34px;
 }
 
-.brand-word {
+.page-404-view .brand-word {
 	padding-top: 2px;
 }
 
-.brand-cut {
+.page-404-view .brand-cut {
 	fill: #15a4b6;
 }
 
-nav.main-nav {
+.page-404-view nav.main-nav {
 	gap: 25px;
 	justify-content: center;
 	flex: 1;
 }
 
-nav.main-nav a {
+.page-404-view nav.main-nav a {
 	font-size: 14px;
 	font-weight: 500;
 	color: #303b4f;
@@ -1240,23 +1237,23 @@ nav.main-nav a {
 	white-space: nowrap;
 }
 
-nav.main-nav a.active {
+.page-404-view nav.main-nav a.active {
 	font-weight: 800;
 	color: #133f81;
 }
 
-nav.main-nav a.active::after {
+.page-404-view nav.main-nav a.active::after {
 	height: 2px;
 	bottom: 0;
 	background: #1b63c6;
 }
 
-.nav-actions {
+.page-404-view .nav-actions {
 	gap: 12px;
 	direction: rtl;
 }
 
-.login-btn {
+.page-404-view .login-btn {
 	height: 36px;
 	padding: 0 24px;
 	border-radius: 5px;
@@ -1266,11 +1263,11 @@ nav.main-nav a.active::after {
 	box-shadow: none;
 }
 
-.login-btn:hover {
+.page-404-view .login-btn:hover {
 	background: #0d3269;
 }
 
-.lang-btn {
+.page-404-view .lang-btn {
 	border: 0;
 	padding: 0;
 	background: none;
@@ -1279,7 +1276,7 @@ nav.main-nav a.active::after {
 	border-radius: 0;
 }
 
-.mobile-menu {
+.page-404-view .mobile-menu {
 	display: none;
 }
 
@@ -16678,6 +16675,7 @@ button[disabled] {
 	unicode-bidi: isolate;
 	max-width: 100%;
 	overflow-wrap: anywhere;
+	white-space: nowrap;
 }
 
 /* --------------------- 8. overflow fix: header actions at 768px & below */
@@ -17662,8 +17660,7 @@ footer.site-footer,
 }
 
 .site-footer .contact-col a,
-.footer-light .contact-col a,
-.ltr-num {
+.footer-light .contact-col a {
 	white-space: nowrap !important;
 	direction: ltr !important;
 	display: inline-block !important;

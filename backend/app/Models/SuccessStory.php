@@ -31,7 +31,7 @@ class SuccessStory extends Model
     {
         $img = $this->image;
         if (empty($img)) {
-            return asset('storage/uploads/gallery/gallery-list-1.jpg');
+            return asset('assets/images/gallery/gallery-list-1.jpg');
         }
 
         if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {

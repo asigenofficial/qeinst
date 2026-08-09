@@ -239,6 +239,7 @@ button[disabled] {
 	unicode-bidi: isolate;
 	max-width: 100%;
 	overflow-wrap: anywhere;
+	white-space: nowrap;
 }
 
 /* --------------------- 8. overflow fix: header actions at 768px & below */
@@ -1223,8 +1224,7 @@ footer.site-footer,
 }
 
 .site-footer .contact-col a,
-.footer-light .contact-col a,
-.ltr-num {
+.footer-light .contact-col a {
 	white-space: nowrap !important;
 	direction: ltr !important;
 	display: inline-block !important;

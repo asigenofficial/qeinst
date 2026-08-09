@@ -34,7 +34,7 @@ class Gallery extends Model
     {
         $img = $this->cover_image;
         if (empty($img)) {
-            return asset('storage/uploads/gallery/gallery-main.jpg');
+            return asset('assets/images/gallery/gallery-main.jpg');
         }
 
         if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {

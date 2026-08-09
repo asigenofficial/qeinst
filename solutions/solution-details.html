@@ -140,6 +140,31 @@
 <div class="container"><span>ترخيص رقم: 747395253 | رقم السجل: 1010477798 — جميع الحقوق محفوظة © 2026 معهد خبراء الجودة للتدريب | <a href="../policies/general-privacy.html" style="color:inherit">سياسة الخصوصية</a> | <a href="../policies/terms.html" style="color:inherit">الشروط والأحكام</a></span></div>
 </div>
 </footer>
+<!-- Login Modal -->
+<div class="modal-overlay" id="modal-login">
+<div class="modal-box">
+<button class="modal-close-btn" onclick="QEI.closeModal('modal-login')">✕</button>
+<div style="text-align: center; margin-bottom: 2rem">
+<span class="eyebrow">منصة المستفيدين</span>
+<h2 style="font-size: 1.75rem; font-weight: 900; color: var(--slate-900)">تسجيل الدخول</h2>
+</div>
+<form onsubmit="
+					event.preventDefault()
+					QEI.showToast('تم تسجيل الدخول بنجاح!')
+					QEI.closeModal('modal-login')
+				">
+<div style="margin-bottom: 1.25rem">
+<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">البريد الإلكتروني أو الهوية</label>
+<input class="input-field" placeholder="ادخل بريدك الإلكتروني" required="" type="text"/>
+</div>
+<div style="margin-bottom: 1.5rem">
+<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">كلمة المرور</label>
+<input autocomplete="current-password" class="input-field" dir="ltr" placeholder="••••••••" required="" type="password"/>
+</div>
+<button class="btn btn-primary btn-lg" style="width: 100%" type="submit">دخول للمنصة</button>
+</form>
+</div>
+</div>
 <script src="../assets/js/api-client.js?v=1.0.17"></script>
 <script src="../assets/js/app.js?v=1.0.17"></script>
 <script src="../assets/js/i18n-dict.js"></script>
