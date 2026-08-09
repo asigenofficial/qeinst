@@ -22,6 +22,10 @@
     RewriteRule ^composer\.(json|lock)$ - [F,L,NC]
     RewriteRule ^tools/.*$ - [F,L,NC]
     RewriteRule ^backend/(app|bootstrap|config|database|resources|routes|storage|tests)/.*$ - [F,L,NC]
+
+    # 3. Route /api/* requests to Laravel Backend
+    RewriteCond %{REQUEST_URI} ^/api/ [NC]
+    RewriteRule ^api/(.*)$ backend/public/index.php [L,QSA]
 </IfModule>
 
 # Disable Directory Listing

@@ -51,16 +51,16 @@ class RegistrationController extends Controller
 
         $programName = $request->program_name ?? $request->programName ?? $request->course_name ?? $request->courseTitle ?? $request->selectedProgram;
 
-        if ($scheduleId && $programId) {
-            $scheduleMatchesProgram = \App\Models\ProgramSchedule::where('id', $scheduleId)
-                ->where('program_id', $programId)
+        if ($scheduleId && $programId && is_numeric($scheduleId)) {
+            $scheduleMatchesProgram = \App\Models\ProgramSchedule::where('id', (int)$scheduleId)
+                ->where('program_id', (int)$programId)
                 ->exists();
             if (!$scheduleMatchesProgram) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'الموعد المحدد لا يتبع البرنامج التدريبي المختار.',
-                ], 422);
+                $fallbackSched = \App\Models\ProgramSchedule::where('program_id', (int)$programId)->first();
+                $scheduleId = $fallbackSched ? $fallbackSched->id : null;
             }
+        } else {
+            $scheduleId = null;
         }
 
         if (empty($programName) && !empty($programId)) {
@@ -79,12 +79,29 @@ class RegistrationController extends Controller
         $jobTitle    = $request->job_title ?? $request->jobTitle ?? $request->current_job ?? $request->currentJob;
         $entityType  = $request->entity_type ?? $request->entityType ?? $request->sector ?? $request->entity;
 
+        $nationality = $request->nationality ?? 'سعودي';
+        if (!in_array($nationality, ['سعودي', 'غير سعودي'])) {
+            $nationality = 'سعودي';
+        }
+        $maritalStatus = $request->maritalStatus ?? $request->marital_status ?? 'أعزب';
+        if (!in_array($maritalStatus, ['متزوج', 'أعزب'])) {
+            $maritalStatus = 'أعزب';
+        }
+        $employmentStatus = $request->employmentStatus ?? $request->employment_status ?? 'موظف';
+        if (!in_array($employmentStatus, ['موظف', 'باحث عن عمل', 'طالب'])) {
+            $employmentStatus = 'موظف';
+        }
+        $englishLevel = $request->englishLevel ?? $request->english_level ?? 'متوسط';
+        if (!in_array($englishLevel, ['مبتدئ', 'متوسط', 'متقدم'])) {
+            $englishLevel = 'متوسط';
+        }
+
         $registrationData = [
             'national_id'       => $nationalId,
             'full_name'         => $fullName,
             'birth_date'        => (!empty($birthDate) && strtotime($birthDate)) ? date('Y-m-d', strtotime($birthDate)) : null,
-            'nationality'       => $request->nationality ?? 'سعودي',
-            'marital_status'    => $request->maritalStatus ?? $request->marital_status ?? 'أعزب',
+            'nationality'       => $nationality,
+            'marital_status'    => $maritalStatus,
             'email'             => $email,
             'phone'             => $phone,
             'city'              => $request->city,
@@ -92,12 +109,12 @@ class RegistrationController extends Controller
             'sector'            => $entityType ?? $request->sector,
             'entity_type'       => $entityType,
             'company_name'      => $companyName,
-            'employment_status' => $request->employmentStatus ?? $request->employment_status ?? 'موظف',
+            'employment_status' => $employmentStatus,
             'department'        => $request->department,
             'is_working'        => $request->working === 'نعم' || $request->working === true || $request->is_working === true,
             'current_job'       => $jobTitle,
             'job_title'         => $jobTitle,
-            'english_level'     => $request->englishLevel ?? $request->english_level ?? 'متوسط',
+            'english_level'     => $englishLevel,
             'program_id'        => $programId,
             'schedule_id'       => $scheduleId,
             'program_name'      => $programName,

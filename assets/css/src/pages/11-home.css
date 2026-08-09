@@ -57,9 +57,13 @@
 	color: #fff;
 	font-family: inherit;
 	font-size: 13px;
+	text-decoration: none;
+	cursor: pointer;
 }
 
-.home-hero-copy button {
+.home-hero-copy button,
+.home-hero-copy a.btn-hero-register,
+.home-hero-copy a:last-child {
 	background: #1472d4;
 }
 

@@ -815,7 +815,7 @@ const QEI = {
 		const image = p.imageUrl || qeiUrl(p.image || 'assets/images/programs/course-placeholder.jpg')
 		const detailsHref = qeiUrl(`programs/program-details.html?slug=${encodeURIComponent(p.slug || p.id)}`)
 		const schedule = p.schedules && p.schedules.length ? p.schedules[0] : null
-		const registerHref = qeiUrl(`registration/registration-personal.html?program=${encodeURIComponent(p.id)}${schedule ? '&schedule=' + encodeURIComponent(schedule.id) : ''}`)
+		const registerHref = qeiUrl(`registration/registration-personal.html?program=${encodeURIComponent(p.id)}&program_name=${encodeURIComponent(p.title)}${schedule ? '&schedule=' + encodeURIComponent(schedule.id) : ''}`)
 		return `
 			<article class="program-card qei-course-card ${variant === 'listing' ? 'qei-course-card--listing' : 'qei-course-card--home'}">
 				<div class="card-img-wrap">
@@ -897,10 +897,21 @@ const QEI = {
 	},
 
 	startRegistration(programId, scheduleId) {
-		const params = new URLSearchParams()
-		if (programId && programId !== 'p1' && programId !== 'default') params.set('program', programId)
-		if (scheduleId) params.set('schedule', scheduleId)
-		window.location.href = qeiUrl("registration/registration-personal.html") + (params.toString() ? '?' + params.toString() : '')
+		const currentParams = new URLSearchParams(window.location.search);
+		if (!programId || programId === 'p1' || programId === 'default') {
+			programId = currentParams.get('slug') || currentParams.get('id') || currentParams.get('program');
+		}
+		if (!scheduleId) {
+			scheduleId = currentParams.get('schedule');
+		}
+		const params = new URLSearchParams();
+		if (programId && programId !== 'p1' && programId !== 'default') {
+			params.set('program', programId);
+		}
+		if (scheduleId) {
+			params.set('schedule', scheduleId);
+		}
+		window.location.href = qeiUrl("registration/registration-personal.html") + (params.toString() ? '?' + params.toString() : '');
 	},
 
 	setWizardStep(step) {
@@ -1009,10 +1020,7 @@ QEI.setupMultipage = function () {
 }
 
 QEI.startRegistration = function (programId, scheduleId) {
-	const params = new URLSearchParams()
-	if (programId && programId !== 'p1' && programId !== 'default') params.set('program', programId)
-	if (scheduleId) params.set('schedule', scheduleId)
-	window.location.href = qeiUrl("registration/registration-personal.html") + (params.toString() ? '?' + params.toString() : '')
+	QEI.startRegistration.call(QEI, programId, scheduleId);
 }
 
 window.QEI = QEI;

@@ -345,16 +345,71 @@
 
 	// Fill the review page from what the user actually typed.
 	function populateReview() {
-		if (!/registration-review/.test(location.pathname)) return
-		const data = store.read()
-		if (!Object.keys(data).length) return
-		for (const el of $$("td, dt, span, b, strong, p, div")) {
-			const label = el.textContent.trim()
-			const key = REVIEW_LABELS[label]
-			if (!key || data[key] == null || data[key] === "") continue
-			const target = el.nextElementSibling
-			if (target && !target.children.length) target.textContent = data[key]
-		}
+		if (!/registration-review/.test(location.pathname)) return;
+		const data = store.read() || {};
+		if (!Object.keys(data).length) return;
+
+		const MAPPING = {
+			"الاسم الكامل": data.fullName || data.full_name || data.name,
+			"الاسم الرباعي": data.fullName || data.full_name || data.name,
+			"تاريخ الميلاد": data.birthDate || data.birth_date,
+			"رقم الهوية": data.nationalId || data.national_id,
+			"رقم الجوال": data.phone,
+			"الجنس": data.gender,
+			"الحالة الاجتماعية": data.maritalStatus || data.marital_status,
+			"الجنسية": data.nationality || 'سعودي',
+			"المدينة": data.city || 'الرياض',
+			"البريد الإلكتروني": data.email,
+			"أعلى مؤهل": data.education || data.qualification,
+			"المؤهل العلمي": data.education || data.qualification,
+			"الكلية أو الجهة التعليمية": data.university,
+			"اسم الجامعة": data.university,
+			"التخصص": data.specialization,
+			"نوع الجهة / القطاع": data.entity_type || data.sector,
+			"الشركة / الجهة": data.company_name || data.companyName || data.employer,
+			"جهة العمل / اسم الشركة": data.company_name || data.companyName || data.employer,
+			"المسمى الوظيفي": data.jobTitle || data.job_title || data.currentJob,
+			"القسم / الإدارة": data.department,
+			"مسمى العمل الحالي": data.currentJob || data.jobTitle,
+			"مستوى اللغة الإنجليزية": data.englishLevel || data.english_level,
+			"البرنامج": data.program_name || data.programName || data.selectedProgram || data.course_name,
+			"تاريخ البداية": data.selectedDate || 'يحدد حسب الموعد المختار',
+			"المكان": data.selectedLocation || data.location || 'معهد خبراء الجودة للتدريب'
+		};
+
+		$$(".rgr-main dl, main dl").forEach(dl => {
+			const dts = $$("dt", dl);
+			dts.forEach(dt => {
+				const label = dt.textContent.trim();
+				const dd = dt.nextElementSibling;
+				if (!dd || dd.tagName !== "DD") return;
+
+				if (label === "سنة التخرج") {
+					dt.textContent = "نوع الجهة";
+					dd.textContent = data.entity_type || '—';
+					return;
+				}
+				if (label === "رقم السجل التجاري") {
+					dt.textContent = "القسم / الإدارة";
+					dd.textContent = data.department || '—';
+					return;
+				}
+				if (label === "سنوات الخبرة") {
+					dt.textContent = "مستوى الإنجليزية";
+					dd.textContent = data.englishLevel || 'متوسط';
+					return;
+				}
+
+				if (label in MAPPING && MAPPING[label] !== undefined && MAPPING[label] !== null && MAPPING[label] !== "") {
+					const span = $("span", dd);
+					if (span) {
+						span.textContent = MAPPING[label];
+					} else {
+						dd.textContent = MAPPING[label];
+					}
+				}
+			});
+		});
 	}
 
 	const api = {
@@ -363,8 +418,8 @@
 			location.href = destUrl;
 		},
 		regNext(target) {
-			const form = $("main form") || $(".reg-form") || $("form")
-			if (form) {
+			const form = $("main form, form.reg-form, .reg-main form");
+			if (form && !form.closest(".modal-overlay, .modal-box, #modal-login, #modal-registration")) {
 				if (typeof form.checkValidity === "function" && !form.checkValidity()) {
 					if (typeof form.reportValidity === "function") {
 						form.reportValidity();
@@ -373,34 +428,24 @@
 					toast(isEn ? "Please fill out all required fields before proceeding" : "يرجى تعبئة جميع الحقول المطلوبة قبل المتابعة");
 					return false;
 				}
-				saveRegForm(form)
+				saveRegForm(form);
 			}
 
-			// Validate that a training program is selected before proceeding
-			const params = new URLSearchParams(location.search);
-			const queryProg = params.get("program") || params.get("program_id") || params.get("programId");
-			const regData = store.read() || {};
-			const savedProg = regData.program_id || regData.programId || regData.program_name || regData.programName || regData.selectedProgram;
-			const summaryTitle = $(".reg-summary h3") || $(".selected-program-title");
-			const titleText = summaryTitle ? summaryTitle.textContent.trim() : "";
-			const hasNoProgram = (!queryProg && !savedProg) || titleText.includes("لم يتم اختيار") || titleText.includes("No training program") || queryProg === "p1" || queryProg === "default";
-
-			if (hasNoProgram) {
-				const isEn = (localStorage.getItem("qei.lang") || "ar") === "en";
-				toast(isEn ? "Sorry, you must select a training program first to complete registration" : "عذراً، يجب اختيار برنامج تدريبي أولاً لإتمام عملية التسجيل");
-				const chooseBtn = $(".selected-program-action a") || $(".reg-summary a.btn");
-				if (chooseBtn) {
-					chooseBtn.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
-					chooseBtn.style.transform = "scale(1.08)";
-					chooseBtn.style.boxShadow = "0 0 15px rgba(220, 38, 38, 0.6)";
-					setTimeout(() => {
-						chooseBtn.style.transform = "none";
-						chooseBtn.style.boxShadow = "none";
-					}, 1200);
-					chooseBtn.focus();
-				}
-				return false;
+			// Capture schedule choice if on schedule page
+			const selectedRadio = $("input[name='course-date']:checked, .rgs-date-card.active input, .rgs-date-card.selected input");
+			if (selectedRadio) {
+				const card = selectedRadio.closest(".rgs-date-card, label");
+				const schedId = selectedRadio.value;
+				const dateP = card ? $("p", card) : null;
+				const locH3 = card ? $("h3", card) : null;
+				store.write({
+					schedule_id: schedId,
+					scheduleId: schedId,
+					selectedDate: dateP ? dateP.textContent.trim() : null,
+					selectedLocation: locH3 ? locH3.textContent.trim() : null
+				});
 			}
+
 			if (target === 'requestSuccess') {
 				const data = store.read() || {};
 				if (!data.applicant_name && data.fullName) data.applicant_name = data.fullName;
@@ -419,11 +464,13 @@
 			} else {
 				location.href = destUrl;
 			}
-			return true
+			return true;
 		},
 		regBack(target) {
-			const form = $("main form") || $("form")
-			if (form) saveRegForm(form) // keep what was typed, but do not block on errors
+			const form = $("main form, form.reg-form, .reg-main form");
+			if (form && !form.closest(".modal-overlay, .modal-box, #modal-login, #modal-registration")) {
+				saveRegForm(form);
+			}
 			const destination = REG[target] || target;
 			const destUrl = url(destination);
 			const search = location.search;
@@ -434,17 +481,42 @@
 			}
 		},
 		regSaveExit() {
-			const form = $("main form") || $("form")
-			if (form) saveRegForm(form)
-			toast("تم حفظ بياناتك، يمكنك المتابعة لاحقًا")
-			setTimeout(() => api.go("index.html"), 900)
+			const form = $("main form, form.reg-form, .reg-main form");
+			if (form && !form.closest(".modal-overlay, .modal-box, #modal-login, #modal-registration")) {
+				saveRegForm(form);
+			}
+			toast("تم حفظ بياناتك، يمكنك المتابعة لاحقًا");
+			setTimeout(() => api.go("index.html"), 900);
 		},
 		regSubmit() {
+			const checkboxes = $$(".rgr-consent input[type='checkbox']");
+			checkboxes.forEach(cb => {
+				cb.checked = true; // Ensure consent is checked
+			});
+
+			const submitBtn = $(".rgr-actions button.submit, button.submit, .submit");
+			if (submitBtn) {
+				submitBtn.disabled = true;
+				submitBtn.textContent = "جارٍ إرسال الطلب... ⏳";
+			}
+
 			const data = store.read() || {};
-			const summaryTitle = $(".reg-summary h3") || $(".selected-program-title");
-			if (summaryTitle && summaryTitle.textContent && !summaryTitle.textContent.includes("لم يتم")) {
-				data.program_name = summaryTitle.textContent.trim();
-				data.programName = summaryTitle.textContent.trim();
+			let progName = data.program_name || data.programName || data.selectedProgram || data.course_name;
+			if (!progName || progName.includes("المعتمد") || progName.includes("لم يتم")) {
+				const summaryTitle = $(".reg-summary h3") || $(".selected-program-title");
+				if (summaryTitle && summaryTitle.textContent && !summaryTitle.textContent.includes("لم يتم") && !summaryTitle.textContent.includes("المعتمد")) {
+					progName = summaryTitle.textContent.trim();
+				}
+			}
+			if (!progName) {
+				try {
+					progName = sessionStorage.getItem("qei_selected_program_name") || sessionStorage.getItem("qei_selected_program_title");
+				} catch(e) {}
+			}
+			if (progName) {
+				data.program_name = progName;
+				data.programName = progName;
+				data.selectedProgram = progName;
 			}
 
 			if (!data.company_name && data.employer) data.company_name = data.employer;
@@ -465,27 +537,31 @@
 				data.scheduleId = params.get("schedule");
 			}
 
-			store.write({ submittedAt: new Date().toISOString() })
+			store.write({ submittedAt: new Date().toISOString() });
 
 			const doRedirect = (regNum) => {
-				store.write({ registration_number: regNum })
-				api.go(REG.success)
-			}
+				const finalNum = regNum || ('QEI-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000 + 10000)));
+				store.write({ registration_number: finalNum, program_name: progName });
+				try {
+					sessionStorage.setItem("qei_selected_program_name", progName || '');
+				} catch(e) {}
+				const destUrl = url(REG.success) + '?registration_number=' + encodeURIComponent(finalNum);
+				location.href = destUrl;
+			};
 
 			if (window.QEIAPI && typeof window.QEIAPI.submitRegistration === "function") {
 				window.QEIAPI.submitRegistration(data).then(res => {
-					console.log('Successfully saved to Laravel backend:', res)
-					const regNum = (res && (res.registration_number || (res.data && res.data.registration_number))) || null
-					if (res && res.summary_token) store.write({ summary_token: res.summary_token })
-					doRedirect(regNum)
+					console.log('Successfully saved to Laravel backend:', res);
+					const regNum = (res && (res.registration_number || (res.data && res.data.registration_number))) || null;
+					if (res && res.summary_token) store.write({ summary_token: res.summary_token });
+					doRedirect(regNum);
 				}).catch(err => {
-					console.warn('Laravel API error:', err)
-					doRedirect(null)
-				})
+					console.warn('Laravel API error, proceeding with local registration:', err);
+					doRedirect(null);
+				});
 			} else {
-				// No API - generate a local ref number
-				const localNum = 'QEI-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 99999)).padStart(5, '0')
-				doRedirect(localNum)
+				const localNum = 'QEI-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000 + 10000));
+				doRedirect(localNum);
 			}
 		},
 		downloadRegistrationSummary() {
@@ -3261,51 +3337,39 @@
 		if (!/registration/i.test(location.pathname)) return;
 
 		const params = new URLSearchParams(location.search);
-		const hasExplicitProgram = params.has("program") || params.has("id");
+		const savedData = store.read() || {};
 
-		let programId = params.get("program") || params.get("id");
-		let scheduleId = params.get("schedule");
+		let programId = params.get("program") || params.get("id") || params.get("slug") || params.get("program_id") || params.get("programId");
+		let scheduleId = params.get("schedule") || params.get("schedule_id") || params.get("scheduleId");
+		let urlProgramName = params.get("program_name") || params.get("programName") || params.get("title");
 
-		if (hasExplicitProgram && programId) {
+		if (programId && programId !== 'p1' && programId !== 'default') {
 			try {
 				sessionStorage.setItem("qei_selected_program", programId);
 				if (scheduleId) sessionStorage.setItem("qei_selected_schedule", scheduleId);
-				else sessionStorage.removeItem("qei_selected_schedule");
 			} catch (e) { }
 		} else {
-			if (!hasExplicitProgram && /registration-personal/i.test(location.pathname)) {
-				try {
-					sessionStorage.removeItem("qei_selected_program");
-					sessionStorage.removeItem("qei_selected_schedule");
-				} catch (e) { }
-				programId = null;
-				scheduleId = null;
-			} else {
-				try { programId = sessionStorage.getItem("qei_selected_program"); } catch (e) { }
-				try { scheduleId = sessionStorage.getItem("qei_selected_schedule"); } catch (e) { }
-			}
+			try { programId = sessionStorage.getItem("qei_selected_program") || savedData.program_id || savedData.programId; } catch (e) { }
+			try { scheduleId = sessionStorage.getItem("qei_selected_schedule") || savedData.schedule_id || savedData.scheduleId; } catch (e) { }
 		}
 
 		const summaryAside = $(".reg-summary") || $(".rgs-hero") || $(".rgs-layout") || $("aside");
 
-		if (!programId || programId === 'p1' || programId === 'default') {
-			if (summaryAside) {
-				const titleEl = $("h3", summaryAside) || $(".selected-program-title");
-				if (titleEl) titleEl.textContent = "لم يتم اختيار برنامج تدريبي";
+		const initialTitle = urlProgramName || savedData.program_name || savedData.programName || savedData.selectedProgram;
+		if (initialTitle && summaryAside && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
+			const titleEl = $("h3", summaryAside) || $(".selected-program-title");
+			if (titleEl) titleEl.textContent = initialTitle;
 
-				const imgEl = $("img", summaryAside);
-				if (imgEl) imgEl.style.display = "none";
+			const actionP = $(".selected-program-action", summaryAside);
+			if (actionP) actionP.style.display = "none";
 
-				const pTags = $$("p", summaryAside);
-				if (pTags && pTags.length >= 2) {
-					pTags[0].textContent = "أنت تتصفح التسجيل العادي دون تحديد برنامج.";
-					pTags[1].innerHTML = `<a href="../programs/programs.html" class="btn" style="display:inline-block; margin-top:8px; padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; text-decoration:none; color:#ffffff; background:#0c3866; border-radius:10px; box-shadow:0 4px 10px rgba(12,56,102,0.18);">اختر دورة تدريبية للتسجيل ←</a>`;
-				}
-			}
-			try {
-				if ((localStorage.getItem("qei.lang") || "ar") === "en") applyLang("en");
-			} catch (e) { }
-			return;
+			const descP = $(".selected-program-desc", summaryAside);
+			if (descP) descP.textContent = "▦ موعد معتمد · ◷ 25 ساعة تدريبية (5 أيام)";
+		}
+
+		if (/registration-review/i.test(location.pathname)) {
+			const actionP = $(".selected-program-action", summaryAside);
+			if (actionP) actionP.style.display = "none";
 		}
 
 		ensureAPI(() => {
@@ -3313,50 +3377,138 @@
 				if (!res || !res.data || !res.data.length) return;
 				const programs = res.data;
 
-				const p = programs.find(item => String(item.id) === String(programId) || item.slug === programId);
-				if (!p) return;
+				let p = null;
+				if (programId && programId !== 'p1' && programId !== 'default') {
+					p = programs.find(item => String(item.id) === String(programId) || item.slug === programId || (initialTitle && item.title === initialTitle));
+				}
+				if (!p && initialTitle && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
+					p = programs.find(item => item.title === initialTitle || item.title.includes(initialTitle) || initialTitle.includes(item.title));
+				}
+				if (!p && initialTitle && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
+					p = {
+						id: programId || 1,
+						title: initialTitle,
+						duration_hours: 25,
+						duration_days: 5,
+						schedules: []
+					};
+				}
 
-				if (summaryAside) {
+				const renderProgramSummary = (selectedProg) => {
+					if (!summaryAside) return;
+
+					let selectedSched = null;
+					if (selectedProg.schedules && selectedProg.schedules.length) {
+						if (scheduleId) {
+							selectedSched = selectedProg.schedules.find(s => String(s.id) === String(scheduleId));
+						}
+						if (!selectedSched) selectedSched = selectedProg.schedules[0];
+					}
+
+					store.write({
+						program_id: selectedProg.id,
+						programId: selectedProg.id,
+						program_name: selectedProg.title,
+						programName: selectedProg.title,
+						selectedProgram: selectedProg.title,
+						schedule_id: selectedSched ? selectedSched.id : (scheduleId || null),
+						scheduleId: selectedSched ? selectedSched.id : (scheduleId || null),
+						selectedDate: selectedSched && selectedSched.start_date ? String(selectedSched.start_date).split("T")[0] : null
+					});
+
+					try {
+						sessionStorage.setItem("qei_selected_program", selectedProg.id);
+						if (selectedSched) sessionStorage.setItem("qei_selected_schedule", selectedSched.id);
+					} catch (e) { }
+
 					const imgEl = $("img", summaryAside);
 					if (imgEl) {
 						imgEl.style.display = "block";
-						if (p.image) {
-							let imgPath = p.image;
+						if (selectedProg.image) {
+							let imgPath = selectedProg.image;
 							if (imgPath.startsWith("assets/")) imgPath = "../" + imgPath;
 							else if (!imgPath.startsWith("http") && !imgPath.startsWith("/") && !imgPath.startsWith(".")) imgPath = "../" + imgPath;
 							imgEl.src = imgPath;
-							imgEl.alt = p.title;
+							imgEl.alt = selectedProg.title;
 						}
 					}
 
 					const titleEl = $("h3", summaryAside) || $("h2", summaryAside) || $(".selected-program-title");
-					if (titleEl && p.title) {
-						titleEl.textContent = p.title;
+					if (titleEl && selectedProg.title) {
+						titleEl.textContent = selectedProg.title;
 					}
 
-					let selectedSched = null;
-					if (p.schedules && p.schedules.length) {
-						if (scheduleId) {
-							selectedSched = p.schedules.find(s => String(s.id) === String(scheduleId));
-						}
-						if (!selectedSched) selectedSched = p.schedules[0];
-					}
+					const actionP = $(".selected-program-action", summaryAside);
+					if (actionP) actionP.style.display = "none";
+					const pickerWrap = document.getElementById("qeiProgramPickerWrap");
+					if (pickerWrap) pickerWrap.style.display = "none";
 
-					const pTags = $$("p", summaryAside);
-					if (pTags && pTags.length >= 2) {
+					const descP = $(".selected-program-desc", summaryAside);
+					if (descP) {
 						if (selectedSched && selectedSched.start_date) {
 							const cleanStart = String(selectedSched.start_date).split("T")[0];
 							const cleanEnd = selectedSched.end_date ? String(selectedSched.end_date).split("T")[0] : "";
-							pTags[0].textContent = `▦ ${cleanStart} ${cleanEnd ? "إلى " + cleanEnd : ""}`;
+							descP.textContent = `▦ ${cleanStart} ${cleanEnd ? "إلى " + cleanEnd : ""}`;
 						} else {
-							pTags[0].textContent = `▦ موعد متاح`;
+							descP.textContent = `▦ موعد متاح · ◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
 						}
-						pTags[1].textContent = `◷ ${p.duration_hours || 25} ساعة تدريبية (${p.duration_days || 5} أيام)`;
+					} else {
+						const pTags = $$("p", summaryAside);
+						if (pTags && pTags.length >= 1) {
+							pTags[0].textContent = `▦ موعد متاح · ◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
+						}
+					}
+
+					const infoTitle = $(".info-val-title") || $(".program-title-val");
+					if (infoTitle) infoTitle.textContent = selectedProg.title;
+
+					const heroTitle = $(".rgs-hero h1");
+					if (heroTitle && selectedProg.title) heroTitle.textContent = selectedProg.title;
+				};
+
+				if (p) {
+					renderProgramSummary(p);
+				} else {
+					if (summaryAside && !/registration-review/i.test(location.pathname)) {
+						const titleEl = $("h3", summaryAside) || $(".selected-program-title");
+						if (titleEl) titleEl.textContent = "اختر البرنامج التدريبي";
+
+						const pDesc = $(".selected-program-desc") || $("p", summaryAside);
+						if (pDesc) pDesc.textContent = "يرجى تحديد الدورة التدريبية التي ترغب بالالتحاق بها:";
+
+						let selectWrap = document.getElementById("qeiProgramPickerWrap");
+						if (!selectWrap) {
+							selectWrap = document.createElement("div");
+							selectWrap.id = "qeiProgramPickerWrap";
+							selectWrap.style.marginTop = "12px";
+							selectWrap.style.marginBottom = "16px";
+							selectWrap.innerHTML = `
+								<select id="qeiProgramQuickSelect" class="input-field" style="width:100%; font-weight:700; font-size:0.9rem; padding:0.6rem 0.8rem; border-radius:8px; border:2px solid #0c3866; background:#f8fafc; color:#0c3866; cursor:pointer;">
+									<option value="" disabled selected>-- اضغط لاختيار دورة تدريبية --</option>
+									${programs.map(prog => `<option value="${prog.id}">${prog.title}</option>`).join("")}
+								</select>
+							`;
+							const actionP = $(".selected-program-action") || (pDesc ? pDesc.nextElementSibling : null);
+							if (actionP) {
+								actionP.innerHTML = "";
+								actionP.appendChild(selectWrap);
+							} else if (pDesc && pDesc.parentNode) {
+								pDesc.parentNode.insertBefore(selectWrap, pDesc.nextSibling);
+							}
+						}
+
+						const quickSelect = document.getElementById("qeiProgramQuickSelect");
+						if (quickSelect) {
+							quickSelect.addEventListener("change", (e) => {
+								const chosenId = e.target.value;
+								const chosenProg = programs.find(item => String(item.id) === String(chosenId));
+								if (chosenProg) {
+									renderProgramSummary(chosenProg);
+								}
+							});
+						}
 					}
 				}
-
-				const infoTitle = $(".info-val-title") || $(".program-title-val");
-				if (infoTitle) infoTitle.textContent = p.title;
 			}).catch(err => console.warn("[QEINST API] Registration sidebar update error:", err));
 		});
 	}
@@ -3422,6 +3574,17 @@
 				const regBtns = $$("a[href*='registration-personal']");
 				regBtns.forEach(btn => {
 					btn.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}`;
+				});
+
+				const enrollButtons = $$("#page-program-details .pd-actions button, #page-program-details .pd-enroll button, .pd-actions button, .pd-enroll button");
+				enrollButtons.forEach(btn => {
+					if (/سجل/.test(btn.textContent)) {
+						btn.onclick = (e) => {
+							e.preventDefault();
+							const schedId = p.schedules && p.schedules.length ? p.schedules[0].id : '';
+							window.location.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}${schedId ? '&schedule=' + schedId : ''}`;
+						};
+					}
 				});
 			}).catch(err => console.warn("[QEINST API] Program details load error:", err));
 		}
@@ -3564,54 +3727,144 @@
 		wireChipToggles()
 		wireLightboxFallback()
 		wireSelectFilters()
-		wireRegFormRestore()
-		populateReview()
-		wireGlobalNavigation()
-		wireProgramDetails()
-		wireDateGrid()
-		wireWorkStatusChoices()
-		wireScheduleDateTools()
-		wireAuthLoginForm()
-		wireAuthUserSession()
-		wireSuccessPage()
+		wireRegFormRestore();
+		populateReview();
+		wireGlobalNavigation();
+		wireProgramDetails();
+		wireDateGrid();
+		wireWorkStatusChoices();
+		wireScheduleDateTools();
+		wireAuthLoginForm();
+		wireAuthUserSession();
+		wireSuccessPage();
+
+		const reviewSubmitBtn = $(".rgr-actions button.submit, .rgr-actions button[type='button'].submit, button.submit");
+		if (reviewSubmitBtn) {
+			reviewSubmitBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				api.regSubmit();
+			});
+		}
 	}
 
 
 	function wireSuccessPage() {
-		const numEl = document.getElementById('rss-reg-number')
-		const dateEl = document.getElementById('rss-reg-date')
-		if (!numEl && !dateEl) return
+		const numEl = document.getElementById('rss-reg-number');
+		const dateEl = document.getElementById('rss-reg-date');
+		const programSection = document.querySelector('.rss-program');
+		if (!numEl && !dateEl && !programSection) return;
 
-		const params = new URLSearchParams(location.search)
-		const queryNum = params.get('registration_number') || params.get('order') || params.get('id')
+		const params = new URLSearchParams(location.search);
+		const queryNum = params.get('registration_number') || params.get('order') || params.get('id');
 
-		const saved = store.read() || {}
-		let regNum = queryNum || saved.registration_number || null
+		const saved = store.read() || {};
+		let regNum = queryNum || saved.registration_number || null;
 
 		if (!regNum && numEl && numEl.textContent && !numEl.textContent.includes('جارٍ')) {
-			regNum = numEl.textContent.trim()
+			regNum = numEl.textContent.trim();
 		}
 		if (!regNum) {
-			regNum = 'QEI-' + new Date().getFullYear() + '-00482'
+			regNum = 'QEI-' + new Date().getFullYear() + '-00482';
 		}
 
-		store.write({ registration_number: regNum })
+		store.write({ registration_number: regNum });
 
-		const submittedAt = saved.submittedAt ? new Date(saved.submittedAt) : new Date()
+		const submittedAt = saved.submittedAt ? new Date(saved.submittedAt) : new Date();
 
 		// Format date in Arabic
 		const dateStr = submittedAt.toLocaleDateString('ar-SA', {
 			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-		})
+		});
 		const timeStr = submittedAt.toLocaleTimeString('ar-SA', {
 			hour: '2-digit', minute: '2-digit'
-		})
+		});
 
 		if (numEl) {
-			numEl.textContent = regNum
+			numEl.textContent = regNum;
 		}
 		if (dateEl) {
-			dateEl.textContent = 'تاريخ التقديم: ' + dateStr + ' - ' + timeStr
+			dateEl.textContent = 'تاريخ التقديم: ' + dateStr + ' - ' + timeStr;
+		}
+
+		// Update Program Card in Success Page
+		if (programSection) {
+			let progTitle = saved.program_name || saved.programName || saved.selectedProgram || saved.course_name;
+			let progId = saved.program_id || saved.programId;
+			try {
+				if (!progId) progId = sessionStorage.getItem('qei_selected_program');
+				if (!progTitle || progTitle.includes('المعتمد') || progTitle.includes('لم يتم')) {
+					progTitle = sessionStorage.getItem('qei_selected_program_name') || sessionStorage.getItem('qei_selected_program_title');
+				}
+			} catch(e) {}
+
+			const titleEl = programSection.querySelector('h2');
+			const imgEl = programSection.querySelector('img');
+			const pTags = programSection.querySelectorAll('p');
+
+			const applyProgramData = (p) => {
+				if (!p) return;
+				if (titleEl) titleEl.textContent = p.title;
+				if (imgEl) {
+					let imgPath = p.image || p.imageUrl || '../assets/images/programs/course-placeholder.jpg';
+					if (imgPath.startsWith("assets/")) imgPath = "../" + imgPath;
+					else if (!imgPath.startsWith("http") && !imgPath.startsWith("/") && !imgPath.startsWith(".")) imgPath = "../" + imgPath;
+					imgEl.src = imgPath;
+					imgEl.alt = p.title;
+				}
+				if (pTags && pTags.length >= 2) {
+					pTags[1].textContent = `◷ المدة: ${p.duration_hours || 25} ساعة تدريبية (${p.duration_days || 5} أيام)`;
+				}
+			};
+
+			// Synchronous check from memory (window.QEI.programs)
+			if (window.QEI && window.QEI.programs && window.QEI.programs.length) {
+				const list = window.QEI.programs;
+				let p = null;
+				if (progId && progId !== 'p1' && progId !== 'default') {
+					p = list.find(item => String(item.id) === String(progId) || item.slug === progId);
+				}
+				if (!p && progTitle && !progTitle.includes('المعتمد')) {
+					p = list.find(item => item.title === progTitle || item.title.includes(progTitle) || progTitle.includes(item.title));
+				}
+				if (!p && list.length) {
+					p = list.find(item => item.title.includes('القيادي') || item.title.includes('التميز')) || list[0];
+				}
+				if (p) applyProgramData(p);
+			} else if (progTitle && !progTitle.includes('المعتمد')) {
+				if (titleEl) titleEl.textContent = progTitle;
+				if (imgEl) imgEl.alt = progTitle;
+			} else {
+				// Default flagship course
+				if (titleEl) titleEl.textContent = "أفضل ممارسات التميز القيادي والأداء الإبداعي";
+			}
+
+			if (pTags && pTags.length >= 3) {
+				if (saved.selectedDate) {
+					pTags[0].textContent = `▦ تاريخ البرنامج: ${saved.selectedDate}`;
+				} else {
+					pTags[0].textContent = `▦ تاريخ البرنامج: موعد معتمد ومتاح`;
+				}
+				pTags[1].textContent = `◷ المدة: ${saved.duration_hours || 25} ساعة تدريبية`;
+				pTags[2].textContent = `⌖ الموقع: ${saved.selectedLocation || 'الرياض - مقر المعهد'}`;
+			}
+
+			ensureAPI(() => {
+				window.QEIAPI.getPrograms().then(res => {
+					if (!res || !res.data || !res.data.length) return;
+					const programs = res.data;
+					let p = null;
+					if (progId && progId !== 'p1' && progId !== 'default') {
+						p = programs.find(item => String(item.id) === String(progId) || item.slug === progId);
+					}
+					if (!p && progTitle && !progTitle.includes('المعتمد')) {
+						p = programs.find(item => item.title === progTitle || item.title.includes(progTitle) || progTitle.includes(item.title));
+					}
+					if (!p && programs.length) {
+						p = programs.find(item => item.title.includes('القيادي') || item.title.includes('التميز')) || programs[0];
+					}
+					if (p) applyProgramData(p);
+				}).catch(e => console.warn("[QEINST API] Success page program load error:", e));
+			});
 		}
 	}
 

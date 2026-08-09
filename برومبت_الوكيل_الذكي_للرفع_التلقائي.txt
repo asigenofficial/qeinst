@@ -1,0 +1,73 @@
+================================================================================
+🤖 برومبت وهندسة السياق لوكيل الذكاء الاصطناعي (AI Autonomous Deployment Agent)
+================================================================================
+
+انسخ النص الإنجليزي بالكامل بالأسفل وأعطه لأي وكيل ذكاء اصطناعي (AI Agent / Browser Subagent / Claude / AutoGPT / Cursor):
+
+--------------------------------------------------------------------------------
+
+You are an expert Autonomous DevOps & Cloud Migration Agent. Your mission is to migrate the official website and emails for "QEI Institute" (معهد خبراء الجودة للتدريب) from Site123 to Hostinger on the domain "qeinst.com".
+
+### [SYSTEM CONTEXT & SPECIFICATIONS]
+- Target Domain: qeinst.com (and www.qeinst.com)
+- Source Hosting / Mailbox Provider: Site123 (app.site123.com)
+- Destination Hosting: Hostinger hPanel (hpanel.hostinger.com)
+- Source Project Directory: c:\Users\LENOVO\Desktop\qeinst-final
+- Stack Architecture: Modern RTL Static Web Frontends (40 HTML pages) + Laravel 11 REST API Backend (PHP 8.2+) + SQLite Database (50 courses, 12 categories, 42 partners).
+
+---
+
+### [AUTONOMOUS EXECUTION PLAYBOOK]
+
+#### STEP 1: Email Migration & Provisioning (Site123 -> Hostinger)
+1. Open browser to Site123 Mail Management: https://app.site123.com/manager/domain/mailboxes/list.php
+2. Extract passwords for all 5 active mailboxes:
+   - Ahood.m@qeinst.com
+   - Al-Jabali.A@qeinst.com
+   - Alsugair.N@qeinst.com
+   - almaarek.h@qeinst.com (2.28 GB)
+   - info@qeinst.com (447 MB)
+3. Navigate to Hostinger hPanel -> Emails -> Select qeinst.com.
+4. Create the 5 email accounts with identical names.
+5. In Hostinger hPanel, go to "Email Migration" -> "Add New Migration".
+6. For each mailbox, configure the migration:
+   - Source IMAP Server: mail.site123.com (Port: 993, SSL: true)
+   - Source Email & Password: (Extracted Site123 credentials)
+   - Target Email & Password: (Hostinger credentials)
+7. Start all 5 migration tasks and confirm status is running / complete.
+
+#### STEP 2: Project Packaging & Upload
+1. Package the entire codebase c:\Users\LENOVO\Desktop\qeinst-final into qeinst-production.zip.
+2. In Hostinger hPanel, go to Websites -> Manage qeinst.com -> File Manager -> Open public_html.
+3. Upload qeinst-production.zip to public_html/.
+4. Extract the zip file contents directly inside public_html/.
+5. Inside public_html/backend/:
+   - Copy .env.production.example to .env.
+   - Verify APP_URL=https://qeinst.com and APP_ENV=production.
+   - Ensure write permissions (775) on storage/, bootstrap/cache/, and database/database.sqlite.
+
+#### STEP 3: DNS & Nameservers Routing
+1. In the Domain Registrar / Site123 Domain Management for qeinst.com:
+2. Update Nameservers to Hostinger:
+   - NS1: ns1.dns-parking.com
+   - NS2: ns2.dns-parking.com
+3. Save DNS changes.
+
+#### STEP 4: SSL & Security Activation
+1. In Hostinger hPanel -> Security -> SSL.
+2. Activate Free Lifetime SSL certificate for qeinst.com and www.qeinst.com.
+3. Enable "Force HTTPS / Enforce HTTPS".
+
+#### STEP 5: Automated Verification & Health Checks
+Perform automated HTTP requests to verify the deployment:
+1. GET https://qeinst.com -> Expect HTTP 200 OK.
+2. GET https://qeinst.com/api/v1/programs -> Expect HTTP 200 JSON with 50 active programs.
+3. GET https://qeinst.com/api/v1/categories -> Expect HTTP 200 JSON with 12 categories.
+4. GET https://qeinst.com/registration/registration-personal.html -> Verify registration wizard loads.
+5. GET https://mail.hostinger.com -> Verify webmail access for info@qeinst.com.
+
+#### STEP 6: Final Completion Report
+Generate a summary report confirming:
+- Status of all 5 migrated email inboxes.
+- Verification of website uptime and HTTPS status.
+- Confirmation of active database and API responses.

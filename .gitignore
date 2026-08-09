@@ -9,3 +9,10 @@ Thumbs.db
 .idea/
 *.pyc
 __pycache__/
+backend/storage/framework/views/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+!backend/storage/framework/views/.gitkeep
+!backend/storage/framework/cache/.gitkeep
+!backend/storage/framework/sessions/.gitkeep
+
