@@ -1,0 +1,275 @@
+/* ==========================================================================
+   Responsive & robustness fixes
+   Loaded last on purpose: these rules intentionally win over the modules
+   above, so the original slices stay untouched and reviewable.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Font fallbacks
+   The Tajawal webfont is pulled from Google Fonts. When that request is
+   blocked, offline, or slow, the old stack fell back to Latin-only faces and
+   Arabic text was rendered by an arbitrary system font. Keep a real Arabic
+   fallback chain instead.
+   -------------------------------------------------------------------------- */
+:root {
+	--font-family: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+*, body, html, button, input, select, textarea, h1, h2, h3, h4, h5, h6, table, td, th {
+	font-family: var(--font-family) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Footer brand overflowed the viewport by ~61px at 390px wide
+   .footer-brand is an inline-flex row with a 48px logo plus a 25px title and a
+   wide letter-spaced subtitle, none of which were allowed to shrink or wrap.
+   -------------------------------------------------------------------------- */
+@media (max-width: 560px) {
+	.footer-brand {
+		flex-wrap: wrap;
+		max-width: 100%;
+	}
+
+	.footer-brand svg {
+		width: 40px;
+		height: 40px;
+		flex: none;
+	}
+
+	.footer-brand b {
+		font-size: 21px;
+	}
+
+	.footer-brand small {
+		font-size: 8px;
+		letter-spacing: 1px;
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   3. Gallery details: grid items were missing `min-width: 0`
+   The thumbnail strip is a flex row of fixed 96px images, so its min-content
+   width (~700px) forced the `1fr` column — and therefore the sidebar and the
+   main image — far past the right edge of small viewports.
+   -------------------------------------------------------------------------- */
+.gallery-feature,
+.gallery-viewer,
+.gallery-info {
+	min-width: 0;
+}
+
+.gallery-viewer>* {
+	max-width: 100%;
+}
+
+.gallery-thumbs {
+	min-width: 0;
+	max-width: 100%;
+	overflow-x: auto;
+	scrollbar-width: thin;
+}
+
+.gallery-thumbs img,
+.gallery-thumbs button {
+	flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. Dark footer: fixed-width grid cells could not hold real Arabic text
+   `.gallery-footer-grid > section` had no `min-width: 0`, and the contact /
+   social lines are joined with non-breaking spaces, so their min-content width
+   pushed the grid ~160px past the right edge on phones.
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+
+	.gallery-footer-grid,
+	.gallery-footer-grid>section {
+		min-width: 0;
+	}
+
+	.gallery-footer-grid>section {
+		padding-inline: 0;
+	}
+
+	.gallery-footer-grid>section>*,
+	.gallery-footer-bottom span {
+		min-width: 0;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+	}
+
+	.g-social {
+		overflow-wrap: anywhere;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   5. Generic guards: never let a stray media element or fixed-width form
+   control create a horizontal scrollbar on a narrow screen.
+   -------------------------------------------------------------------------- */
+img,
+video {
+	max-width: 100%;
+}
+
+@media (max-width: 560px) {
+
+	input,
+	textarea,
+	select {
+		max-width: 100%;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   6. Home quick-search bar had no responsive rules at all
+   `.home-search form` is a rigid `repeat(4, 1fr) 74px` grid, so its five
+   controls forced the homepage 100px wider than a phone viewport.
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+	.home-search form {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.home-search form>button {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (max-width: 560px) {
+	.home-search form {
+		grid-template-columns: 1fr;
+	}
+
+	.home-search input,
+	.home-search select,
+	.home-search button {
+		width: 100%;
+		min-width: 0;
+		height: 44px;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   7. Footer logo rendered at its natural size (huge)
+   `.brand-logo` was only ever sized by `.brand .brand-logo` (the header). The
+   footer markup is `.footer-brand > img.brand-logo`, and the footer rules only
+   target a `<svg>` that the markup does not contain, so the image fell back to
+   its intrinsic pixel size and covered the whole footer.
+   -------------------------------------------------------------------------- */
+.footer-brand .brand-logo,
+.g-brand .brand-logo,
+.cf-brand .brand-logo {
+	width: 43px;
+	height: 43px;
+	object-fit: contain;
+	flex: none;
+	display: block;
+}
+
+/* --------------------------------------------------------------------------
+   8. Policy sidebar links overlapped each other
+   `.policy-menu-btn` is written for a `<button>` (`width: 100%`), but the
+   policy pages use inline `<a>` elements, so the links flowed inline and their
+   text ran together instead of stacking.
+   -------------------------------------------------------------------------- */
+a.policy-menu-btn {
+	display: block;
+	text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   9. Programs page: Training Calendar button & Search Input layout
+   -------------------------------------------------------------------------- */
+.pl-header-controls {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	width: 100%;
+	max-width: 720px;
+	margin: 28px auto 0;
+}
+
+.pl-search-input {
+	position: relative;
+	flex: 1;
+	max-width: 480px;
+	height: 50px;
+}
+
+.pl-search-input input {
+	width: 100%;
+	height: 50px;
+	border: 1px solid #dce2e8;
+	border-radius: 8px;
+	background: #fff;
+	padding: 0 45px 0 18px;
+	text-align: right;
+	font-family: inherit;
+	font-size: 14px;
+	box-shadow: 0 2px 6px rgba(30, 52, 74, 0.05);
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pl-search-input input:focus {
+	border-color: #1764c7;
+	box-shadow: 0 0 0 3px rgba(23, 100, 199, 0.12);
+	outline: none;
+}
+
+.pl-search-input span {
+	position: absolute;
+	left: 18px;
+	top: 13px;
+	font-size: 20px;
+	color: #87909a;
+	pointer-events: none;
+}
+
+.pl-calendar-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	height: 50px;
+	padding: 0 22px;
+	background: var(--primary-gradient, linear-gradient(135deg, #1e65d5 0%, #0d47a1 100%));
+	color: #ffffff !important;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none !important;
+	white-space: nowrap;
+	box-shadow: 0 4px 14px rgba(13, 71, 161, 0.35);
+	transition: all 0.25s ease;
+	cursor: pointer;
+}
+
+.pl-calendar-btn:hover {
+	background: var(--primary-gradient-hover, linear-gradient(135deg, #2570e8 0%, #1052b6 100%));
+	box-shadow: 0 6px 18px rgba(13, 71, 161, 0.45);
+	transform: translateY(-1px);
+}
+
+.pl-calendar-btn svg {
+	flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+	.pl-header-controls {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.pl-search-input {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.pl-calendar-btn {
+		width: 100%;
+		justify-content: center;
+	}
+}

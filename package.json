@@ -1,0 +1,16 @@
+{
+	"name": "qei-institute-web",
+	"version": "1.0.0",
+	"private": true,
+	"description": "QEI — Quality Experts Institute for Training: static Arabic (RTL) website, one HTML file per screen.",
+	"scripts": {
+		"build:css": "node tools/build-css.mjs",
+		"check:css": "node tools/build-css.mjs --check",
+		"qa": "python3 tools/qa.py",
+		"dev": "npx serve . -l 8080",
+		"start": "npx serve . -l 8080"
+	},
+	"engines": {
+		"node": ">=18"
+	}
+}

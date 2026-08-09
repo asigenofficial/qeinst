@@ -1,0 +1,381 @@
+/* ==========================================================================
+   Components — buttons, cards, forms, modals, wizard, toasts
+   54 rule(s)  ·  slice 8 — keep this file in manifest order
+   ========================================================================== */
+
+.request-stepper .active i {
+	background: #0a92cb;
+	border-color: #0a92cb;
+	color: #fff;
+}
+
+.custom-request-layout {
+	display: grid;
+	grid-template-columns: 295px 1fr;
+	direction: ltr;
+	gap: 24px;
+	align-items: start;
+}
+
+.request-sidebar,
+.custom-request-form {
+	direction: rtl;
+}
+
+.quick-help,
+.request-steps,
+.custom-request-form {
+	border: 1px solid #dfe4e9;
+	border-radius: 9px;
+	background: #fff;
+}
+
+.quick-help {
+	padding: 20px 19px;
+	margin-bottom: 16px;
+}
+
+.help-head {
+	display: flex;
+	align-items: center;
+	gap: 13px;
+	margin-bottom: 9px;
+}
+
+.help-head > span {
+	font-size: 42px;
+	color: #069bc0;
+}
+
+.help-head h2,
+.request-steps h2 {
+	font-size: 16px;
+	color: #334252;
+	margin: 0;
+}
+
+.quick-help > p {
+	font-size: 10px;
+	line-height: 1.7;
+	color: #8c939c;
+	margin: 0 0 15px;
+}
+
+.quick-help > a:not(.outline) {
+	display: grid;
+	grid-template-columns: 24px 1fr;
+	grid-template-rows: auto auto;
+	color: #17467e;
+	font-size: 10px;
+	margin-bottom: 10px;
+}
+
+.quick-help > a > b {
+	font-size: 10px;
+}
+
+.quick-help > a > small {
+	grid-column: 2;
+	font-size: 8px;
+	color: #a3a9b0;
+}
+
+.quick-help .outline {
+	height: 39px;
+	border: 1px solid #dfe4e9;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #495462;
+	font-size: 11px;
+}
+
+.request-steps {
+	padding: 20px 19px;
+}
+
+.request-steps h2 {
+	margin-bottom: 15px;
+}
+
+.request-steps ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 14px;
+}
+
+.request-steps li {
+	display: flex;
+	gap: 11px;
+}
+
+.request-steps li > i {
+	width: 23px;
+	height: 23px;
+	border-radius: 50%;
+	border: 1px solid #d7dde3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-style: normal;
+	font-size: 9px;
+}
+
+.request-steps li.active > i {
+	border-color: #0a92cb;
+	color: #0a92cb;
+}
+
+.request-steps li div {
+	display: flex;
+	flex-direction: column;
+}
+
+.request-steps b {
+	font-size: 11px;
+	color: #495360;
+}
+
+.request-steps span {
+	font-size: 8px;
+	color: #a7adb4;
+}
+
+.custom-request-form {
+	padding: 37px 32px 28px;
+}
+
+.custom-request-form > h2 {
+	font-size: 19px;
+	font-weight: 500;
+	color: #40505f;
+	margin: 0 0 29px;
+}
+
+.request-fields {
+	display: grid;
+	gap: 17px;
+}
+
+.request-fields.two {
+	grid-template-columns: 1fr 1fr;
+}
+
+.custom-request-form label {
+	display: block;
+	font-size: 10px;
+	font-weight: 600;
+	color: #5e6874;
+	margin-bottom: 17px;
+	position: relative;
+}
+
+.custom-request-form input:not([type="checkbox"]):not([type="file"]),
+.custom-request-form select,
+.custom-request-form textarea {
+	width: 100%;
+	border: 1px solid #dce1e6;
+	border-radius: 5px;
+	background: #fff;
+	font-family: inherit;
+	text-align: right;
+	margin-top: 7px;
+	padding: 0 12px;
+}
+
+.custom-request-form input:not([type="checkbox"]):not([type="file"]),
+.custom-request-form select {
+	height: 43px;
+}
+
+.custom-request-form textarea {
+	height: 105px;
+	padding-top: 12px;
+	resize: none;
+}
+
+.custom-request-form label > small {
+	position: absolute;
+	left: 0;
+	bottom: -14px;
+	font-size: 8px;
+	color: #a9afb6;
+}
+
+.phone-field {
+	display: grid;
+	grid-template-columns: 1fr 52px;
+	direction: ltr;
+	margin-top: 7px;
+}
+
+.phone-field input {
+	margin-top: 0 !important;
+}
+
+.phone-field em {
+	height: 43px;
+	border: 1px solid #dce1e6;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-style: normal;
+}
+
+.file-label {
+	height: 135px;
+	border: 1px dashed #ccd4dc;
+	border-radius: 5px;
+	position: relative;
+	cursor: pointer;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.file-label > input {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+}
+
+.file-label span {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.file-label small {
+	position: static !important;
+}
+
+.request-consent {
+	display: flex !important;
+	align-items: center;
+	gap: 8px;
+	font-weight: 400 !important;
+}
+
+.request-next {
+	width: 100%;
+	height: 49px;
+	border: 0;
+	border-radius: 5px;
+	background: #123e73;
+	color: #fff;
+	font-family: inherit;
+	font-weight: 700;
+}
+
+.request-draft {
+	height: 42px;
+	padding: 0 20px;
+	border: 1px solid #dce1e6;
+	border-radius: 5px;
+	background: #fff;
+	float: left;
+	margin-top: 12px;
+}
+
+@media (max-width: 950px) {
+	.custom-request-layout {
+		grid-template-columns: 1fr;
+	}
+	.request-sidebar {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+	}
+	.quick-help {
+		margin: 0;
+	}
+}
+
+@media (max-width: 560px) {
+	.custom-training-shell {
+		padding: 25px 18px 50px;
+	}
+	.custom-intro h1 {
+		font-size: 29px;
+	}
+	.request-sidebar,
+	.request-fields.two {
+		grid-template-columns: 1fr;
+	}
+	.custom-request-form {
+		padding: 25px 16px;
+	}
+	.request-draft {
+		float: none;
+		width: 100%;
+	}
+}
+
+/* Screenshot-matched FAQ page */
+
+.page-faq-view {
+	background: #fff;
+}
+
+.faq-shell {
+	max-width: 1220px;
+	padding: 45px 24px 65px;
+}
+
+.faq-breadcrumb {
+	display: flex;
+	justify-content: flex-start;
+	gap: 5px;
+	color: #a4abb3;
+	font-size: 11px;
+	margin-bottom: 55px;
+}
+
+.faq-breadcrumb a {
+	color: #a4abb3;
+}
+
+.faq-breadcrumb b {
+	font-weight: 500;
+}
+
+.faq-hero {
+	display: grid;
+	grid-template-columns: 33% 67%;
+	direction: ltr;
+	align-items: center;
+	margin-bottom: 32px;
+}
+
+.faq-hero img {
+	width: 300px;
+	height: 250px;
+	object-fit: cover;
+}
+
+.faq-hero > div {
+	direction: rtl;
+	text-align: right;
+}
+
+.faq-hero h1 {
+	font-size: 34px;
+	font-weight: 400;
+	color: #193f73;
+	margin: 0 0 10px;
+}
+
+.faq-hero p {
+	font-size: 13px;
+	color: #8d949e;
+	margin: 0 0 23px;
+}
+
+.faq-hero form {
+	height: 55px;
+	position: relative;
+}

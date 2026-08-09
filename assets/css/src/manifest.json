@@ -1,0 +1,27 @@
+{
+	"output": "../app.css",
+	"order": [
+		"01-base-header-nav.css",
+		"pages/02-about.css",
+		"pages/03-article-details.css",
+		"pages/04-clients.css",
+		"pages/05-closed-program.css",
+		"pages/06-contact.css",
+		"pages/07-solutions.css",
+		"pages/08-custom-training.css",
+		"pages/09-faq.css",
+		"pages/10-gallery.css",
+		"pages/11-home.css",
+		"pages/12-impact.css",
+		"pages/13-methodology.css",
+		"pages/14-program-details.css",
+		"pages/15-programs-listing.css",
+		"pages/16-trainer-profile.css",
+		"pages/17-training-calendar.css",
+		"pages/18-why-choose-us.css",
+		"pages/19-policy-pages.css",
+		"pages/20-training-needs.css",
+		"21-responsive-fixes.css",
+		"22-ui-runtime.css"
+	]
+}

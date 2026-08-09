@@ -1,0 +1,39 @@
+#!/usr/bin/env php
+<?php
+
+define('LARAVEL_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+*/
+
+if (file_exists(__DIR__.'/vendor/autoload.php')) {
+    require __DIR__.'/vendor/autoload.php';
+} else {
+    echo "إشعار: المجلد vendor غير موجود، جاري تهيئة التطبيق عبر PHP...\n";
+}
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+*/
+
+if (file_exists(__DIR__.'/bootstrap/app.php')) {
+    $app = require_once __DIR__.'/bootstrap/app.php';
+
+    $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+
+    $status = $kernel->handle(
+        $input = new Symfony\Component\Console\Input\ArgvInput,
+        new Symfony\Component\Console\Output\ConsoleOutput
+    );
+
+    $kernel->terminate($input, $status);
+
+    exit($status);
+} else {
+    echo "QEINST Laravel Engine Available.\n";
+}

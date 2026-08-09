@@ -1,0 +1,481 @@
+/* ==========================================================================
+   Page — contact
+   53 rule(s)  ·  slice 6 — keep this file in manifest order
+   ========================================================================== */
+
+.support-title {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.headset {
+	font-size: 56px;
+	color: #0b69a9;
+}
+
+.support-title h2 {
+	font-size: 22px;
+	font-weight: 500;
+	color: #3d4855;
+	margin: 0 0 5px;
+}
+
+.support-title p {
+	font-size: 11px;
+	color: #979ea7;
+}
+
+.closed-support-inner > a {
+	height: 70px;
+	border: 1px solid #dfe4e9;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 0 20px;
+	background: #fff;
+}
+
+.closed-support-inner > a b {
+	color: #1764cb;
+	font-size: 18px;
+}
+
+.closed-support-inner > a span {
+	display: flex;
+	flex-direction: column;
+}
+
+.closed-support-inner strong {
+	font-size: 12px;
+	color: #344150;
+}
+
+.closed-support-inner small {
+	font-size: 9px;
+	color: #a0a7af;
+}
+
+@media (max-width: 950px) {
+	.closed-layout {
+		grid-template-columns: 1fr;
+	}
+	.closed-main {
+		grid-row: 1;
+	}
+	.closed-sidebar {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+	.closed-support-inner {
+		grid-template-columns: 1fr 1fr;
+	}
+	.support-title {
+		grid-column: span 2;
+	}
+}
+
+@media (max-width: 560px) {
+	.closed-shell {
+		padding: 15px 18px 30px;
+	}
+	.closed-header h1 {
+		font-size: 30px;
+	}
+	.closed-hero {
+		height: auto;
+		aspect-ratio: 2.18/1;
+	}
+	.closed-sidebar {
+		grid-template-columns: 1fr;
+	}
+	.closed-support-inner {
+		grid-template-columns: 1fr;
+		padding-inline: 18px;
+	}
+	.support-title {
+		grid-column: auto;
+	}
+	.closed-support-inner > a {
+		width: 100%;
+	}
+	.closed-header {
+		gap: 12px;
+	}
+	.closed-lock {
+		width: 42px;
+		height: 42px;
+		flex: 0 0 42px;
+	}
+}
+
+/* Screenshot-matched Contact page */
+
+.page-contact-view {
+	background: #fff;
+}
+
+.contact-shell {
+	max-width: 1360px;
+	padding: 35px 26px 60px;
+	min-height: 0;
+}
+
+.contact-breadcrumb {
+	display: flex;
+	justify-content: flex-start;
+	gap: 5px;
+	color: #a4abb4;
+	font-size: 11px;
+	margin-bottom: 4px;
+}
+
+.contact-breadcrumb a {
+	color: #a4abb4;
+}
+
+.contact-breadcrumb b {
+	font-weight: 500;
+	color: #67717d;
+}
+
+.contact-intro {
+	text-align: center;
+	margin-bottom: 66px;
+}
+
+.contact-intro h1 {
+	font-size: 44px;
+	font-weight: 800;
+	color: #17467e;
+	margin: 0 0 19px;
+}
+
+.contact-intro p {
+	font-size: 14px;
+	line-height: 2;
+	color: #9198a2;
+}
+
+.contact-methods > h2 {
+	text-align: center;
+	font-size: 23px;
+	color: #17467e;
+	margin: 0 0 30px;
+}
+
+.contact-method-grid {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 18px;
+	direction: rtl;
+	margin-bottom: 56px;
+}
+
+.contact-method-grid article {
+	height: 188px;
+	border: 1px solid #dfe4e9;
+	border-radius: 12px;
+	text-align: center;
+	padding: 20px 12px;
+	background: #fff;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.contact-method-grid article:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 10px 24px rgba(23, 70, 126, 0.08);
+	border-color: #b3d1f5;
+}
+
+.contact-method-grid i,
+.contact-method-grid .contact-icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: #edf4fc;
+	color: #17467e;
+	font-style: normal;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 12px;
+	transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.contact-method-grid article:hover .contact-icon,
+.contact-method-grid article:hover i {
+	background: #17467e;
+	color: #ffffff;
+	transform: scale(1.08);
+	box-shadow: 0 4px 12px rgba(23, 70, 126, 0.25);
+}
+
+.contact-method-grid h3 {
+	font-size: 13px;
+	color: #303b47;
+	margin: 0 0 7px;
+}
+
+.contact-method-grid b {
+	display: block;
+	font-size: 11px;
+	color: #17467e;
+	margin-bottom: 5px;
+}
+
+.contact-method-grid p {
+	font-size: 10px;
+	line-height: 1.7;
+	color: #a1a7af;
+}
+
+.contact-main-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 25px;
+	direction: ltr;
+	margin-bottom: 39px;
+}
+
+.contact-map,
+.contact-form {
+	height: 450px;
+	border: 1px solid #dfe4e9;
+	border-radius: 10px;
+	background: #fff;
+	padding: 20px 22px;
+	direction: rtl;
+}
+
+.contact-map h2,
+.contact-form h2 {
+	font-size: 19px;
+	color: #17467e;
+	margin: 0 0 17px;
+}
+
+.contact-map img {
+	width: 100%;
+	height: 340px;
+	object-fit: cover;
+	display: block;
+	border-radius: 4px;
+}
+
+.contact-form label {
+	display: block;
+	font-size: 10px;
+	color: #7c848e;
+	margin-bottom: 13px;
+	position: relative;
+}
+
+.contact-fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 15px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+	width: 100%;
+	border: 1px solid #dce1e6;
+	border-radius: 5px;
+	background: #fff;
+	font-family: inherit;
+	text-align: right;
+	margin-top: 6px;
+	padding: 0 12px;
+	color: #59636e;
+}
+
+.contact-form input,
+.contact-form select {
+	height: 38px;
+}
+
+.contact-form select {
+	background: #f4f5f6;
+}
+
+.contact-form textarea {
+	height: 102px;
+	padding-top: 12px;
+	resize: none;
+}
+
+.contact-form label small {
+	position: absolute;
+	left: 0;
+	bottom: -14px;
+	color: #adb3ba;
+}
+
+.contact-form button {
+	width: 100%;
+	height: 43px;
+	background: #123e78;
+	color: #fff;
+	border: 0;
+	border-radius: 5px;
+	font-family: inherit;
+	margin-top: 17px;
+}
+
+.contact-cta {
+	height: 224px;
+	border-radius: 10px;
+	background: #eef5ff url("../images/support/contact-cta.jpg") right center/500px 205px no-repeat;
+	display: flex;
+	align-items: center;
+	padding-right: 0;
+	padding-left: 58%;
+	margin-bottom: 0;
+	overflow: hidden;
+}
+
+.contact-cta div {
+	text-align: right;
+}
+
+.contact-cta h2 {
+	font-size: 22px;
+	color: #17467e;
+	margin: 0 0 10px;
+}
+
+.contact-cta p {
+	font-size: 12px;
+	line-height: 1.8;
+	color: #8a929d;
+	margin: 0 0 19px;
+}
+
+.contact-cta a {
+	height: 45px;
+	padding: 0 27px;
+	background: #123e78;
+	color: #fff;
+	border-radius: 5px;
+	display: inline-flex;
+	align-items: center;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+body[data-page="contact"] > .site-footer {
+	display: block !important;
+}
+
+@media (max-width: 1000px) {
+	.contact-method-grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.contact-main-grid {
+		grid-template-columns: 1fr;
+	}
+	.contact-map,
+	.contact-form {
+		height: auto;
+	}
+	.contact-cta {
+		padding-left: 45%;
+	}
+}
+
+@media (max-width: 560px) {
+	.contact-shell {
+		padding: 24px 18px 70px;
+		min-height: 0;
+	}
+	.contact-intro h1 {
+		font-size: 35px;
+	}
+	.contact-intro {
+		margin-bottom: 45px;
+	}
+	.contact-method-grid {
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+	}
+	.contact-method-grid article {
+		height: 175px;
+	}
+	.contact-main-grid {
+		gap: 18px;
+	}
+	.contact-fields {
+		grid-template-columns: 1fr;
+	}
+	.contact-form {
+		padding: 20px 16px;
+	}
+	.contact-form textarea {
+		height: 120px;
+	}
+	.contact-map img {
+		height: auto;
+		aspect-ratio: 1.9/1;
+	}
+	.contact-cta {
+		height: 300px;
+		background-position: right bottom;
+		background-size: auto 180px;
+		padding: 28px;
+		align-items: flex-start;
+	}
+	.contact-cta p br {
+		display: none;
+	}
+	.contact-cta div {
+		max-width: 100%;
+	}
+}
+
+/* Screenshot-matched Corporate Solutions page */
+
+.page-solutions-view {
+	background: #fff;
+}
+
+.solutions-shell {
+	max-width: 1145px;
+	padding: 40px 0 62px;
+}
+
+.solutions-breadcrumb {
+	display: flex;
+	justify-content: flex-start;
+	gap: 5px;
+	color: #a6adb5;
+	font-size: 11px;
+	margin-bottom: 8px;
+}
+
+.solutions-breadcrumb a {
+	color: #a6adb5;
+}
+
+.solutions-breadcrumb b {
+	font-weight: 500;
+}
+
+.solutions-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+	direction: ltr;
+	gap: 45px;
+	align-items: center;
+	margin-bottom: 92px;
+}
+
+.solutions-hero img {
+	width: 100%;
+	height: 370px;
+	object-fit: cover;
+	border-radius: 7px;
+}

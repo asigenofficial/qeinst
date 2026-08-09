@@ -1,0 +1,404 @@
+/* ==========================================================================
+   Components — buttons, cards, forms, modals, wizard, toasts
+   53 rule(s)  ·  slice 17 — keep this file in manifest order
+   ========================================================================== */
+
+/* Screenshot-matched Training Calendar */
+
+.page-training-calendar {
+	background: #fff;
+}
+
+.tc-shell {
+	max-width: 1450px;
+	padding: 18px 28px 45px;
+}
+
+.tc-breadcrumb {
+	display: flex;
+	justify-content: flex-start;
+	gap: 5px;
+	font-size: 10px;
+	color: #98a1aa;
+}
+
+.tc-breadcrumb a {
+	color: #98a1aa;
+}
+
+.tc-header {
+	text-align: center;
+	margin: 35px 0 30px;
+}
+
+.tc-header h1 {
+	font-size: 34px;
+	font-weight: 400;
+	color: #173f68;
+	margin: 0 0 8px;
+}
+
+.tc-header p {
+	font-size: 12px;
+	color: #8a939c;
+}
+
+.tc-filters {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr) 130px;
+	gap: 14px;
+}
+
+.tc-filters select,
+.tc-filters button {
+	height: 58px;
+	border: 1px solid #d9e0e6;
+	border-radius: 8px;
+	background: #fff;
+	padding: 0 18px;
+	font-family: inherit;
+	color: #697580;
+}
+
+.tc-toolbar {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	align-items: center;
+	margin: 25px 0 16px;
+}
+
+.tc-toolbar > div {
+	display: flex;
+}
+
+.tc-toolbar > div:first-child {
+	justify-self: start;
+}
+
+.tc-toolbar > div:last-child {
+	justify-self: end;
+}
+
+.tc-toolbar button {
+	height: 42px;
+	padding: 0 18px;
+	border: 1px solid #d9e0e6;
+	background: #fff;
+	font-family: inherit;
+	color: #63707c;
+}
+
+.tc-toolbar button.active {
+	background: var(--primary-gradient, linear-gradient(135deg, #1e65d5 0%, #0d47a1 100%));
+	color: #fff;
+	border-color: transparent;
+}
+
+.tc-toolbar h2 {
+	text-align: center;
+	font-size: 16px;
+	color: #173f68;
+}
+
+.tc-calendar {
+	border: 1px solid #dfe4e8;
+}
+
+.tc-week {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+}
+
+.tc-week b {
+	text-align: center;
+	padding: 12px;
+	border-left: 1px solid #dfe4e8;
+	font-size: 11px;
+	color: #7f8993;
+}
+
+.tc-days {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+}
+
+.tc-day {
+	height: 83px;
+	border-top: 1px solid #dfe4e8;
+	border-left: 1px solid #dfe4e8;
+	padding: 8px;
+	text-align: right;
+}
+
+.tc-day b {
+	font-size: 10px;
+	color: #394957;
+}
+
+.tc-day.muted b {
+	color: #c7cdd2;
+}
+
+.tc-tag {
+	display: inline-block;
+	margin-top: 18px;
+	border-radius: 12px;
+	padding: 5px 8px;
+	font-size: 8px;
+}
+
+.tc-tag.open,
+.tc-status.open {
+	background: #e6f7ee;
+	color: #28a467;
+}
+
+.tc-tag.limited,
+.tc-status.limited {
+	background: #fff3df;
+	color: #e7a13c;
+}
+
+.tc-tag.full,
+.tc-status.full {
+	background: #fde9e9;
+	color: #dd6565;
+}
+
+.tc-upcoming {
+	text-align: center;
+	font-size: 27px;
+	font-weight: 400;
+	color: #34495c;
+	margin: 55px 0 24px;
+}
+
+.tc-programs {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.tc-program {
+	height: 112px;
+	border: 1px solid #e0e5e9;
+	border-radius: 10px;
+	display: grid;
+	grid-template-columns: 210px 100px 1.1fr 1fr 220px;
+	align-items: center;
+	gap: 18px;
+	padding: 10px;
+	direction: rtl;
+}
+
+.tc-thumb {
+	height: 92px;
+	border: 1px solid #1664ae;
+	border-radius: 8px;
+	background: #fff;
+}
+
+.tc-status {
+	justify-self: center;
+	border-radius: 12px;
+	padding: 6px 12px;
+	font-size: 9px;
+}
+
+.tc-program h3 {
+	font-size: 17px;
+	color: #173f68;
+	text-align: right;
+}
+
+.tc-pmeta {
+	display: flex;
+	flex-direction: column;
+	text-align: right;
+}
+
+.tc-pmeta b,
+.tc-pmeta small {
+	font-size: 9px;
+	color: #8b949d;
+	line-height: 1.6;
+}
+
+.tc-actions {
+	display: flex;
+	gap: 10px;
+	direction: rtl;
+}
+
+.tc-actions button,
+.tc-actions a {
+	height: 42px;
+	min-width: 95px;
+	border: 1px solid #d8e0e6;
+	border-radius: 6px;
+	background: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: inherit;
+	color: #53626f;
+}
+
+.tc-actions button {
+	background: var(--primary-gradient, linear-gradient(135deg, #1e65d5 0%, #0d47a1 100%));
+	color: #fff;
+	border-color: transparent;
+	box-shadow: 0 4px 12px rgba(13, 71, 161, 0.25);
+}
+
+.page-training-calendar .gallery-dark-footer {
+	margin-top: 48px;
+}
+
+body[data-page="calendar"] > .site-footer {
+	display: none;
+}
+
+@media (max-width: 800px) {
+	.tc-filters {
+		grid-template-columns: 1fr 1fr;
+	}
+	.tc-filters button {
+		grid-column: 1/-1;
+	}
+	.tc-calendar {
+		overflow-x: auto;
+	}
+	.tc-week,
+	.tc-days {
+		min-width: 760px;
+	}
+	.tc-program {
+		height: auto;
+		grid-template-columns: 120px 1fr;
+		gap: 12px;
+	}
+	.tc-thumb {
+		height: 90px;
+	}
+	.tc-program h3,
+	.tc-pmeta,
+	.tc-actions {
+		grid-column: 1/-1;
+	}
+	.tc-actions {
+		justify-content: center;
+	}
+}
+
+@media (max-width: 560px) {
+	.tc-shell {
+		padding: 16px;
+	}
+	.tc-header h1 {
+		font-size: 30px;
+	}
+	.tc-filters {
+		grid-template-columns: 1fr;
+	}
+	.tc-toolbar {
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+	.tc-toolbar > div,
+	.tc-toolbar > div:first-child,
+	.tc-toolbar > div:last-child {
+		justify-self: center;
+	}
+	.tc-toolbar h2 {
+		grid-row: 1;
+	}
+	.tc-program {
+		grid-template-columns: 1fr;
+	}
+	.tc-thumb {
+		height: 150px;
+	}
+	.tc-status {
+		justify-self: start;
+	}
+	.tc-program h3 {
+		font-size: 18px;
+	}
+	.tc-actions a,
+	.tc-actions button {
+		flex: 1;
+	}
+}
+
+/* Screenshot-matched Vision & Mission page */
+
+.page-vision-mission {
+	background: #fff;
+}
+
+.vm-shell {
+	max-width: 1400px;
+	padding: 22px 38px 0;
+}
+
+.vm-breadcrumb {
+	display: flex;
+	justify-content: flex-start;
+	gap: 6px;
+	font-size: 10px;
+	color: #929ba4;
+}
+
+.vm-breadcrumb a {
+	color: #929ba4;
+}
+
+.vm-hero {
+	margin-top: 38px;
+	display: grid;
+	grid-template-columns: 1fr 565px;
+	gap: 30px;
+	align-items: center;
+	direction: ltr;
+}
+
+.vm-hero > div {
+	direction: rtl;
+	text-align: center;
+}
+
+.vm-hero h1 {
+	font-size: 36px;
+	color: #173f68;
+	margin: 0 0 20px;
+}
+
+.vm-hero p {
+	font-size: 15px;
+	line-height: 1.9;
+	color: #697580;
+}
+
+.vm-hero img {
+	width: 565px;
+	height: 285px;
+	object-fit: cover;
+	border-radius: 0 10px 10px 0;
+}
+
+.vm-pillars {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 22px;
+	margin-top: 55px;
+}
+
+.vm-pillars article {
+	height: 185px;
+	border: 1px solid #dfe5ea;
+	border-radius: 10px;
+	padding: 30px;
+	position: relative;
+	text-align: right;
+}

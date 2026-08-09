@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>التسجيل — البيانات الشخصية | QEI — معهد خبراء الجودة للتدريب</title>
+	<meta name="description"
+		content="منصة معهد خبراء الجودة للتدريب المعلمة والحلول المؤسسية وفق معايير المركز الوطني للتعليم الإلكتروني في المملكة العربية السعودية" />
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="../assets/css/app.css" />
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="../assets/images/brand/favicon.png" />
+</head>
+
+<body data-page="registration-personal" data-multipage="1">
+	<a class="qei-skip" href="#top">تجاوز إلى المحتوى</a>
+
+
+	<main id="top">
+		<section class="page-view active page-registration-personal" id="page-registration-personal">
+			<div class="container reg-shell">
+				<nav class="reg-breadcrumb">
+					<a href="../index.html">الرئيسية</a><span>/</span><a
+						href="../programs/program-details.html">التسجيل</a><span>/</span><b>بيانات التسجيل</b>
+				</nav>
+				<header class="reg-header">
+					<h1>البيانات الشخصية</h1>
+					<p>يرجى تعبئة بياناتك الشخصية بدقة</p>
+				</header>
+				<div class="reg-layout">
+					<aside class="reg-summary">
+						<h2>✓ البرنامج المحدد</h2>
+						<img src="" alt="" style="display:none;" />
+						<h3 class="selected-program-title">لم يتم اختيار برنامج تدريبي</h3>
+						<p class="selected-program-desc">أنت تتصفح التسجيل العادي دون تحديد برنامج.</p>
+						<p class="selected-program-action">
+							<a href="../programs/programs.html" class="btn" style="display:inline-block; margin-top:8px; padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; text-decoration:none; color:#ffffff; background:#0c3866; border-radius:10px; box-shadow:0 4px 10px rgba(12,56,102,0.18);">اختر دورة تدريبية للتسجيل ←</a>
+						</p>
+						<hr />
+						<section>
+							<i class="reg-icon-black">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c4563"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+									<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+								</svg>
+							</i>
+							<div><b>بياناتك محفوظة</b><small>نستخدم تشفيراً لضمان حماية بياناتك الشخصية</small></div>
+						</section>
+						<section>
+							<i class="reg-icon-black">
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c4563"
+									stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+									<path
+										d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
+									</path>
+								</svg>
+							</i>
+							<div><b>تحتاج مساعدة؟</b><small>فريقنا لمساعدتك في أي وقت</small></div>
+						</section>
+						<hr />
+						<h4>تواصل معنا</h4>
+						<p>☎ <a href="tel:+966567167988" class="ltr-num" style="color:inherit;text-decoration:none">+966
+								56 716 7988</a></p>
+						<p>✉ <a href="mailto:info@qeinst.com"
+								style="color:inherit;text-decoration:none">info@qeinst.com</a></p>
+						<p>◷ الأحد - الخميس، 8:00 ص - 5:00 م</p>
+					</aside>
+					<main class="reg-main">
+						<div class="reg-steps">
+							<article class="active">
+								<i>1</i>
+								<b>المعلومات الشخصية</b>
+							</article>
+							<span></span>
+							<article>
+								<i>2</i>
+								<b>بيانات العمل</b>
+							</article>
+							<span></span>
+							<article>
+								<i>3</i>
+								<b>اختيار الموعد</b>
+							</article>
+							<span></span>
+							<article>
+								<i>4</i>
+								<b>مراجعة وإرسال</b>
+							</article>
+						</div>
+						<form class="reg-form" autocomplete="off" onsubmit="event.preventDefault(); QEI.regNext('work')">
+							<label>
+								رقم الهوية <em>*</em>
+								<input id="nationalId" name="nationalId" type="text" autocomplete="off" required inputmode="numeric" maxlength="10"
+									placeholder="ادخل رقم الهوية (10 أرقام)" />
+							</label>
+
+							<label>
+								الاسم الكامل <em>*</em>
+								<input id="fullName" name="fullName" required placeholder="ادخل الاسم الرباعي" />
+								<small>كما هو مسجل في الهوية</small>
+							</label>
+
+							<label>
+								تاريخ الميلاد <em>*</em>
+								<input id="birthDate" name="birthDate" required type="date" placeholder="اختر تاريخ الميلاد" />
+							</label>
+
+							<label>
+								الجنسية <em>*</em>
+								<select id="nationality" name="nationality" required>
+									<option value="" disabled selected>اختر الجنسية</option>
+									<option value="سعودي">سعودي</option>
+									<option value="غير سعودي">غير سعودي</option>
+								</select>
+							</label>
+
+							<label>
+								الحالة الاجتماعية <em>*</em>
+								<select id="maritalStatus" name="maritalStatus" required>
+									<option value="" disabled selected>اختر الحالة الاجتماعية</option>
+									<option value="متزوج">متزوج</option>
+									<option value="أعزب">أعزب</option>
+								</select>
+							</label>
+
+							<label>
+								البريد الإلكتروني <em>*</em>
+								<input id="email" name="email" autocomplete="email" dir="ltr" required type="email"
+									placeholder="mohammad@example.com" />
+								<small>سيتم إرسال تأكيد التسجيل على هذا البريد</small>
+							</label>
+
+							<label>
+								رقم الجوال <em>*</em>
+								<div class="reg-phone">
+									<span>+966</span>
+									<input id="phone" name="phone" autocomplete="tel" dir="ltr" required type="tel" placeholder="50 123 4567" />
+								</div>
+								<small>يرجى إدخال رقم جوال صحيح</small>
+							</label>
+
+							<div class="reg-actions-wrap">
+								<div class="reg-actions">
+									<button class="next" type="button" onclick="QEI.regNext('work')">
+										<span>التالي</span>
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+											stroke-linejoin="round">
+											<polyline points="9 18 15 12 9 6"></polyline>
+										</svg>
+									</button>
+									<div class="reg-secondary-actions">
+										<button type="button" class="btn-secondary" onclick="QEI.regSaveExit()">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round"
+												stroke-linejoin="round">
+												<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+												<polyline points="16 17 21 12 16 7"></polyline>
+												<line x1="21" y1="12" x2="9" y2="12"></line>
+											</svg>
+											<span>حفظ والخروج</span>
+										</button>
+									</div>
+								</div>
+								<p class="reg-required-note">الحقول المميزة * مطلوبة</p>
+							</div>
+						</form>
+					</main>
+				</div>
+			</div>
+			<footer class="site-footer footer-light">
+				<div class="gallery-footer-grid">
+					<section class="g-brand">
+						<div>
+							<img class="gf-logo" src="../assets/images/brand/qei-logo-white.png"
+								alt="QEI" /><b>QEI<small>INSTITUTE</small></b>
+						</div>
+						<p>معهد رائد في تقديم برامج تدريبية معتمدة تسهم<br />في تطوير الكفاءات وبناء القدرات للمستقبل.
+						</p>
+						<div class="g-social">
+							<a href="https://www.youtube.com/@qeinst" target="_blank" rel="noopener"
+								aria-label="YouTube" title="YouTube (@qeinst)"><svg width="18" height="18"
+									viewBox="0 0 24 24" fill="currentColor">
+									<path
+										d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+								</svg></a>
+							<a href="https://wa.me/966567167988" target="_blank" rel="noopener" aria-label="WhatsApp"
+								title="WhatsApp (+966567167988)"><svg width="18" height="18" viewBox="0 0 24 24"
+									fill="currentColor">
+									<path
+										d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.205 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+								</svg></a>
+							<a href="https://www.linkedin.com/company/%D9%85%D8%B9%D9%87%D8%AF-%D8%AE%D8%A8%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D8%AC%D9%88%D8%AF%D8%A9-%D9%84%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8/" target="_blank" rel="noopener"
+								aria-label="LinkedIn" title="LinkedIn (@qeinst)"><svg width="18" height="18"
+									viewBox="0 0 24 24" fill="currentColor">
+									<path
+										d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+								</svg></a>
+							<a href="https://x.com/T100_i" target="_blank" rel="noopener"
+								aria-label="X (Twitter)" title="X (@T100_i)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+									<path
+										d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+								</svg></a>
+						</div>
+					</section>
+					<section>
+						<h3>روابط سريعة</h3>
+						<a href="../programs/programs.html">البرامج التدريبية</a><a
+							href="../solutions/solutions.html">حلول المؤسسات</a><a href="../about/about.html">عن
+							المعهد</a><a href="../about/clients.html">عملاؤنا وشركاؤنا</a><a
+							href="../about/about.html">وظائف</a><a href="../support/contact.html">تواصل معنا</a>
+					</section>
+					<section>
+						<h3>الخدمات</h3>
+						<a href="#sectors">القطاعات المستهدفة</a><a href="../solutions/solutions.html">الحلول
+							التدريبية</a><a href="../solutions/solutions.html">الاستشارات</a><a
+							href="#certificates">الشهادات الاحترافية</a><a href="../support/faq.html">الأسئلة
+							الشائعة</a>
+					</section>
+					<section>
+						<h3>اشترك في نشرتنا</h3>
+						<p>اشترك ليصلك كل جديد من البرامج والعروض.</p>
+						<input aria-label="ادخل بريدك الإلكتروني" type="email" autocomplete="email" dir="ltr"
+							placeholder="ادخل بريدك الإلكتروني" /><button>اشترك الآن</button>
+					</section>
+					<section>
+						<h3>تواصل معنا</h3>
+						<p>☎ <a href="tel:+966567167988" class="ltr-num" style="color:inherit;text-decoration:none">+966
+								56 716 7988</a></p>
+						<p>📱 <a href="https://wa.me/966567167988" target="_blank" rel="noopener"
+								style="color:inherit;text-decoration:none">واتساب +966 56 716 7988</a></p>
+						<p>✉ info@qeinst.com</p>
+						<p>⌖ 7259 طريق الملك عبد العزيز، حي المرسلات، الرياض</p>
+					</section>
+				</div>
+				<div class="gallery-footer-bottom">
+					<span>ترخيص رقم: 747395253 | رقم السجل: 1010477798</span><span>سياسة الخصوصية | الشروط والأحكام |
+						جميع الحقوق محفوظة © 2026</span>
+				</div>
+			</footer>
+		</section>
+	</main>
+
+	<!-- MODALS -->
+
+	<!-- Multi-Step Registration Modal -->
+	<div class="modal-overlay" id="modal-registration">
+		<div class="modal-box" style="max-width: 720px">
+			<button class="modal-close-btn" onclick="QEI.closeModal('modal-registration')">✕</button>
+
+			<div style="text-align: center; margin-bottom: 2rem">
+				<span class="eyebrow">تسجيل جديد</span>
+				<h2 style="font-size: 1.75rem; font-weight: 900; color: var(--slate-900)">
+					استمارة الالتحاق بالبرنامج التدريبي
+				</h2>
+			</div>
+
+			<!-- Stepper Header -->
+			<div class="wizard-stepper">
+				<div class="wizard-step-item active" id="wizStepItem-1">
+					<div class="wizard-step-badge">1</div>
+					<span class="wizard-step-title">البيانات الشخصية</span>
+				</div>
+				<div class="wizard-step-item" id="wizStepItem-2">
+					<div class="wizard-step-badge">2</div>
+					<span class="wizard-step-title">التعليم والعمل</span>
+				</div>
+				<div class="wizard-step-item" id="wizStepItem-3">
+					<div class="wizard-step-badge">3</div>
+					<span class="wizard-step-title">اختيار الدفعة</span>
+				</div>
+				<div class="wizard-step-item" id="wizStepItem-4">
+					<div class="wizard-step-badge">4</div>
+					<span class="wizard-step-title">مراجعة وإرسال</span>
+				</div>
+			</div>
+
+			<!-- Step 1 Content -->
+			<div id="wizContentStep-1">
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem">
+					<div>
+						<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">رقم
+							الهوية / الإقامة *</label>
+						<input inputmode="numeric" type="text" class="input-field" placeholder="10 أرقام"
+							value="" />
+					</div>
+					<div>
+						<label
+							style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">الاسم
+							الكامل *</label>
+						<input inputmode="numeric" type="text" class="input-field" placeholder="ادخل الاسم الرباعي"
+							value="" />
+					</div>
+				</div>
+
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem">
+					<div>
+						<label
+							style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">البريد
+							الإلكتروني *</label>
+						<input autocomplete="email" dir="ltr" type="email" class="input-field"
+							placeholder="name@domain.com" value="" />
+					</div>
+					<div>
+						<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">رقم
+							الجوال *</label>
+						<input autocomplete="tel" dir="ltr" type="tel" class="input-field" placeholder="05xxxxxxxx"
+							value="" />
+					</div>
+				</div>
+
+				<div style="text-align: left; margin-top: 2rem">
+					<button class="btn btn-primary" onclick="QEI.setWizardStep(2)">الخطوة التالية ←</button>
+				</div>
+			</div>
+
+			<!-- Step 2 Content -->
+			<div id="wizContentStep-2" style="display: none">
+				<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem">
+					<div>
+						<label
+							style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">المؤهل
+							العلمي</label>
+						<select class="input-field">
+							<option selected>بكالوريوس</option>
+							<option>ماجستير</option>
+							<option>دبلوم</option>
+						</select>
+					</div>
+					<div>
+						<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">جهة
+							العمل</label>
+						<input type="text" class="input-field" value="شركة رؤية الرقمية" />
+					</div>
+				</div>
+
+				<div style="margin-bottom: 1rem">
+					<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">المسمى
+						الوظيفي</label>
+					<input type="text" class="input-field" value="محلل بيانات أول" />
+				</div>
+
+				<div style="display: flex; justify-content: space-between; margin-top: 2rem">
+					<button class="btn btn-outline" onclick="QEI.setWizardStep(1)">→ السابق</button>
+					<button class="btn btn-primary" onclick="QEI.setWizardStep(3)">الخطوة التالية ←</button>
+				</div>
+			</div>
+
+			<!-- Step 3 Content -->
+			<div id="wizContentStep-3" style="display: none">
+				<div style="margin-bottom: 1.5rem">
+					<label style="display: block; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.5rem">اختر
+						الدفعة المناسبة لك</label>
+					<div style="
+								border: 2px solid var(--primary-blue);
+								background: var(--primary-50);
+								border-radius: var(--radius-md);
+								padding: 1rem;
+								margin-bottom: 0.75rem;
+							">
+						<div style="font-weight: 800; color: var(--primary-blue)">الدفعة الأولى (حضوري - الرياض)</div>
+						<div style="font-size: 0.85rem; color: var(--slate-600)">الموعد يظهر تلقائيًا من قاعدة البيانات بعد اختيار البرنامج
+						</div>
+					</div>
+				</div>
+
+				<div style="display: flex; justify-content: space-between; margin-top: 2rem">
+					<button class="btn btn-outline" onclick="QEI.setWizardStep(2)">→ السابق</button>
+					<button class="btn btn-primary" onclick="QEI.setWizardStep(4)">الخطوة التالية (المراجعة) ←</button>
+				</div>
+			</div>
+
+			<!-- Step 4 Content -->
+			<div id="wizContentStep-4" style="display: none">
+				<h3 style="
+							font-size: 1.35rem;
+							font-weight: 800;
+							color: var(--slate-900);
+							text-align: center;
+							margin-bottom: 0.5rem;
+						">
+					راجع بياناتك قبل الإرسال
+				</h3>
+				<p style="color: var(--slate-600); text-align: center; font-size: 0.9rem; margin-bottom: 1.5rem">
+					تأكد من صحة المعلومات التالية ثم أرسل طلب التسجيل.
+				</p>
+
+				<div style="
+							background: var(--slate-50);
+							border: 1px solid var(--slate-200);
+							border-radius: var(--radius-md);
+							padding: 1.25rem;
+							margin-bottom: 1rem;
+						">
+					<div
+						style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem">
+						<strong style="color: var(--primary-blue)">👤 البيانات الشخصية</strong>
+						<button class="btn btn-outline btn-sm" onclick="QEI.setWizardStep(1)">تعديل ✏️</button>
+					</div>
+					<div style="font-size: 0.85rem; color: var(--slate-700); line-height: 1.6">
+						الاسم: — | الهوية: —<br />
+						البريد: mohammad@example.com | الجوال: 0501234567
+					</div>
+				</div>
+
+				<div style="display: flex; justify-content: space-between; margin-top: 1.5rem">
+					<button class="btn btn-outline" onclick="QEI.setWizardStep(3)">→ السابق</button>
+					<button class="btn btn-primary btn-lg" onclick="QEI.submitRegistration()">إرسال طلب التسجيل
+						🚀</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Login Modal -->
+	<div class="modal-overlay" id="modal-login">
+		<div class="modal-box">
+			<button class="modal-close-btn" onclick="QEI.closeModal('modal-login')">✕</button>
+			<div style="text-align: center; margin-bottom: 2rem">
+				<span class="eyebrow">منصة المستفيدين</span>
+				<h2 style="font-size: 1.75rem; font-weight: 900; color: var(--slate-900)">تسجيل الدخول</h2>
+			</div>
+
+			<form onsubmit="
+						event.preventDefault()
+						QEI.showToast('تم تسجيل الدخول بنجاح!')
+						QEI.closeModal('modal-login')
+					">
+				<div style="margin-bottom: 1.25rem">
+					<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">البريد
+						الإلكتروني أو الهوية</label>
+					<input type="text" required class="input-field" placeholder="ادخل بريدك الإلكتروني" />
+				</div>
+				<div style="margin-bottom: 1.5rem">
+					<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem">كلمة
+						المرور</label>
+					<input autocomplete="current-password" dir="ltr" type="password" required class="input-field"
+						placeholder="••••••••" />
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg" style="width: 100%">دخول للمنصة</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Footer Component -->
+
+	<script src="../assets/js/app.js"></script>
+	<script src="../assets/js/i18n-dict.js"></script>
+	<script src="../assets/js/ui-runtime.js"></script>
+</body>
+
+</html>

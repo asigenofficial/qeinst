@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>سياسة حداثة المحتوى | QEI — معهد خبراء الجودة للتدريب</title>
+		<meta
+			name="description"
+			content="التزام معهد خبراء الجودة للتدريب بمراجعة وتحديث المحتوى التدريبي بانتظام وفق معايير المركز الوطني للتعليم الإلكتروني"
+		/>
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="../assets/css/app.css" />
+
+		<!-- Favicon -->
+		<link rel="icon" type="image/png" href="../assets/images/brand/favicon.png" />
+
+		<style>
+			.cf-section {
+				padding: 2.5rem 0 4rem;
+				background: #fafbfc;
+			}
+			.cf-breadcrumbs {
+				font-size: 0.85rem;
+				color: #64748b;
+				margin-bottom: 2.5rem;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.cf-breadcrumbs a {
+				color: #64748b;
+				text-decoration: none;
+			}
+			.cf-breadcrumbs a:hover {
+				color: #1d4ed8;
+			}
+			.cf-hero-wrap {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 2rem;
+				margin-bottom: 3.5rem;
+			}
+			.cf-hero-text h1 {
+				font-size: 2.75rem;
+				font-weight: 900;
+				color: #1e293b;
+				margin-bottom: 0.75rem;
+				letter-spacing: -0.5px;
+			}
+			.cf-hero-text p {
+				font-size: 1.1rem;
+				color: #64748b;
+				margin: 0;
+				line-height: 1.65;
+				max-width: 650px;
+			}
+			.cf-hero-graphic {
+				width: 190px;
+				height: auto;
+				flex-shrink: 0;
+			}
+			
+			.cf-grid-layout {
+				display: grid;
+				grid-template-columns: 2.2fr 1fr;
+				gap: 2rem;
+				align-items: start;
+			}
+			
+			/* Main Section Card */
+			.cf-main-card {
+				background: #ffffff;
+				border: 1px solid #e2e8f0;
+				border-radius: 20px;
+				padding: 2.25rem;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+				display: flex;
+				flex-direction: column;
+				gap: 1.75rem;
+			}
+			.cf-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1.25rem;
+				padding-bottom: 1.75rem;
+				border-bottom: 1px solid #f1f5f9;
+			}
+			.cf-item:last-child {
+				padding-bottom: 0;
+				border-bottom: none;
+			}
+			.cf-item-left {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				flex: 1;
+			}
+			.cf-item-num {
+				font-size: 1.15rem;
+				font-weight: 800;
+				color: #1e293b;
+				min-width: 24px;
+			}
+			.cf-item-content {
+				flex: 1;
+			}
+			.cf-item-title {
+				font-size: 1.25rem;
+				font-weight: 800;
+				color: #1e293b;
+				margin: 0 0 0.4rem;
+			}
+			.cf-item-desc {
+				font-size: 0.9rem;
+				color: #64748b;
+				line-height: 1.7;
+				margin: 0;
+			}
+			.cf-icon-badge {
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-shrink: 0;
+			}
+			.cf-icon-badge.blue {
+				background: #eff6ff;
+				color: #1d4ed8;
+			}
+			.cf-icon-badge.teal {
+				background: #e6fffa;
+				color: #0d9488;
+			}
+			
+			/* Sidebar Card */
+			.cf-sidebar-card {
+				background: #ffffff;
+				border: 1px solid #e2e8f0;
+				border-radius: 20px;
+				padding: 2rem;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+			}
+			.cf-info-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+			}
+			.cf-info-text {
+				text-align: right;
+			}
+			.cf-info-label {
+				font-size: 0.8rem;
+				color: #94a3b8;
+				margin-bottom: 0.2rem;
+				display: block;
+			}
+			.cf-info-val {
+				font-size: 0.95rem;
+				font-weight: 800;
+				color: #1e293b;
+				margin: 0;
+			}
+			.cf-sidebar-badge {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				background: #f8fafc;
+				color: #475569;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-shrink: 0;
+				border: 1px solid #f1f5f9;
+			}
+
+			@media (max-width: 992px) {
+				.cf-grid-layout {
+					grid-template-columns: 1fr;
+				}
+				.cf-hero-wrap {
+					flex-direction: column-reverse;
+					text-align: center;
+				}
+			}
+		</style>
+	</head>
+	<body data-page="content-freshness" data-multipage="1">
+		<a class="qei-skip" href="#top">تجاوز إلى المحتوى</a>
+		<header class="site-header" id="siteHeader">
+			<div class="container nav-wrap">
+				<a class="brand" href="../index.html" aria-label="معهد خبراء الجودة للتدريب">
+					<img class="brand-logo" src="../assets/images/brand/qei-logo.png" alt="QEI" />
+					<span class="brand-word">QEI</span>
+				</a>
+				<button class="mobile-menu" id="mobileMenuBtn" aria-label="فتح القائمة">☰</button>
+				<nav class="main-nav" id="mainNav">
+					<a href="../index.html">الرئيسية</a>
+					<a href="../about/about.html">عن المعهد</a>
+					<a href="../programs/programs.html">البرامج التدريبية</a>
+					<a href="../solutions/solutions.html">حلول المؤسسات</a>
+					<a href="../about/clients.html">عملاؤنا وشركاؤنا</a>
+					<a href="../support/contact.html">تواصل معنا</a>
+					<div class="nav-item-dropdown">
+						<a href="javascript:void(0)" class="dropdown-toggle active">المزيد <span class="arrow">▾</span></a>
+						<div class="dropdown-menu">
+							<a href="policies.html" class="active">المركز القانوني</a>
+							
+						</div>
+					</div>
+				</nav>
+				<div class="nav-actions">
+					<button class="lang-btn" title="English / العربية">EN</button>
+					<a href="../registration/registration-personal.html" class="btn login-btn">تسجيل الدخول</a>
+				</div>
+			</div>
+		</header>
+
+		<main id="top">
+			<section class="cf-section" id="page-content-freshness">
+				<div class="container">
+					<!-- Breadcrumbs -->
+					<nav class="cf-breadcrumbs" aria-label="مسار التنقل">
+						<a href="../index.html">الرئيسية</a> <span>/</span> <a href="policies.html">المركز القانوني</a> <span>/</span> <span style="color: #1e293b; font-weight: 600;">سياسة حداثة المحتوى</span>
+					</nav>
+
+					<!-- Hero Header with Title, Description and Browser SVG Illustration -->
+					<div class="cf-hero-wrap">
+						<div class="cf-hero-text">
+							<h1>سياسة حداثة المحتوى</h1>
+							<p>نلتزم بمراجعة وتحديث المحتوى التدريبي بانتظام لضمان دقته وملاءمته لأحدث المعايير.</p>
+						</div>
+						<svg class="cf-hero-graphic" viewBox="0 0 190 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<!-- Browser Window Base -->
+							<rect x="10" y="15" width="145" height="145" rx="14" fill="#FFFFFF" stroke="#334155" stroke-width="4"/>
+							<!-- Top Browser Header Bar -->
+							<path d="M10 27C10 19.268 16.268 13 24 13H141C148.732 13 155 19.268 155 27V42H10V27Z" fill="#1E293B"/>
+							
+							<!-- Browser Buttons (3 Dots) -->
+							<circle cx="26" cy="27" r="3.5" fill="#EF4444"/>
+							<circle cx="37" cy="27" r="3.5" fill="#F59E0B"/>
+							<circle cx="48" cy="27" r="3.5" fill="#10B981"/>
+
+							<!-- Document Inside Browser -->
+							<g transform="translate(30, 52)">
+								<rect x="0" y="0" width="75" height="92" rx="8" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+								<rect x="14" y="18" width="47" height="5" rx="2.5" fill="#94A3B8"/>
+								<rect x="14" y="32" width="47" height="4" rx="2" fill="#E2E8F0"/>
+								<rect x="14" y="42" width="47" height="4" rx="2" fill="#E2E8F0"/>
+								<rect x="14" y="52" width="47" height="4" rx="2" fill="#E2E8F0"/>
+								<rect x="14" y="62" width="35" height="4" rx="2" fill="#E2E8F0"/>
+								<rect x="14" y="72" width="28" height="4" rx="2" fill="#E2E8F0"/>
+							</g>
+
+							<!-- Teal Circular Badge with Checkmark at Bottom Right -->
+							<g transform="translate(115, 105)">
+								<circle cx="26" cy="26" r="26" fill="#0D9488"/>
+								<circle cx="26" cy="26" r="24.5" stroke="#FFFFFF" stroke-width="2"/>
+								<path d="M16 26L23 33L36 18" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</g>
+						</svg>
+					</div>
+
+					<!-- Two-Column Layout Grid -->
+					<div class="cf-grid-layout">
+						<!-- Main Column (6 Numbered Sections) -->
+						<div class="cf-main-col">
+							<div class="cf-main-card">
+								
+								<!-- Item 1: التزام المعهد -->
+								<div class="cf-item">
+									<div class="cf-item-left">
+										<span class="cf-item-num">1.</span>
+										<div class="cf-item-content">
+											<h2 class="cf-item-title">التزام المعهد</h2>
+											<p class="cf-item-desc">يضمن المعهد مراجعة المحتوى التدريبي المنشور بشكل دوري.</p>
+										</div>
+									</div>
+									<div class="cf-icon-badge blue">
+										<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+									</div>
+								</div>
+
+								<!-- Item 2: الامتثال -->
+								<div class="cf-item">
+									<div class="cf-item-left">
+										<span class="cf-item-num">2.</span>
+										<div class="cf-item-content">
+											<h2 class="cf-item-title">الامتثال</h2>
+											<p class="cf-item-desc">يتم التأكد من توافق المحتوى مع القوانين والسياسات الوطنية.</p>
+										</div>
+									</div>
+									<div class="cf-icon-badge teal">
+										<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+									</div>
+								</div>
+
+								<!-- Item 3: المراجعة الدورية -->
+								<div class="cf-item">
+									<div class="cf-item-left">
+										<span class="cf-item-num">3.</span>
+										<div class="cf-item-content">
+											<h2 class="cf-item-title">المراجعة الدورية</h2>
+											<p class="cf-item-desc">تتم مراجعة وتحديث المحتوى كلما دعت الحاجة.</p>
+										</div>
+									</div>
+									<div class="cf-icon-badge blue">
+										<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+									</div>
+								</div>
+
+								<!-- Item 4: استقبال الملاحظات -->
+								<div class="cf-item">
+									<div class="cf-item-left">
+										<span class="cf-item-num">4.</span>
+										<div class="cf-item-content">
+											<h2 class="cf-item-title">استقبال الملاحظات</h2>
+											<p class="cf-item-desc">يستقبل المعهد ملاحظات الزوار والمستفيدين حول المحتوى.</p>
+										</div>
+									</div>
+									<div class="cf-icon-badge teal">
+										<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+									</div>
+								</div>
+
+								<!-- Item 5: قنوات التواصل -->
+								<div class="cf-item">
+									<div class="cf-item-left">
+										<span class="cf-item-num">5.</span>
+										<div class="cf-item-content">
+											<h2 class="cf-item-title">قنوات التواصل</h2>
+											<p class="cf-item-desc">البريد الإلكتروني: info@qeinst.com واتساب: 0567167988</p>
+										</div>
+									</div>
+									<div class="cf-icon-badge blue">
+										<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+									</div>
+								</div>
+
+								<!-- Item 6: الاستجابة -->
+								<div class="cf-item">
+									<div class="cf-item-left">
+										<span class="cf-item-num">6.</span>
+										<div class="cf-item-content">
+											<h2 class="cf-item-title">الاستجابة</h2>
+											<p class="cf-item-desc">تتم مراجعة الملاحظات بشكل فوري والتأكد من ملاءمتها.</p>
+										</div>
+									</div>
+									<div class="cf-icon-badge teal">
+										<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<!-- Sidebar (Metadata & Contact Card) -->
+						<div class="cf-sidebar-col">
+							<div class="cf-sidebar-card">
+								
+								<!-- Row 1: آخر تحديث -->
+								<div class="cf-info-row">
+									<div class="cf-info-text">
+										<span class="cf-info-label">آخر تحديث:</span>
+										<h4 class="cf-info-val">أغسطس 2026</h4>
+									</div>
+									<div class="cf-sidebar-badge">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+									</div>
+								</div>
+
+								<!-- Row 2: للاستفسار -->
+								<div class="cf-info-row">
+									<div class="cf-info-text">
+										<span class="cf-info-label">للاستفسار:</span>
+										<h4 class="cf-info-val" style="font-size: 0.85rem;">info@qeinst.com</h4>
+									</div>
+									<div class="cf-sidebar-badge">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+									</div>
+								</div>
+
+								<!-- Row 3: واتساب -->
+								<div class="cf-info-row">
+									<div class="cf-info-text">
+										<span class="cf-info-label">واتساب:</span>
+										<h4 class="cf-info-val">0567167988</h4>
+									</div>
+									<div class="cf-sidebar-badge">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+									</div>
+								</div>
+
+								<!-- Row 4: الموقع -->
+								<div class="cf-info-row">
+									<div class="cf-info-text">
+										<span class="cf-info-label">المملكة العربية السعودية</span>
+										<h4 class="cf-info-val">الرياض</h4>
+									</div>
+									<div class="cf-sidebar-badge">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+				<footer class="site-footer footer-light">
+					<div class="gallery-footer-grid">
+						<section class="g-brand">
+							<div>
+								<img class="gf-logo" src="../assets/images/brand/qei-logo-white.png" alt="QEI" /><b
+									>QEI<small>INSTITUTE</small></b
+								>
+							</div>
+							<p>معهد رائد في تقديم برامج تدريبية معتمدة تسهم<br />في تطوير الكفاءات وبناء القدرات للمستقبل.</p>
+							<div class="g-social">
+								<a href="https://www.youtube.com/@qeinst" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube (@qeinst)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+								<a href="https://wa.me/966567167988" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp (+966567167988)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.205 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
+								<a href="https://www.linkedin.com/company/%D9%85%D8%B9%D9%87%D8%AF-%D8%AE%D8%A8%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D8%AC%D9%88%D8%AF%D8%A9-%D9%84%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn (معهد خبراء الجودة للتدريب)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
+								<a href="https://x.com/T100_i" target="_blank" rel="noopener" aria-label="X (Twitter)" title="X (@T100_i)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+							</div>
+						</section>
+						<section>
+							<h3>روابط سريعة</h3>
+							<a href="../programs/programs.html">البرامج التدريبية</a><a href="../solutions/solutions.html">حلول المؤسسات</a
+							><a href="../about/about.html">عن المعهد</a><a href="../about/clients.html">عملاؤنا وشركاؤنا</a><a href="../about/about.html">وظائف</a
+							><a href="../support/contact.html">تواصل معنا</a>
+						</section>
+						<section>
+							<h3>الخدمات</h3>
+							<a href="../programs/programs.html#sectors">القطاعات المستهدفة</a><a href="../solutions/solutions.html">الحلول التدريبية</a
+							><a href="../solutions/solutions.html">الاستشارات</a><a href="../programs/programs.html#certificates">الشهادات الاحترافية</a
+							><a href="../support/faq.html">الأسئلة الشائعة</a>
+						</section>
+						<section>
+							<h3>اشترك في نشرتنا</h3>
+							<p>اشترك ليصلك كل جديد من البرامج والعروض.</p>
+							<input aria-label="ادخل بريدك الإلكتروني" type="email" autocomplete="email" dir="ltr" placeholder="ادخل بريدك الإلكتروني" /><button>اشترك الآن</button>
+						</section>
+						<section>
+							<h3>تواصل معنا</h3>
+							<p>☎ <a href="tel:+966567167988" class="ltr-num" style="color:inherit;text-decoration:none">+966 56 716 7988</a></p>
+							<p>✉ <a href="mailto:info@qeinst.com" style="color:inherit;text-decoration:none">info@qeinst.com</a></p>
+							<p>📱 <a href="https://wa.me/966567167988" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">واتساب +966 56 716 7988</a></p>
+							<p>⌖ <a href="../support/contact.html" style="color:inherit;text-decoration:none">7259 طريق الملك عبد العزيز، حي المرسلات، الرياض</a></p>
+						</section>
+					</div>
+					<div class="gallery-footer-bottom">
+						<span>ترخيص رقم: 747395253 | رقم السجل: 1010477798</span
+						><span><a href="general-privacy.html" style="color:inherit;text-decoration:underline">سياسة الخصوصية</a> | <a href="terms.html" style="color:inherit;text-decoration:underline">الشروط والأحكام</a> | جميع الحقوق محفوظة © 2026 معهد خبراء الجودة للتدريب</span>
+					</div>
+				</footer>
+			</section>
+		</main>
+
+		<!-- MODALS -->
+
+		<!-- Multi-Step Registration Modal -->
+		<div class="modal-overlay" id="modal-registration">
+			<div class="modal-box" style="max-width: 720px">
+				<button class="modal-close-btn" onclick="QEI.closeModal('modal-registration')">✕</button>
+
+				<div style="text-align: center; margin-bottom: 2rem">
+					<span class="eyebrow">تسجيل جديد</span>
+					<h2 style="font-size: 1.75rem; font-weight: 900; color: var(--slate-900)">
+						استمارة الالتحاق بالبرنامج التدريبي
+					</h2>
+				</div>
+
+				<!-- Stepper Header -->
+				<div class="wizard-stepper">
+					<div class="wizard-step-item active" id="wizStepItem-1">
+						<div class="wizard-step-badge">1</div>
+						<span class="wizard-step-title">البيانات الشخصية</span>
+					</div>
+					<div class="wizard-step-item" id="wizStepItem-2">
+						<div class="wizard-step-badge">2</div>
+						<span class="wizard-step-title">التعليم والعمل</span>
+					</div>
+					<div class="wizard-step-item" id="wizStepItem-3">
+						<div class="wizard-step-badge">3</div>
+						<span class="wizard-step-title">اختيار الدفعة</span>
+					</div>
+					<div class="wizard-step-item" id="wizStepItem-4">
+						<div class="wizard-step-badge">4</div>
+						<span class="wizard-step-title">مراجعة وإرسال</span>
+					</div>
+				</div>
+
+				<!-- Step 1 Content -->
+				<div id="wizContentStep-1">
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem">
+						<div>
+							<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+								>رقم الهوية / الإقامة *</label
+							>
+							<input inputmode="numeric" type="text" class="input-field" placeholder="10 أرقام" value="" />
+						</div>
+						<div>
+							<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+								>الاسم الكامل *</label
+							>
+							<input inputmode="numeric" type="text" class="input-field" placeholder="ادخل الاسم الرباعي" value="" />
+						</div>
+					</div>
+
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem">
+						<div>
+							<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+								>البريد الإلكتروني *</label
+							>
+							<input autocomplete="email" dir="ltr" type="email" class="input-field" placeholder="name@domain.com" value="" />
+						</div>
+						<div>
+							<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+								>رقم الجوال *</label
+							>
+							<input autocomplete="tel" dir="ltr" type="tel" class="input-field" placeholder="05xxxxxxxx" value="" />
+						</div>
+					</div>
+
+					<div style="text-align: left; margin-top: 2rem">
+						<button class="btn btn-primary" onclick="QEI.setWizardStep(2)">الخطوة التالية ←</button>
+					</div>
+				</div>
+
+				<!-- Step 2 Content -->
+				<div id="wizContentStep-2" style="display: none">
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem">
+						<div>
+							<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+								>المؤهل العلمي</label
+							>
+							<select class="input-field">
+								<option selected>بكالوريوس</option>
+								<option>ماجستير</option>
+								<option>دبلوم</option>
+							</select>
+						</div>
+						<div>
+							<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+								>جهة العمل</label
+							>
+							<input type="text" class="input-field" value="شركة رؤية الرقمية" />
+						</div>
+					</div>
+
+					<div style="margin-bottom: 1rem">
+						<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+							>المسمى الوظيفي</label
+						>
+						<input type="text" class="input-field" value="محلل بيانات أول" />
+					</div>
+
+					<div style="display: flex; justify-content: space-between; margin-top: 2rem">
+						<button class="btn btn-outline" onclick="QEI.setWizardStep(1)">→ السابق</button>
+						<button class="btn btn-primary" onclick="QEI.setWizardStep(3)">الخطوة التالية ←</button>
+					</div>
+				</div>
+
+				<!-- Step 3 Content -->
+				<div id="wizContentStep-3" style="display: none">
+					<div style="margin-bottom: 1.5rem">
+						<label style="display: block; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.5rem"
+							>اختر الدفعة المناسبة لك</label
+						>
+						<div
+							style="
+								border: 2px solid var(--primary-blue);
+								background: var(--primary-50);
+								border-radius: var(--radius-md);
+								padding: 1rem;
+								margin-bottom: 0.75rem;
+							"
+						>
+							<div style="font-weight: 800; color: var(--primary-blue)">الدفعة الأولى (حضوري - الرياض)</div>
+							<div style="font-size: 0.85rem; color: var(--slate-600)">الموعد يظهر تلقائيًا من قاعدة البيانات بعد اختيار البرنامج</div>
+						</div>
+					</div>
+
+					<div style="display: flex; justify-content: space-between; margin-top: 2rem">
+						<button class="btn btn-outline" onclick="QEI.setWizardStep(2)">→ السابق</button>
+						<button class="btn btn-primary" onclick="QEI.setWizardStep(4)">الخطوة التالية (المراجعة) ←</button>
+					</div>
+				</div>
+
+				<!-- Step 4 Content -->
+				<div id="wizContentStep-4" style="display: none">
+					<h3
+						style="
+							font-size: 1.35rem;
+							font-weight: 800;
+							color: var(--slate-900);
+							text-align: center;
+							margin-bottom: 0.5rem;
+						"
+					>
+						راجع بياناتك قبل الإرسال
+					</h3>
+					<p style="color: var(--slate-600); text-align: center; font-size: 0.9rem; margin-bottom: 1.5rem">
+						تأكد من صحة المعلومات التالية ثم أرسل طلب التسجيل.
+					</p>
+
+					<div
+						style="
+							background: var(--slate-50);
+							border: 1px solid var(--slate-200);
+							border-radius: var(--radius-md);
+							padding: 1.25rem;
+							margin-bottom: 1rem;
+						"
+					>
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem">
+							<strong style="color: var(--primary-blue)">👤 البيانات الشخصية</strong>
+							<button class="btn btn-outline btn-sm" onclick="QEI.setWizardStep(1)">تعديل ✏️</button>
+						</div>
+						<div style="font-size: 0.85rem; color: var(--slate-700); line-height: 1.6">
+							الاسم: — | الهوية: —<br />
+							البريد: mohammad@example.com | الجوال: 0501234567
+						</div>
+					</div>
+
+					<div style="display: flex; justify-content: space-between; margin-top: 1.5rem">
+						<button class="btn btn-outline" onclick="QEI.setWizardStep(3)">→ السابق</button>
+						<button class="btn btn-primary btn-lg" onclick="QEI.submitRegistration()">إرسال طلب التسجيل 🚀</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Login Modal -->
+		<div class="modal-overlay" id="modal-login">
+			<div class="modal-box">
+				<button class="modal-close-btn" onclick="QEI.closeModal('modal-login')">✕</button>
+				<div style="text-align: center; margin-bottom: 2rem">
+					<span class="eyebrow">منصة المستفيدين</span>
+					<h2 style="font-size: 1.75rem; font-weight: 900; color: var(--slate-900)">تسجيل الدخول</h2>
+				</div>
+
+				<form
+					onsubmit="
+						event.preventDefault()
+						QEI.showToast('تم تسجيل الدخول بنجاح!')
+						QEI.closeModal('modal-login')
+					"
+				>
+					<div style="margin-bottom: 1.25rem">
+						<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+							>البريد الإلكتروني أو الهوية</label
+						>
+						<input type="text" required class="input-field" placeholder="ادخل بريدك الإلكتروني" />
+					</div>
+					<div style="margin-bottom: 1.5rem">
+						<label style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.35rem"
+							>كلمة المرور</label
+						>
+						<input autocomplete="current-password" dir="ltr" type="password" required class="input-field" placeholder="••••••••" />
+					</div>
+					<button type="submit" class="btn btn-primary btn-lg" style="width: 100%">دخول للمنصة</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Footer Component -->
+
+		<script src="../assets/js/app.js"></script>
+		<script src="../assets/js/i18n-dict.js"></script>
+	<script src="../assets/js/ui-runtime.js"></script>
+	</body>
+</html>
