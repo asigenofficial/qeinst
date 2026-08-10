@@ -534,10 +534,11 @@ button[disabled] {
 		content: "";
 		position: fixed;
 		inset: 0;
-		background: rgba(5, 14, 28, 0.5);
-		backdrop-filter: none !important;
-		-webkit-backdrop-filter: none !important;
+		background: rgba(5, 14, 28, 0.4);
+		backdrop-filter: blur(8px) !important;
+		-webkit-backdrop-filter: blur(8px) !important;
 		z-index: 90;
+		transition: all 0.3s ease;
 	}
 
 	nav.main-nav {
@@ -546,24 +547,26 @@ button[disabled] {
 		bottom: 0 !important;
 		right: -360px !important;
 		left: auto !important;
-		width: 310px !important;
+		width: 320px !important;
 		max-width: 85vw !important;
 		height: 100vh !important;
 		height: 100dvh !important;
 		max-height: 100vh !important;
 		max-height: 100dvh !important;
-		background: linear-gradient(180deg, #091a34 0%, #051327 100%) !important;
-		box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6) !important;
+		background: linear-gradient(135deg, rgba(9, 26, 52, 0.95) 0%, rgba(5, 19, 39, 0.98) 100%) !important;
+		backdrop-filter: blur(20px) !important;
+		-webkit-backdrop-filter: blur(20px) !important;
+		box-shadow: -15px 0 40px rgba(0, 0, 0, 0.5), inset 1px 0 0 rgba(255, 255, 255, 0.1) !important;
 		z-index: 9999 !important;
 		display: flex !important;
 		flex-direction: column !important;
 		padding: 0 !important;
 		margin: 0 !important;
 		overflow: hidden !important;
-		transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+		transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease !important;
 		direction: rtl !important;
-		border-radius: 20px 0 0 20px !important;
-		border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+		border-radius: 24px 0 0 24px !important;
+		border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
 		box-sizing: border-box !important;
 	}
 
@@ -598,22 +601,17 @@ button[disabled] {
 	}
 
 	.qei-drawer-body {
-		flex: 1 1 auto !important;
+		flex: 1 1 0% !important;
 		min-height: 0 !important;
-		height: auto !important;
+		height: 100% !important;
 		overflow-y: auto !important;
 		overflow-x: hidden !important;
 		-webkit-overflow-scrolling: touch !important;
-		touch-action: pan-y !important;
 		padding: 16px 20px 24px 20px !important;
 		scrollbar-width: thin !important;
 		scrollbar-color: rgba(0, 201, 167, 0.7) rgba(255, 255, 255, 0.08) !important;
 		box-sizing: border-box !important;
 		display: block !important;
-		direction: ltr !important;
-	}
-
-	.qei-drawer-body>* {
 		direction: rtl !important;
 	}
 
@@ -698,6 +696,8 @@ button[disabled] {
 		flex-direction: column;
 		gap: 8px;
 		margin-bottom: 24px;
+		width: 100% !important;
+		box-sizing: border-box !important;
 	}
 
 	.qei-drawer-item {
@@ -715,6 +715,9 @@ button[disabled] {
 		border: 1px solid rgba(255, 255, 255, 0.1) !important;
 		cursor: pointer !important;
 		pointer-events: auto !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		box-sizing: border-box !important;
 	}
 
 	.qei-drawer-item:hover,
@@ -800,7 +803,7 @@ button[disabled] {
 		gap: 4px !important;
 	}
 
-	.qei-drawer-contact-item {
+	nav.main-nav a.qei-drawer-contact-item {
 		display: flex !important;
 		align-items: center !important;
 		gap: 8px !important;
@@ -813,6 +816,8 @@ button[disabled] {
 		padding: 2px 0 !important;
 		min-height: 0 !important;
 		height: auto !important;
+		background: transparent !important;
+		border-radius: 0 !important;
 	}
 
 	.qei-drawer-contact-item span,
@@ -856,10 +861,10 @@ button[disabled] {
 		padding: 0 !important;
 	}
 
-	.qei-drawer-social-link {
+	nav.main-nav a.qei-drawer-social-link {
 		width: 36px !important;
 		height: 36px !important;
-		border-radius: 8px !important;
+		border-radius: 18px !important;
 		border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
 		background: rgba(255, 255, 255, 0.1) !important;
 		display: flex !important;
@@ -1068,7 +1073,6 @@ button.primary:hover,
    ========================================================================== */
 .articles-filters button,
 .faq-categories button,
-.clients-filters button,
 .gallery-categories button,
 .gallery-filters button,
 .gallery-filter button,
@@ -1078,7 +1082,7 @@ button.primary:hover,
 .pl-toolbar>div>button,
 [class*="-categories"] button,
 [class*="-filter"] button,
-[class*="-filters"] button,
+[class*="-filters"]:not(.clients-filters) button,
 [class*="-tabs"] button {
 	background: #ffffff !important;
 	color: #334155 !important;
@@ -1091,7 +1095,6 @@ button.primary:hover,
 .articles-filters button svg,
 .articles-filters button .filter-icon,
 .faq-categories button svg,
-.clients-filters button svg,
 .gallery-filters button svg,
 .filter-btn svg,
 .tab-btn svg {
@@ -1102,7 +1105,6 @@ button.primary:hover,
 
 .articles-filters button:hover,
 .faq-categories button:hover,
-.clients-filters button:hover,
 .gallery-categories button:hover,
 .gallery-filters button:hover,
 .gallery-filter button:hover,
@@ -1112,7 +1114,7 @@ button.primary:hover,
 .pl-toolbar>div>button:hover,
 [class*="-categories"] button:hover,
 [class*="-filter"] button:hover,
-[class*="-filters"] button:hover {
+[class*="-filters"]:not(.clients-filters) button:hover {
 	background: #f8fafc !important;
 	border-color: #cbd5e1 !important;
 	color: #0c3866 !important;
@@ -1120,7 +1122,6 @@ button.primary:hover,
 
 .articles-filters button.active,
 .faq-categories button.active,
-.clients-filters button.active,
 .gallery-categories button.active,
 .gallery-filters button.active,
 .gallery-filter button.active,
@@ -1130,7 +1131,7 @@ button.primary:hover,
 .pl-toolbar>div>button.active,
 [class*="-categories"] button.active,
 [class*="-filter"] button.active,
-[class*="-filters"] button.active {
+[class*="-filters"]:not(.clients-filters) button.active {
 	background: #0c3866 !important;
 	color: #ffffff !important;
 	border: none !important;
@@ -1140,7 +1141,6 @@ button.primary:hover,
 .articles-filters button.active svg,
 .articles-filters button.active .filter-icon,
 .faq-categories button.active svg,
-.clients-filters button.active svg,
 .gallery-filters button.active svg,
 .filter-btn.active svg,
 .tab-btn.active svg {

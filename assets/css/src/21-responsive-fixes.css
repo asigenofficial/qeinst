@@ -15,6 +15,59 @@
 	--font-family: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
 }
 
+*, *::before, *::after {
+	box-sizing: border-box !important;
+}
+
+html, body {
+	max-width: 100vw;
+	overflow-x: hidden !important;
+	width: 100%;
+	scroll-behavior: smooth;
+}
+
+/* Premium Typography for Mobile */
+@media (max-width: 768px) {
+	html {
+		font-size: 15px; /* Base size reduction for mobile */
+	}
+	h1, .h1 { font-size: clamp(1.75rem, 5vw, 2.5rem) !important; line-height: 1.3 !important; }
+	h2, .h2 { font-size: clamp(1.5rem, 4vw, 2rem) !important; line-height: 1.4 !important; }
+	h3, .h3 { font-size: clamp(1.25rem, 3.5vw, 1.75rem) !important; }
+	
+	/* Increase spacing between sections to let design breathe */
+	section {
+		padding-top: 3rem !important;
+		padding-bottom: 3rem !important;
+	}
+
+	/* Enforce touch targets for all interactive elements */
+	a, button, input[type="submit"] {
+		min-height: 44px;
+	}
+
+	/* Premium Card Aesthetics on Mobile */
+	.card, .program-item, .news-item, .gallery-item, .trainer-card, .article-card, .solution-card {
+		border-radius: 16px !important;
+		box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+		border: 1px solid rgba(226, 232, 240, 0.6) !important;
+		background: #ffffff;
+		transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+		overflow: hidden;
+	}
+
+	.card:active, .program-item:active, .news-item:active, .gallery-item:active {
+		transform: scale(0.98) !important;
+		box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+	}
+
+	/* Force all common grid wrappers to single column on mobile to prevent overflow */
+	.grid, [class*="-grid"], [class*="list"] {
+		grid-template-columns: 1fr !important;
+		gap: 1.5rem !important;
+	}
+}
+
 *, body, html, button, input, select, textarea, h1, h2, h3, h4, h5, h6, table, td, th {
 	font-family: var(--font-family) !important;
 }

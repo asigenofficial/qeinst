@@ -8,6 +8,10 @@ const QEI_API_BASE = window.QEI_API_URL || (function() {
 		if (!host || host === 'localhost' || host === '127.0.0.1') {
 			return 'http://127.0.0.1:8000/api/v1';
 		}
+		// If running on local network (e.g., 192.168.x.x), point to the backend port 8000
+		if (host.startsWith('192.168.') || host.startsWith('10.') || host.startsWith('172.')) {
+			return `http://${host}:8000/api/v1`;
+		}
 		// Live / Production Server fallback
 		return window.location.origin + '/api/v1';
 	}
