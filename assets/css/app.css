@@ -16187,10 +16187,6 @@ body[data-page="beneficiary-satisfaction"] > .site-footer {
 
 /* --------------------------------------------------------------------------
    1. Font fallbacks
-   The Tajawal webfont is pulled from Google Fonts. When that request is
-   blocked, offline, or slow, the old stack fell back to Latin-only faces and
-   Arabic text was rendered by an arbitrary system font. Keep a real Arabic
-   fallback chain instead.
    -------------------------------------------------------------------------- */
 :root {
 	--font-family: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
@@ -16207,27 +16203,26 @@ html, body {
 	scroll-behavior: smooth;
 }
 
-/* Premium Typography for Mobile */
+/* --------------------------------------------------------------------------
+   2. Global mobile typography & spacing
+   -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
 	html {
-		font-size: 15px; /* Base size reduction for mobile */
+		font-size: 15px;
 	}
-	h1, .h1 { font-size: clamp(1.75rem, 5vw, 2.5rem) !important; line-height: 1.3 !important; }
-	h2, .h2 { font-size: clamp(1.5rem, 4vw, 2rem) !important; line-height: 1.4 !important; }
-	h3, .h3 { font-size: clamp(1.25rem, 3.5vw, 1.75rem) !important; }
-	
-	/* Increase spacing between sections to let design breathe */
+	h1, .h1 { font-size: clamp(1.6rem, 5.5vw, 2.5rem) !important; line-height: 1.3 !important; }
+	h2, .h2 { font-size: clamp(1.3rem, 4.5vw, 2rem) !important; line-height: 1.4 !important; }
+	h3, .h3 { font-size: clamp(1.1rem, 3.5vw, 1.75rem) !important; }
+
 	section {
-		padding-top: 3rem !important;
-		padding-bottom: 3rem !important;
+		padding-top: 2.5rem !important;
+		padding-bottom: 2.5rem !important;
 	}
 
-	/* Enforce touch targets for all interactive elements */
 	a, button, input[type="submit"] {
 		min-height: 44px;
 	}
 
-	/* Premium Card Aesthetics on Mobile */
 	.card, .program-item, .news-item, .gallery-item, .trainer-card, .article-card, .solution-card {
 		border-radius: 16px !important;
 		box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
@@ -16241,12 +16236,6 @@ html, body {
 		transform: scale(0.98) !important;
 		box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
 	}
-
-	/* Force all common grid wrappers to single column on mobile to prevent overflow */
-	.grid, [class*="-grid"], [class*="list"] {
-		grid-template-columns: 1fr !important;
-		gap: 1.5rem !important;
-	}
 }
 
 *, body, html, button, input, select, textarea, h1, h2, h3, h4, h5, h6, table, td, th {
@@ -16254,9 +16243,139 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   2. Footer brand overflowed the viewport by ~61px at 390px wide
-   .footer-brand is an inline-flex row with a 48px logo plus a 25px title and a
-   wide letter-spaced subtitle, none of which were allowed to shrink or wrap.
+   3. Hero section — mobile layout fix
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+	.hero-wrapper {
+		min-height: 380px !important;
+		border-radius: 12px !important;
+		margin-top: 0.75rem !important;
+		margin-bottom: 1rem !important;
+	}
+
+	.hero-content {
+		padding: 2rem 1.25rem !important;
+		max-width: 100% !important;
+	}
+
+	.hero-content h1 {
+		font-size: clamp(1.6rem, 6vw, 2.4rem) !important;
+		line-height: 1.3 !important;
+		margin-bottom: 0.75rem !important;
+	}
+
+	.hero-content p {
+		font-size: 1rem !important;
+		margin-bottom: 1.25rem !important;
+	}
+
+	.hero-actions {
+		flex-direction: column !important;
+		gap: 0.65rem !important;
+	}
+
+	.hero-actions .btn {
+		width: 100% !important;
+		justify-content: center !important;
+		padding: 0.75rem 1.25rem !important;
+		font-size: 0.95rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   4. Home search bar — fix grid overflow on mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+	.home-search form {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.home-search form > button {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (max-width: 560px) {
+	.home-search form {
+		grid-template-columns: 1fr;
+	}
+
+	.home-search input,
+	.home-search select,
+	.home-search button {
+		width: 100%;
+		min-width: 0;
+		height: 46px;
+	}
+}
+
+/* home-search container */
+@media (max-width: 768px) {
+	.home-search {
+		padding: 1.25rem 1rem !important;
+		margin-top: 0 !important;
+	}
+	
+	.home-search h2 {
+		font-size: 1.1rem !important;
+		margin-bottom: 1rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   5. Program grid — prevent overflow from 310px minmax on small screens
+   -------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+	.program-grid {
+		grid-template-columns: 1fr !important;
+		gap: 1.25rem !important;
+	}
+}
+
+@media (min-width: 500px) and (max-width: 700px) {
+	.program-grid {
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   6. Solutions grid — mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+	.solutions-grid {
+		grid-template-columns: 1fr !important;
+		gap: 1rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   7. Methodology steps grid — fix 2 columns on very small screens
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+	.method-timeline {
+		grid-template-columns: repeat(3, 1fr) !important;
+	}
+}
+
+@media (max-width: 640px) {
+	.method-timeline {
+		grid-template-columns: repeat(2, 1fr) !important;
+		gap: 0.75rem !important;
+	}
+}
+
+@media (max-width: 420px) {
+	.method-timeline {
+		grid-template-columns: 1fr !important;
+	}
+
+	.method-step {
+		padding: 1.25rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   8. Footer footer-grid — responsive stacking
    -------------------------------------------------------------------------- */
 @media (max-width: 560px) {
 	.footer-brand {
@@ -16283,10 +16402,7 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   3. Gallery details: grid items were missing `min-width: 0`
-   The thumbnail strip is a flex row of fixed 96px images, so its min-content
-   width (~700px) forced the `1fr` column — and therefore the sidebar and the
-   main image — far past the right edge of small viewports.
+   9. Gallery & viewer
    -------------------------------------------------------------------------- */
 .gallery-feature,
 .gallery-viewer,
@@ -16294,7 +16410,7 @@ html, body {
 	min-width: 0;
 }
 
-.gallery-viewer>* {
+.gallery-viewer > * {
 	max-width: 100%;
 }
 
@@ -16311,23 +16427,20 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   4. Dark footer: fixed-width grid cells could not hold real Arabic text
-   `.gallery-footer-grid > section` had no `min-width: 0`, and the contact /
-   social lines are joined with non-breaking spaces, so their min-content width
-   pushed the grid ~160px past the right edge on phones.
+   10. Dark footer overflow fix on mobile
    -------------------------------------------------------------------------- */
 @media (max-width: 900px) {
 
 	.gallery-footer-grid,
-	.gallery-footer-grid>section {
+	.gallery-footer-grid > section {
 		min-width: 0;
 	}
 
-	.gallery-footer-grid>section {
+	.gallery-footer-grid > section {
 		padding-inline: 0;
 	}
 
-	.gallery-footer-grid>section>*,
+	.gallery-footer-grid > section > *,
 	.gallery-footer-bottom span {
 		min-width: 0;
 		max-width: 100%;
@@ -16340,8 +16453,7 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   5. Generic guards: never let a stray media element or fixed-width form
-   control create a horizontal scrollbar on a narrow screen.
+   11. Generic image/video guards
    -------------------------------------------------------------------------- */
 img,
 video {
@@ -16349,7 +16461,6 @@ video {
 }
 
 @media (max-width: 560px) {
-
 	input,
 	textarea,
 	select {
@@ -16358,64 +16469,7 @@ video {
 }
 
 /* --------------------------------------------------------------------------
-   6. Home quick-search bar had no responsive rules at all
-   `.home-search form` is a rigid `repeat(4, 1fr) 74px` grid, so its five
-   controls forced the homepage 100px wider than a phone viewport.
-   -------------------------------------------------------------------------- */
-@media (max-width: 900px) {
-	.home-search form {
-		grid-template-columns: 1fr 1fr;
-	}
-
-	.home-search form>button {
-		grid-column: 1 / -1;
-	}
-}
-
-@media (max-width: 560px) {
-	.home-search form {
-		grid-template-columns: 1fr;
-	}
-
-	.home-search input,
-	.home-search select,
-	.home-search button {
-		width: 100%;
-		min-width: 0;
-		height: 44px;
-	}
-}
-
-/* --------------------------------------------------------------------------
-   7. Footer logo rendered at its natural size (huge)
-   `.brand-logo` was only ever sized by `.brand .brand-logo` (the header). The
-   footer markup is `.footer-brand > img.brand-logo`, and the footer rules only
-   target a `<svg>` that the markup does not contain, so the image fell back to
-   its intrinsic pixel size and covered the whole footer.
-   -------------------------------------------------------------------------- */
-.footer-brand .brand-logo,
-.g-brand .brand-logo,
-.cf-brand .brand-logo {
-	width: 43px;
-	height: 43px;
-	object-fit: contain;
-	flex: none;
-	display: block;
-}
-
-/* --------------------------------------------------------------------------
-   8. Policy sidebar links overlapped each other
-   `.policy-menu-btn` is written for a `<button>` (`width: 100%`), but the
-   policy pages use inline `<a>` elements, so the links flowed inline and their
-   text ran together instead of stacking.
-   -------------------------------------------------------------------------- */
-a.policy-menu-btn {
-	display: block;
-	text-decoration: none;
-}
-
-/* --------------------------------------------------------------------------
-   9. Programs page: Training Calendar button & Search Input layout
+   12. Programs listing controls
    -------------------------------------------------------------------------- */
 .pl-header-controls {
 	display: flex;
@@ -16505,6 +16559,171 @@ a.policy-menu-btn {
 	.pl-calendar-btn {
 		width: 100%;
 		justify-content: center;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   13. Footer logo size
+   -------------------------------------------------------------------------- */
+.footer-brand .brand-logo,
+.g-brand .brand-logo,
+.cf-brand .brand-logo {
+	width: 43px;
+	height: 43px;
+	object-fit: contain;
+	flex: none;
+	display: block;
+}
+
+/* --------------------------------------------------------------------------
+   14. Policy sidebar links
+   -------------------------------------------------------------------------- */
+a.policy-menu-btn {
+	display: block;
+	text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   15. Mobile drawer overall — contact section spacing fix
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+	/* Fix the registration CTA button in drawer to have proper sizing */
+	.qei-drawer-cta {
+		min-height: 52px !important;
+		font-size: 15px !important;
+		padding: 14px 18px !important;
+	}
+
+	/* Ensure drawer items don't overflow container */
+	.qei-drawer-nav-list {
+		padding: 0 !important;
+		width: 100% !important;
+	}
+
+	.qei-drawer-item {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+
+	/* Fix contact items in drawer */
+	.qei-drawer-footer {
+		padding: 12px 0 8px !important;
+		flex-shrink: 0 !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   16. Container padding on very small screens
+   -------------------------------------------------------------------------- */
+@media (max-width: 400px) {
+	.container {
+		padding-left: 0.85rem !important;
+		padding-right: 0.85rem !important;
+	}
+
+	.hero-content {
+		padding: 1.5rem 1rem !important;
+	}
+
+	.hero-content h1 {
+		font-size: 1.5rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   17. Section head on mobile — prevent text overflow
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+	.section-head h2 {
+		font-size: 1.5rem !important;
+		line-height: 1.35 !important;
+	}
+
+	.section-head p {
+		font-size: 0.95rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   18. Success story & impact cards
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+	.success-grid,
+	.impact-grid,
+	.clients-grid,
+	.team-grid {
+		grid-template-columns: 1fr !important;
+		gap: 1rem !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   19. About page grid fixes on mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+	.section-about > div[style*="grid-template-columns: 1fr 1fr"] {
+		grid-template-columns: 1fr !important;
+		gap: 2rem !important;
+	}
+
+	.section-about > div[style*="grid-template-columns: repeat(4, 1fr)"] {
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+
+	.section-about div[style*="justify-content: space-between"] {
+		flex-direction: column !important;
+		text-align: center !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.section-about > div[style*="grid-template-columns: repeat(4, 1fr)"] {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   20. Article details grid fix
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+	.section-article-details > div[style*="grid-template-columns: 1fr 310px"] {
+		grid-template-columns: 1fr !important;
+		gap: 2rem !important;
+	}
+
+	.section-article-details div[style*="grid-template-columns: repeat(3, 1fr)"] {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   21. 404 page responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+	.hero-404-grid {
+		grid-template-columns: 1fr !important;
+		text-align: center;
+	}
+
+	.hero-404-grid p {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.hero-404-grid > div:last-child {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.help-cards-grid {
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+}
+
+@media (max-width: 576px) {
+	.help-cards-grid {
+		grid-template-columns: 1fr !important;
 	}
 }
 
