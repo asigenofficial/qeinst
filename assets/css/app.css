@@ -1932,22 +1932,21 @@ nav.main-nav a.active::after {
 	color: #b1b5bc;
 }
 
-.about-hero,
-.about-story {
-	display: grid;
-	grid-template-columns: 44% 56%;
-	direction: ltr;
-	align-items: center;
-}
-
 .about-hero {
-	grid-template-columns: 1fr;
-	min-height: auto;
-	margin-bottom: 60px;
+	display: block;
+	direction: rtl;
 }
 
 .about-hero-image {
-	display: none;
+	display: none !important;
+}
+
+.about-hero-image img,
+.about-story-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
 }
 
 .about-hero-copy {
@@ -1995,7 +1994,7 @@ nav.main-nav a.active::after {
 }
 
 .about-story {
-	grid-template-columns: 1fr;
+	display: block;
 	margin-bottom: 65px;
 }
 
@@ -2037,7 +2036,7 @@ nav.main-nav a.active::after {
 
 .about-story-copy {
 	direction: rtl;
-	padding-right: 45px;
+	padding-right: 0;
 	text-align: right;
 }
 

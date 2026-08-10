@@ -134,14 +134,12 @@
 }
 
 .about-hero {
-	display: grid;
-	grid-template-columns: 1fr;
-	direction: ltr;
-	align-items: center;
+	display: block;
+	direction: rtl;
 }
 
 .about-hero-image {
-	display: none;
+	display: none !important;
 }
 
 .about-hero-image img,
@@ -154,7 +152,7 @@
 
 .about-hero-copy {
 	direction: rtl;
-	padding-left: 50px;
+	padding-left: 0;
 	text-align: right;
 }
 
@@ -197,7 +195,7 @@
 }
 
 .about-story {
-	grid-template-columns: 52% 48%;
+	display: block;
 	margin-bottom: 65px;
 }
 
@@ -239,7 +237,7 @@
 
 .about-story-copy {
 	direction: rtl;
-	padding-right: 45px;
+	padding-right: 0;
 	text-align: right;
 }
 
