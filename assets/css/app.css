@@ -2000,10 +2000,7 @@ nav.main-nav a.active::after {
 }
 
 .about-story-image {
-	height: 265px;
-	border-radius: 14px;
-	overflow: hidden;
-	position: relative;
+	display: none !important;
 }
 
 .about-story-image::after {
