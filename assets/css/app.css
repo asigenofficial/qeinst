@@ -1941,28 +1941,18 @@ nav.main-nav a.active::after {
 }
 
 .about-hero {
-	grid-template-columns: 44% 56%;
-	min-height: 310px;
+	grid-template-columns: 1fr;
+	min-height: auto;
 	margin-bottom: 60px;
 }
 
 .about-hero-image {
-	height: 290px;
-	border-radius: 14px;
-	overflow: hidden;
-}
-
-.about-hero-image img,
-.about-story-image img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	display: block;
+	display: none;
 }
 
 .about-hero-copy {
 	direction: rtl;
-	padding-left: 50px;
+	padding-left: 0;
 	text-align: right;
 }
 
