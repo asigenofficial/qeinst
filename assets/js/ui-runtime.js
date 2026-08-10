@@ -373,7 +373,6 @@
 			"مسمى العمل الحالي": data.currentJob || data.jobTitle,
 			"مستوى اللغة الإنجليزية": data.englishLevel || data.english_level,
 			"البرنامج": data.program_name || data.programName || data.selectedProgram || data.course_name,
-			"تاريخ البداية": data.selectedDate || 'يحدد حسب الموعد المختار',
 			"المكان": data.selectedLocation || data.location || 'معهد خبراء الجودة للتدريب'
 		};
 
@@ -3839,11 +3838,7 @@
 			}
 
 			if (pTags && pTags.length >= 3) {
-				if (saved.selectedDate) {
-					pTags[0].textContent = `▦ تاريخ البرنامج: ${saved.selectedDate}`;
-				} else {
-					pTags[0].textContent = `▦ تاريخ البرنامج: موعد معتمد ومتاح`;
-				}
+				pTags[0].textContent = `▦ حالة الدورة: متاح للتسجيل المباشر`;
 				pTags[1].textContent = `◷ المدة: ${saved.duration_hours || 25} ساعة تدريبية`;
 				pTags[2].textContent = `⌖ الموقع: ${saved.selectedLocation || 'الرياض - مقر المعهد'}`;
 			}
