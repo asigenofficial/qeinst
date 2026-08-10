@@ -135,27 +135,13 @@
 
 .about-hero {
 	display: grid;
-	grid-template-columns: 44% 56%;
-	direction: ltr;
-	align-items: center;
-}
-
-.about-story {
-	display: grid;
 	grid-template-columns: 1fr;
 	direction: ltr;
 	align-items: center;
 }
 
-.about-hero {
-	min-height: 310px;
-	margin-bottom: 60px;
-}
-
 .about-hero-image {
-	height: 290px;
-	border-radius: 14px;
-	overflow: hidden;
+	display: none;
 }
 
 .about-hero-image img,
