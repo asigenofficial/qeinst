@@ -7395,21 +7395,52 @@ body[data-page="home"] > .site-footer {
 	.home-shell {
 		padding: 0;
 	}
+	/* Make hero a flex column so the overlay and copy stack properly */
 	.home-hero {
-		height: 470px;
+		height: auto !important;
+		min-height: 360px;
+		position: relative;
+		display: flex !important;
+		flex-direction: column;
+		justify-content: flex-end;
 	}
+	/* Remove absolute positioning — let copy flow naturally at bottom of hero */
 	.home-hero-copy {
-		right: 22px;
-		left: 22px;
-		top: 100px;
-		width: auto;
+		position: relative !important;
+		right: auto !important;
+		left: auto !important;
+		top: auto !important;
+		width: 100% !important;
+		padding: 1.5rem 1.1rem 1.25rem !important;
+		box-sizing: border-box !important;
 	}
 	.home-hero-copy h1 {
-		font-size: 31px;
+		font-size: 26px !important;
+		line-height: 1.4 !important;
+		margin: 6px 0 !important;
 	}
+	.home-hero-copy p {
+		font-size: 13px !important;
+		line-height: 1.75 !important;
+	}
+	/* Stack CTA buttons vertically */
+	.home-hero-copy > div {
+		flex-direction: column !important;
+		gap: 8px !important;
+		margin-top: 14px !important;
+	}
+	.home-hero-copy a,
+	.home-hero-copy button {
+		width: 100% !important;
+		justify-content: center !important;
+		height: 44px !important;
+		font-size: 14px !important;
+	}
+	/* Search bar — single column */
 	.home-search form {
-		grid-template-columns: 1fr;
+		grid-template-columns: 1fr !important;
 	}
+	/* Program and solution grids */
 	.home-program-grid,
 	.home-solution-grid {
 		grid-template-columns: 1fr;
@@ -7446,6 +7477,7 @@ body[data-page="home"] > .site-footer {
 		height: 120px;
 	}
 }
+
 
 /* Home final vertical-fit refinements */
 
