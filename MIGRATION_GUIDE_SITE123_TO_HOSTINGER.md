@@ -1,6 +1,6 @@
 # 🚀 الدليل التعليمي الشامل خطوة بخطوة: نقل الموقع والإيميلات من SITE123 إلى HOSTINGER
 
-مرحباً بك! هذا الدليل مفصل بدقة وسهولة ليرشدك خطوة بخطوة لنقل دومين المعهد الرسمي (**`qeinst.com`**) وبريدك الإلكتروني وموقعك الجديد بالكامل إلى استضافة **Hostinger**.
+مرحباً بك! هذا الدليل مفصل بدقة وسهولة ليرشدك خطوة بخطوة لنقل دومين المعهد الرسمي (**`https://qeitraining.com`**) وبريدك الإلكتروني وموقعك الجديد بالكامل إلى استضافة **Hostinger**.
 
 ---
 
@@ -9,7 +9,7 @@
 1. **الخطوة الأولى:** استخراج وتجهيز بيانات الإيميلات الحالية من Site123.
 2. **الخطوة الثانية:** إنشاء الإيميلات على Hostinger وبدء الترحيل التلقائي لكافة الرسائل (Email Migration).
 3. **الخطوة الثالثة:** رفع ملفات الموقع الجديد إلى استضافة Hostinger.
-4. **الخطوة الرابعة:** توجيه الدومين `qeinst.com` إلى Hostinger عبر (Nameservers).
+4. **الخطوة الرابعة:** توجيه الدومين `https://qeitraining.com` إلى Hostinger عبر (Nameservers).
 5. **الخطوة الخامسة:** تفعيل شهادة الأمان المجانية (SSL / HTTPS) والتأكد من عمل كل شيء بنسبة 100%.
 
 ---
@@ -19,11 +19,11 @@
 قبل إجراء أي تغيير على الدومين، يجب حفظ كلمات مرور الإيميلات الخمسة الموجودة لديك:
 
 ### الإيميلات الخمسة الحالية في حسابك:
-1. `Ahood.m@qeinst.com`
-2. `Al-Jabali.A@qeinst.com`
-3. `Alsugair.N@qeinst.com`
-4. `almaarek.h@qeinst.com` (حجمه 2.28 GB)
-5. `info@qeinst.com` (حجمه 447.49 MB)
+1. `Ahood.m@https://qeitraining.com`
+2. `Al-Jabali.A@https://qeitraining.com`
+3. `Alsugair.N@https://qeitraining.com`
+4. `almaarek.h@https://qeitraining.com` (حجمه 2.28 GB)
+5. `info@https://qeitraining.com` (حجمه 447.49 MB)
 
 ### طريقة حفظ كلمات المرور:
 1. ادخل على لوحة Site123 في صفحة: **صناديق البريد والطلبات**.
@@ -37,20 +37,20 @@
 ### أ) إنشاء حسابات البريد في Hostinger:
 1. سجّل الدخول إلى لوحة تحكم **Hostinger (hPanel)**: [https://hpanel.hostinger.com](https://hpanel.hostinger.com).
 2. من القائمة العلوية أو الجانبية، اختر **Emails (البريد الإلكتروني)**.
-3. اضغط على الدومين `qeinst.com`، ثم اضغط على **Create Email Account (إنشاء حساب بريد)**.
+3. اضغط على الدومين `https://qeitraining.com`، ثم اضغط على **Create Email Account (إنشاء حساب بريد)**.
 4. أنشئ الحسابات الخمسة بنفس الأسماء تماماً:
-   - `Ahood.m@qeinst.com`
-   - `Al-Jabali.A@qeinst.com`
-   - `Alsugair.N@qeinst.com`
-   - `almaarek.h@qeinst.com`
-   - `info@qeinst.com`
+   - `Ahood.m@https://qeitraining.com`
+   - `Al-Jabali.A@https://qeitraining.com`
+   - `Alsugair.N@https://qeitraining.com`
+   - `almaarek.h@https://qeitraining.com`
+   - `info@https://qeitraining.com`
 5. عيّن كلمة مرور قوية لكل حساب واحفظها لديك.
 
 ### ب) نقل كافة الرسائل السابقة تلقائياً (Email Migration):
 1. داخل صفحة **Emails** في Hostinger، ستجد خياراً اسمه **Email Migration (ترحيل البريد الإلكتروني)** في القائمة الجانبية.
 2. اضغط على **Add New Migration Request (طلب ترحيل جديد)**.
 3. املأ الخانات كالتالي:
-   - **Source Email:** اكتب الإيميل في Site123 (مثلاً: `almaarek.h@qeinst.com`).
+   - **Source Email:** اكتب الإيميل في Site123 (مثلاً: `almaarek.h@https://qeitraining.com`).
    - **Source Password:** كلمة المرور الخاصة به في Site123 (التي استخرجتها بالخطوة الأولى).
    - **IMAP Server:** اكتب `mail.site123.com` (أو `imap.site123.com`).
    - **Port:** `993` (SSL).
@@ -70,7 +70,7 @@
    - اضغط كليك يمين ← **Send to (إرسال إلى)** ← **Compressed (zipped) folder** وسمّه مثلاً `qeinst-site.zip`.
 
 2. **الرفع عبر مدير الملفات في Hostinger:**
-   - من لوحة Hostinger (hPanel)، اذهب إلى **Websites (المواقع الإلكترونية)** واضغط على **Manage (إدارة)** بجانب `qeinst.com`.
+   - من لوحة Hostinger (hPanel)، اذهب إلى **Websites (المواقع الإلكترونية)** واضغط على **Manage (إدارة)** بجانب `https://qeitraining.com`.
    - اضغط على **File Manager (مدير الملفات)**.
    - ادخل إلى مجلد: `public_html`.
    - اضغط على أيقونة **Upload (رفع)** في الأعلى، واختر ملف `qeinst-site.zip`.
@@ -82,7 +82,7 @@
 
 ---
 
-## 4️⃣ الخطوة الرابعة: توجيه الدومين `qeinst.com` إلى Hostinger
+## 4️⃣ الخطوة الرابعة: توجيه الدومين `https://qeitraining.com` إلى Hostinger
 
 لكي يبدأ الزوار بالدخول على موقعك الجديد وإرسال الإيميلات إلى Hostinger:
 
@@ -101,7 +101,7 @@
 ## 5️⃣ الخطوة الخامسة: تفعيل شهادة الأمان (SSL / HTTPS)
 
 1. في لوحة تحكم Hostinger (hPanel)، اذهب إلى قسم **Security (الأمان)** ← **SSL**.
-2. اضغط على **Install SSL (تثبيت شهادة SSL مجانية مدى الحياة)** لدومين `qeinst.com` و `www.qeinst.com`.
+2. اضغط على **Install SSL (تثبيت شهادة SSL مجانية مدى الحياة)** لدومين `https://qeitraining.com` و `www.https://qeitraining.com`.
 3. اضغط على **Enforce HTTPS (فرض التصفح الآمن)**.
 
 ---
@@ -110,12 +110,12 @@
 
 بمجرد اكتمال الخطوات السابقة:
 1. **الموقع الإلكتروني:**
-   - افتح المتصفح وادخل على: `https://qeinst.com`.
-   - تأكد من تصفح كافة البرامج والدخول لصفحة التسجيل: `https://qeinst.com/registration/registration-personal.html`.
+   - افتح المتصفح وادخل على: `https://https://qeitraining.com`.
+   - تأكد من تصفح كافة البرامج والدخول لصفحة التسجيل: `https://https://qeitraining.com/registration/registration-personal.html`.
    - قم بإجراء تسجيل تجريبي وتأكد من وصوله لصفحة النجاح.
 2. **البريد الإلكتروني:**
    - ادخل إلى بريدك الجديد عبر الرابط: `https://mail.hostinger.com`.
-   - سجّل الدخول بأي إيميل (مثلاً `info@qeinst.com`) وتأكد من وجود رسائلك السابقة واختبر إرسال واستقبال رسالة جديدة.
+   - سجّل الدخول بأي إيميل (مثلاً `info@https://qeitraining.com`) وتأكد من وجود رسائلك السابقة واختبر إرسال واستقبال رسالة جديدة.
 
 ---
 

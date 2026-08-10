@@ -287,7 +287,7 @@ class RegistrationController extends Controller
             <button class="print-btn" onclick="window.print()">🖨 طباعة الملخص / حفظ PDF</button>
         </div>
         <div class="footer">
-            معهد خبراء الجودة للتدريب — جميع الحقوق محفوظة © 2026 | info@qeinst.com | +966 56 716 7988
+            معهد خبراء الجودة للتدريب — جميع الحقوق محفوظة © 2026 | info@https://qeitraining.com | +966 56 716 7988
         </div>
     </div>
 </body>

@@ -285,7 +285,7 @@ php artisan db:seed
 ### 💻 كيفية تنفيذ الأوامر على سيرفر Hostinger (عبر Terminal):
 
 1. **فتح Terminal في لوحة hPanel:**
-   - ادخل على لوحة **Hostinger (hPanel)** ← **Websites** ← اضغط **Manage** بجانب `qeinst.com`.
+   - ادخل على لوحة **Hostinger (hPanel)** ← **Websites** ← اضغط **Manage** بجانب `https://qeitraining.com`.
    - من القائمة الجانبية اليسرى، اذهب إلى قسم **Advanced (متقدم)** واضغط على **Terminal**.
 2. **الانتقال لمجلد الباك إند:**
    ```bash

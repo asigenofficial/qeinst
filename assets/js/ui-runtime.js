@@ -510,7 +510,7 @@
 			if (!progName) {
 				try {
 					progName = sessionStorage.getItem("qei_selected_program_name") || sessionStorage.getItem("qei_selected_program_title");
-				} catch(e) {}
+				} catch (e) { }
 			}
 			if (progName) {
 				data.program_name = progName;
@@ -543,7 +543,7 @@
 				store.write({ registration_number: finalNum, program_name: progName });
 				try {
 					sessionStorage.setItem("qei_selected_program_name", progName || '');
-				} catch(e) {}
+				} catch (e) { }
 				const destUrl = url(REG.success) + '?registration_number=' + encodeURIComponent(finalNum);
 				location.href = destUrl;
 			};
@@ -670,7 +670,7 @@
 			el.hidden = true
 			grid.parentElement.insertBefore(el, grid.nextSibling)
 		}
-		
+
 		const pagination = grid.parentElement.querySelector(".pl-pagination");
 		if (pagination) {
 			if (!el.hidden) {
@@ -679,7 +679,7 @@
 				pagination.style.removeProperty("display");
 			}
 		}
-		
+
 		return el
 	}
 
@@ -1398,7 +1398,7 @@
 				["حلول المؤسسات", url("solutions/solutions.html")],
 				["المديرون", url("about/about.html#management")],
 				["عن المعهد", url("about/about.html")],
-								["معرض الصور", url("gallery/gallery.html")],
+				["معرض الصور", url("gallery/gallery.html")],
 				["تواصل معنا", url("support/contact.html")],
 			]
 			for (const [text, absHref] of pairs) {
@@ -1529,11 +1529,11 @@
 				</span>
 				<span class="ltr-num">+966 9200 23456</span>
 			</a>
-			<a href="mailto:info@qeinst.com" class="qei-drawer-contact-item">
+			<a href="mailto:info@https://qeitraining.com" class="qei-drawer-contact-item">
 				<span class="qei-drawer-contact-icon">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
 				</span>
-				<span>info@qeinst.com</span>
+				<span>info@https://qeitraining.com</span>
 			</a>
 			<div class="qei-drawer-social">
 				<a href="https://www.youtube.com/@qeinst" target="_blank" class="qei-drawer-social-link" aria-label="YouTube">
@@ -1891,7 +1891,7 @@
 			cb.dataset.qeiWired = "1"
 			cb.addEventListener("change", apply)
 		}
-		
+
 		const searchInput = $('input[type="search"]', document);
 		if (searchInput && !searchInput.dataset.qeiWired) {
 			searchInput.dataset.qeiWired = "1";
@@ -2151,7 +2151,7 @@
 					"#programs": "programs/programs.html",
 					"#solutions": "solutions/solutions.html",
 					"#about": "about/about.html",
-										"#policies": "policies/policies.html",
+					"#policies": "policies/policies.html",
 					"#contact": "support/contact.html",
 					"#certificates": "about/clients.html",
 					"#clients": "about/clients.html",
@@ -2985,20 +2985,20 @@
 		const nextBtn = $("#calendarNextBtn");
 
 		const pad = n => String(n).padStart(2, '0');
-		const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+		const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 		const parseDate = value => {
 			if (!value) return null;
 			const clean = String(value).split('T')[0];
 			const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(clean);
 			if (!m) return null;
-			return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]), 12, 0, 0, 0);
+			return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12, 0, 0, 0);
 		};
-		const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
-		const sameDay = (a,b) => a && b && dateKey(a) === dateKey(b);
+		const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+		const sameDay = (a, b) => a && b && dateKey(a) === dateKey(b);
 		const esc = v => escapeHtml(String(v == null ? '' : v));
-		const monthFmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { month:'long', year:'numeric' });
-		const fullDateFmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-		const shortDateFmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day:'numeric', month:'short', year:'numeric' });
+		const monthFmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { month: 'long', year: 'numeric' });
+		const fullDateFmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+		const shortDateFmt = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'short', year: 'numeric' });
 
 		const state = {
 			cursor: new Date(),
@@ -3018,7 +3018,7 @@
 					if (idx >= 0) value = u.pathname.slice(idx + 1);
 					else return value;
 				}
-			} catch (_) {}
+			} catch (_) { }
 			value = value.replace(/^\/+/, '');
 			return value.startsWith('assets/') ? '../' + value : (value.startsWith('../') ? value : '../' + value);
 		}
@@ -3026,9 +3026,9 @@
 		function statusMeta(s) {
 			const seats = Number(s.available_seats);
 			const raw = norm(s.status || '');
-			if (raw.includes('مكتمل') || seats === 0) return { cls:'full', text:'مكتمل' };
-			if (raw.includes('محدود') || (Number.isFinite(seats) && seats > 0 && seats <= 5)) return { cls:'limited', text:'مقاعد محدودة' };
-			return { cls:'open', text:'متاح' };
+			if (raw.includes('مكتمل') || seats === 0) return { cls: 'full', text: 'مكتمل' };
+			if (raw.includes('محدود') || (Number.isFinite(seats) && seats > 0 && seats <= 5)) return { cls: 'limited', text: 'مقاعد محدودة' };
+			return { cls: 'open', text: 'متاح' };
 		}
 
 		function normalizedLocation(s) { return String(s.location || '').trim(); }
@@ -3055,7 +3055,7 @@
 		function monthItems() {
 			const y = state.cursor.getFullYear(), m = state.cursor.getMonth();
 			return filteredItems().filter(item => item.date && item.date.getFullYear() === y && item.date.getMonth() === m)
-				.sort((a,b) => a.date - b.date || String(a.program.title).localeCompare(String(b.program.title), 'ar'));
+				.sort((a, b) => a.date - b.date || String(a.program.title).localeCompare(String(b.program.title), 'ar'));
 		}
 
 		function updateTitle() {
@@ -3076,8 +3076,8 @@
 			daysEl.className = 'tc-days tc-month-grid';
 			daysEl.innerHTML = '';
 			const y = state.cursor.getFullYear(), m = state.cursor.getMonth();
-			const first = new Date(y,m,1,12);
-			const offset = (first.getDay()+1)%7; // Saturday first
+			const first = new Date(y, m, 1, 12);
+			const offset = (first.getDay() + 1) % 7; // Saturday first
 			const gridStart = addDays(first, -offset);
 			const byDay = new Map();
 			for (const item of filteredItems()) {
@@ -3086,27 +3086,27 @@
 				byDay.get(key).push(item);
 			}
 			const today = new Date();
-			for (let i=0;i<42;i++) {
-				const d=addDays(gridStart,i), key=dateKey(d), items=byDay.get(key)||[];
-				const cell=document.createElement('div');
-				cell.className='tc-day'+(d.getMonth()!==m?' muted':'')+(sameDay(d,today)?' tc-today':'')+(state.selectedDay===key?' tc-selected-day':'');
-				cell.dataset.date=key;
-				const shown=items.slice(0,2).map(renderEventChip).join('');
-				const more=items.length>2?`<button type="button" class="tc-more-events" data-date="${key}">+${items.length-2} برامج</button>`:'';
-				cell.innerHTML=`<button type="button" class="tc-day-number" data-date="${key}" aria-label="${esc(fullDateFmt.format(d))}">${d.getDate()}</button><div class="tc-day-events">${shown}${more}</div>`;
+			for (let i = 0; i < 42; i++) {
+				const d = addDays(gridStart, i), key = dateKey(d), items = byDay.get(key) || [];
+				const cell = document.createElement('div');
+				cell.className = 'tc-day' + (d.getMonth() !== m ? ' muted' : '') + (sameDay(d, today) ? ' tc-today' : '') + (state.selectedDay === key ? ' tc-selected-day' : '');
+				cell.dataset.date = key;
+				const shown = items.slice(0, 2).map(renderEventChip).join('');
+				const more = items.length > 2 ? `<button type="button" class="tc-more-events" data-date="${key}">+${items.length - 2} برامج</button>` : '';
+				cell.innerHTML = `<button type="button" class="tc-day-number" data-date="${key}" aria-label="${esc(fullDateFmt.format(d))}">${d.getDate()}</button><div class="tc-day-events">${shown}${more}</div>`;
 				daysEl.appendChild(cell);
 			}
 		}
 
 		function renderProgramCard(item) {
-			const p=item.program, s=item.schedule, meta=statusMeta(s);
-			const cleanStart=parseDate(s.start_date), cleanEnd=parseDate(s.end_date);
-			const dateText=cleanStart ? (cleanEnd && !sameDay(cleanStart,cleanEnd) ? `${shortDateFmt.format(cleanStart)} — ${shortDateFmt.format(cleanEnd)}` : fullDateFmt.format(cleanStart)) : 'موعد متاح';
+			const p = item.program, s = item.schedule, meta = statusMeta(s);
+			const cleanStart = parseDate(s.start_date), cleanEnd = parseDate(s.end_date);
+			const dateText = cleanStart ? (cleanEnd && !sameDay(cleanStart, cleanEnd) ? `${shortDateFmt.format(cleanStart)} — ${shortDateFmt.format(cleanEnd)}` : fullDateFmt.format(cleanStart)) : 'موعد متاح';
 			return `<article class="tc-program-card">
-				<a class="tc-program-thumb" href="program-details.html?slug=${encodeURIComponent(p.slug||p.id)}"><img src="${esc(imagePath(p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.jpeg'" /></a>
-				<div class="tc-program-main"><div class="tc-program-title-row"><h3>${esc(p.title)}</h3><span class="tc-status ${meta.cls}">${meta.text}</span></div><p>${esc(p.category?.name||'برنامج تدريبي')}</p></div>
-				<div class="tc-program-meta"><strong>${esc(dateText)}</strong><span>${esc(s.location||'')}</span><span>${esc(s.execution_mode||'')} · ${Number(p.duration_days||0)||''}${p.duration_days?' أيام':''}</span></div>
-				<div class="tc-program-actions"><a class="btn btn-primary" href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}">التسجيل</a><a class="btn btn-outline" href="program-details.html?slug=${encodeURIComponent(p.slug||p.id)}">التفاصيل</a></div>
+				<a class="tc-program-thumb" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}"><img src="${esc(imagePath(p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.jpeg'" /></a>
+				<div class="tc-program-main"><div class="tc-program-title-row"><h3>${esc(p.title)}</h3><span class="tc-status ${meta.cls}">${meta.text}</span></div><p>${esc(p.category?.name || 'برنامج تدريبي')}</p></div>
+				<div class="tc-program-meta"><strong>${esc(dateText)}</strong><span>${esc(s.location || '')}</span><span>${esc(s.execution_mode || '')} · ${Number(p.duration_days || 0) || ''}${p.duration_days ? ' أيام' : ''}</span></div>
+				<div class="tc-program-actions"><a class="btn btn-primary" href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}">التسجيل</a><a class="btn btn-outline" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}">التفاصيل</a></div>
 			</article>`;
 		}
 
@@ -3129,7 +3129,7 @@
 			if (d && (d.getMonth() !== state.cursor.getMonth() || d.getFullYear() !== state.cursor.getFullYear())) state.cursor = new Date(d.getFullYear(), d.getMonth(), 1, 12);
 			renderAll();
 			const target = $("#calendarUpcomingTitle");
-			if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+			if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
 
 		daysEl.addEventListener('click', e => {
@@ -3140,35 +3140,35 @@
 		});
 
 		if (todayBtn) todayBtn.addEventListener('click', () => { state.cursor = new Date(); state.selectedDay = null; renderAll(); });
-		if (prevBtn) prevBtn.addEventListener('click', () => { state.selectedDay = null; state.cursor = new Date(state.cursor.getFullYear(), state.cursor.getMonth()-1, 1, 12); renderAll(); });
-		if (nextBtn) nextBtn.addEventListener('click', () => { state.selectedDay = null; state.cursor = new Date(state.cursor.getFullYear(), state.cursor.getMonth()+1, 1, 12); renderAll(); });
+		if (prevBtn) prevBtn.addEventListener('click', () => { state.selectedDay = null; state.cursor = new Date(state.cursor.getFullYear(), state.cursor.getMonth() - 1, 1, 12); renderAll(); });
+		if (nextBtn) nextBtn.addEventListener('click', () => { state.selectedDay = null; state.cursor = new Date(state.cursor.getFullYear(), state.cursor.getMonth() + 1, 1, 12); renderAll(); });
 		if (clearDayBtn) clearDayBtn.addEventListener('click', () => { state.selectedDay = null; renderAll(); });
-		[catSelect,locSelect,modeSelect].filter(Boolean).forEach(sel => sel.addEventListener('change', () => { state.selectedDay = null; renderAll(); }));
-		if (resetBtn) resetBtn.addEventListener('click', e => { e.preventDefault(); [catSelect,locSelect,modeSelect].filter(Boolean).forEach(s => s.selectedIndex=0); state.selectedDay=null; renderAll(); });
+		[catSelect, locSelect, modeSelect].filter(Boolean).forEach(sel => sel.addEventListener('change', () => { state.selectedDay = null; renderAll(); }));
+		if (resetBtn) resetBtn.addEventListener('click', e => { e.preventDefault();[catSelect, locSelect, modeSelect].filter(Boolean).forEach(s => s.selectedIndex = 0); state.selectedDay = null; renderAll(); });
 
 		// Draw a complete monthly calendar immediately, even before API data arrives.
 		renderMonth();
 		showSkeleton(listEl);
 		ensureAPI(() => {
-			Promise.all([window.QEIAPI.getPrograms(), window.QEIAPI.getCategories().catch(()=>null)]).then(([res,cats]) => {
+			Promise.all([window.QEIAPI.getPrograms(), window.QEIAPI.getCategories().catch(() => null)]).then(([res, cats]) => {
 				restoreSkeleton(listEl);
 				state.programs = (res && res.data) || [];
 				state.items = [];
 				state.programs.forEach(program => {
 					(program.schedules || []).forEach(schedule => {
 						const d = parseDate(schedule.start_date);
-						if (d) state.items.push({program, schedule, date:d});
+						if (d) state.items.push({ program, schedule, date: d });
 					});
 				});
 
 				if (catSelect && cats && cats.data) catSelect.innerHTML = '<option value="">المجال — جميع المجالات</option>' + cats.data.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
-				if (locSelect) { const locs=[...new Set(state.items.map(x=>normalizedLocation(x.schedule)).filter(Boolean))]; locSelect.innerHTML='<option value="">الموقع — جميع المواقع</option>'+locs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(''); }
-				if (modeSelect) { const modes=[...new Set(state.items.map(x=>String(x.schedule.execution_mode||'').trim()).filter(Boolean))]; modeSelect.innerHTML='<option value="">طريقة التنفيذ — الكل</option>'+modes.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(''); }
+				if (locSelect) { const locs = [...new Set(state.items.map(x => normalizedLocation(x.schedule)).filter(Boolean))]; locSelect.innerHTML = '<option value="">الموقع — جميع المواقع</option>' + locs.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(''); }
+				if (modeSelect) { const modes = [...new Set(state.items.map(x => String(x.schedule.execution_mode || '').trim()).filter(Boolean))]; modeSelect.innerHTML = '<option value="">طريقة التنفيذ — الكل</option>' + modes.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join(''); }
 
 				const today = new Date();
-				const hasCurrentMonth = state.items.some(x => x.date.getFullYear()===today.getFullYear() && x.date.getMonth()===today.getMonth());
+				const hasCurrentMonth = state.items.some(x => x.date.getFullYear() === today.getFullYear() && x.date.getMonth() === today.getMonth());
 				if (!hasCurrentMonth && state.items.length) {
-					const first = state.items.slice().sort((a,b)=>a.date-b.date)[0].date;
+					const first = state.items.slice().sort((a, b) => a.date - b.date)[0].date;
 					state.cursor = new Date(first.getFullYear(), first.getMonth(), 1, 12);
 				}
 				renderAll();
@@ -3242,12 +3242,12 @@
 			}
 
 			grid.innerHTML = items.map((item, index) => {
-								const rawCover = item.cover_image || item.media_path || 'assets/images/gallery/gallery-main.jpg';
+				const rawCover = item.cover_image || item.media_path || 'assets/images/gallery/gallery-main.jpg';
 				const thumbSrc = /^https?:\/\//i.test(rawCover) ? rawCover : url(rawCover);
 
 				const title = item.title || "من أجواء التدريب";
 				const cat = item.category || "فعاليات المعهد";
-				
+
 				return `
 					<a class="gallery-card" href="javascript:void(0)" data-index="${index}">
 						<div style="position:relative; overflow:hidden; border-radius:16px; aspect-ratio:16/9; background:#f8fafc; box-shadow:0 4px 15px rgba(0,0,0,0.06); transition:transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.06)';">
@@ -3514,7 +3514,7 @@
 
 	/* ---------------------------------------------------------------- bootstrap */
 
-		function wireHomePage() {
+	function wireHomePage() {
 		const featGrid = document.getElementById("featuredProgramsGrid");
 		if (featGrid) showSkeleton(featGrid);
 
@@ -3794,7 +3794,7 @@
 				if (!progTitle || progTitle.includes('المعتمد') || progTitle.includes('لم يتم')) {
 					progTitle = sessionStorage.getItem('qei_selected_program_name') || sessionStorage.getItem('qei_selected_program_title');
 				}
-			} catch(e) {}
+			} catch (e) { }
 
 			const titleEl = programSection.querySelector('h2');
 			const imgEl = programSection.querySelector('img');
@@ -3967,7 +3967,7 @@
 					if (res.status) {
 						toast(res.message || "تم تسجيل الدخول بنجاح!")
 						localStorage.setItem("qei_user", JSON.stringify(res.user))
-							if (res.token) localStorage.setItem("qei_token", res.token)
+						if (res.token) localStorage.setItem("qei_token", res.token)
 						if (window.QEI && typeof QEI.closeModal === "function") QEI.closeModal("modal-login")
 					} else {
 						toast(res.message || "بيانات الدخول غير صحيحة", "error")

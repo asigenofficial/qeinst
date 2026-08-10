@@ -41,7 +41,7 @@ echo "----------------------------------------\n";
 $regData = [
     'national_id' => '1029384756',
     'full_name' => 'متدرب تجريبي للتحقق النهائي',
-    'email' => 'test.verify@qeinst.com',
+    'email' => 'test.verify@https://qeitraining.com',
     'phone' => '0567167988',
     'nationality' => 'سعودي',
     'marital_status' => 'أعزب',
