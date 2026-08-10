@@ -134,12 +134,19 @@
 }
 
 .about-hero {
-	display: block;
-	direction: rtl;
+	display: grid;
+	grid-template-columns: 44% 56%;
+	direction: ltr;
+	align-items: center;
+	min-height: 310px;
+	margin-bottom: 60px;
 }
 
 .about-hero-image {
-	display: none !important;
+	display: block;
+	height: 290px;
+	border-radius: 14px;
+	overflow: hidden;
 }
 
 .about-hero-image img,
@@ -152,7 +159,7 @@
 
 .about-hero-copy {
 	direction: rtl;
-	padding-left: 0;
+	padding-left: 50px;
 	text-align: right;
 }
 
