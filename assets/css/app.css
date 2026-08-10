@@ -1941,8 +1941,8 @@ nav.main-nav a.active::after {
 }
 
 .about-hero {
-	grid-template-columns: 1fr;
-	min-height: auto;
+	grid-template-columns: 44% 56%;
+	min-height: 310px;
 	margin-bottom: 60px;
 }
 
@@ -1962,7 +1962,7 @@ nav.main-nav a.active::after {
 
 .about-hero-copy {
 	direction: rtl;
-	padding-left: 0;
+	padding-left: 50px;
 	text-align: right;
 }
 
