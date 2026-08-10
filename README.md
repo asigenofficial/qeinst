@@ -280,8 +280,35 @@ php artisan db:seed
    ```
 3. التأكد من منح صلاحيات الكتابة (Permissions 755/775) لملف القاعدة ومجلد `database`.
 
+---
+
+### 💻 كيفية تنفيذ الأوامر على سيرفر Hostinger (عبر Terminal):
+
+1. **فتح Terminal في لوحة hPanel:**
+   - ادخل على لوحة **Hostinger (hPanel)** ← **Websites** ← اضغط **Manage** بجانب `qeinst.com`.
+   - من القائمة الجانبية اليسرى، اذهب إلى قسم **Advanced (متقدم)** واضغط على **Terminal**.
+2. **الانتقال لمجلد الباك إند:**
+   ```bash
+   cd public_html/backend
+   ```
+3. **تنفيذ الأوامر التالية بالترتيب:**
+   - **تثبيت مكتبات الباك إند:**
+     ```bash
+     composer install
+     ```
+   - **تنشيط قاعدة البيانات وتعبئة البيانات الأولية:**
+     ```bash
+     php artisan migrate --seed
+     ```
+   - **تحسين وتسريع أداء السيرفر والكاش:**
+     ```bash
+     php artisan config:cache
+     php artisan route:cache
+     ```
+
 
 ---
+
 
 ## إعادة بناء بيانات الموقع
 
