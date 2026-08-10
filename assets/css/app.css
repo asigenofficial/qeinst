@@ -1936,7 +1936,7 @@ nav.main-nav a.active::after {
 .about-story {
 	display: grid;
 	grid-template-columns: 56% 44%;
-	direction: ltr;
+	direction: rtl;
 	align-items: center;
 }
 
@@ -1961,7 +1961,7 @@ nav.main-nav a.active::after {
 
 .about-hero-copy {
 	direction: rtl;
-	padding-right: 50px;
+	padding-left: 50px;
 	text-align: right;
 }
 
