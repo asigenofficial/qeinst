@@ -47,8 +47,8 @@ AddDefaultCharset UTF-8
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 
-    # Force HTML, CSS and JS to never be cached by browser
-    <FilesMatch "\.(css|js|html)$">
+    # Force HTML, CSS, JS and Images to revalidate and never stay stale on browsers
+    <FilesMatch "\.(css|js|html|jpg|jpeg|png|gif|webp|svg)$">
         Header set Cache-Control "no-cache, no-store, must-revalidate"
         Header set Pragma "no-cache"
         Header set Expires "0"
