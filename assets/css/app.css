@@ -2004,7 +2004,7 @@ nav.main-nav a.active::after {
 }
 
 .about-story {
-	grid-template-columns: 52% 48%;
+	grid-template-columns: 1fr;
 	margin-bottom: 65px;
 }
 
