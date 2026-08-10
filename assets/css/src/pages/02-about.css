@@ -136,8 +136,8 @@
 .about-hero,
 .about-story {
 	display: grid;
-	grid-template-columns: 56% 44%;
-	direction: rtl;
+	grid-template-columns: 44% 56%;
+	direction: ltr;
 	align-items: center;
 }
 
