@@ -1225,7 +1225,17 @@ footer.site-footer,
 
 .site-footer .contact-col a,
 .footer-light .contact-col a {
-	white-space: nowrap !important;
+	white-space: normal !important;
+	word-break: break-word !important;
+	overflow-wrap: anywhere !important;
+	direction: rtl !important;
+	display: inline-block !important;
+	max-width: 100% !important;
+}
+
+.site-footer .contact-col a .ltr-num,
+.footer-light .contact-col a .ltr-num {
+	unicode-bidi: embed !important;
 	direction: ltr !important;
 	display: inline-block !important;
 }
@@ -1240,9 +1250,14 @@ footer.site-footer,
 .socials,
 .g-social {
 	display: flex !important;
+	flex-wrap: wrap !important;
 	align-items: center !important;
+	justify-content: flex-start !important;
 	gap: 10px !important;
 	margin-top: 12px !important;
+	direction: rtl !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
 }
 
 .socials a,

@@ -1573,9 +1573,10 @@ nav.main-nav a.active::after {
 
 .socials {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 14px;
 	margin-top: 20px;
-	direction: ltr;
+	direction: rtl;
 }
 
 .socials a {
