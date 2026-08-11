@@ -1523,17 +1523,17 @@
 		const footerEl = document.createElement("div")
 		footerEl.className = "qei-drawer-footer"
 		footerEl.innerHTML = `
-			<a href="tel:+966920023456" class="qei-drawer-contact-item">
+			<a href="tel:+966567167988" class="qei-drawer-contact-item">
 				<span class="qei-drawer-contact-icon">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
 				</span>
-				<span class="ltr-num">+966 9200 23456</span>
+				<span class="ltr-num">+966 56 716 7988</span>
 			</a>
-			<a href="mailto:info@https://qeitraining.com" class="qei-drawer-contact-item">
+			<a href="mailto:info@qeinst.com" class="qei-drawer-contact-item">
 				<span class="qei-drawer-contact-icon">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
 				</span>
-				<span>info@https://qeitraining.com</span>
+				<span>info@qeinst.com</span>
 			</a>
 			<div class="qei-drawer-social">
 				<a href="https://www.youtube.com/@qeinst" target="_blank" class="qei-drawer-social-link" aria-label="YouTube">
@@ -3102,12 +3102,23 @@
 			const p = item.program, s = item.schedule, meta = statusMeta(s);
 			const cleanStart = parseDate(s.start_date), cleanEnd = parseDate(s.end_date);
 			const dateText = cleanStart ? (cleanEnd && !sameDay(cleanStart, cleanEnd) ? `${shortDateFmt.format(cleanStart)} — ${shortDateFmt.format(cleanEnd)}` : fullDateFmt.format(cleanStart)) : 'موعد متاح';
-			return `<article class="tc-program-card">
-				<a class="tc-program-thumb" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}"><img src="${esc(imagePath(p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.jpeg'" /></a>
-				<div class="tc-program-main"><div class="tc-program-title-row"><h3>${esc(p.title)}</h3><span class="tc-status ${meta.cls}">${meta.text}</span></div><p>${esc(p.category?.name || 'برنامج تدريبي')}</p></div>
-				<div class="tc-program-meta"><strong>${esc(dateText)}</strong><span>${esc(s.location || '')}</span><span>${esc(s.execution_mode || '')} · ${Number(p.duration_days || 0) || ''}${p.duration_days ? ' أيام' : ''}</span></div>
-				<div class="tc-program-actions"><a class="btn btn-primary" href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}">التسجيل</a><a class="btn btn-outline" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}">التفاصيل</a></div>
-			</article>`;
+			const pImg = p.image ? imagePath(p.image) : (p.image_url || '../assets/images/programs/course-placeholder.jpg');
+			return `<article class="program-card pl-card card" style="height: auto !important; min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+						<a href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}" class="card-image-wrap" style="position: relative; height: 180px; width: 100%; border-radius: 10px; overflow: hidden; background: #f8fafc; display: block;">
+							<img src="${esc(pImg)}" alt="${esc(p.title)}" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.jpeg'" />
+							<span class="card-tag" style="position: absolute; top: 10px; right: 10px; background: rgba(12, 56, 102, 0.88); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; backdrop-filter: blur(4px);">${p.level || 'جميع المستويات'}</span>
+						</a>
+						<div class="card-content" style="padding-top: 14px; display: flex; flex-direction: column; flex: 1;">
+							<h3 class="card-title" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 12px 0; line-height: 1.4;">${esc(p.title)}</h3>
+							<div class="card-meta" style="font-size: 0.82rem; color: #0284c7; font-weight: 600; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
+								<span>⏱️ ${esc(dateText)}</span>
+								<span>📍 ${esc(s.location || '')} · ${esc(s.execution_mode || '')}</span>
+							</div>
+							<div class="card-footer" style="display: flex; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid #f1f5f9;">
+								<a href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
+							</div>
+						</div>
+					</article>`;
 		}
 
 		function renderPrograms() {

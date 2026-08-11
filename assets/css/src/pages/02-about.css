@@ -135,18 +135,20 @@
 
 .about-hero {
 	display: grid;
-	grid-template-columns: 44% 56%;
-	direction: ltr;
+	grid-template-columns: 52% 44%;
+	gap: 4%;
 	align-items: center;
 	min-height: 310px;
 	margin-bottom: 60px;
+	direction: rtl;
 }
 
 .about-hero-image {
 	display: block;
-	height: 290px;
-	border-radius: 14px;
+	height: 320px;
+	border-radius: 16px;
 	overflow: hidden;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
 }
 
 .about-hero-image img,
@@ -159,23 +161,23 @@
 
 .about-hero-copy {
 	direction: rtl;
-	padding-left: 50px;
 	text-align: right;
+	padding: 0;
 }
 
 .about-hero-copy h1 {
-	font-size: 46px;
-	line-height: 1.2;
-	font-weight: 500;
-	color: #123d78;
+	font-size: 2.5rem;
+	line-height: 1.25;
+	font-weight: 800;
+	color: #0f2d5a;
 	margin: 0 0 16px;
 }
 
 .about-hero-copy p {
-	font-size: 15px;
-	line-height: 1.95;
-	color: #777f8b;
-	margin: 0 0 28px;
+	font-size: 1.05rem;
+	line-height: 1.85;
+	color: #475569;
+	margin: 0 0 24px;
 }
 
 .about-primary-btn {

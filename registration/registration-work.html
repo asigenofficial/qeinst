@@ -37,11 +37,7 @@
 					</article>
 					<span></span>
 					<article>
-						<i>3</i><b>اختيار<br />الموعد</b>
-					</article>
-					<span></span>
-					<article>
-						<i>4</i><b>مراجعة<br />وإرسال</b>
+						<i>3</i><b>مراجعة<br />وإرسال</b>
 					</article>
 				</div>
 				<div class="rgw-layout">
@@ -69,7 +65,7 @@
 						</section>
 					</aside>
 					<main class="rgw-main">
-						<form onsubmit="event.preventDefault(); QEI.regNext('schedule')">
+						<form onsubmit="event.preventDefault(); QEI.regNext('review')">
 							<label>المؤهل العلمي <em>*</em><select id="education" name="education" required>
 									<option value="">اختر المؤهل العلمي</option>
 									<option>ثانوية عامة</option>
@@ -132,7 +128,7 @@
 									<option>متقدم</option>
 								</select></label>
 							<div class="rgw-actions">
-								<button class="next" type="button" onclick="QEI.regNext('schedule')">التالي ›</button>
+								<button class="next" type="button" onclick="QEI.regNext('review')">التالي ›</button>
 								<button type="button" class="btn-secondary" onclick="QEI.regBack('personal')">‹
 									السابق</button>
 								<button type="button" class="btn-secondary" onclick="QEI.regSaveExit()">↩ حفظ
