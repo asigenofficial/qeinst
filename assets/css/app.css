@@ -19133,3 +19133,36 @@ html[lang="en"] .footer-bottom span {
 		width: 100% !important;
 	}
 }
+
+/* Match the home-page social component on all shared content footers.
+   The explicit RTL direction keeps YouTube at the right edge in Arabic layouts. */
+body[data-page="clients"] .site-footer .footer-brand-col .socials,
+body[data-page="faq"] .site-footer .footer-brand-col .socials,
+body[data-page="methodology"] .site-footer .footer-brand-col .socials,
+body[data-page="why-choose-us"] .site-footer .footer-brand-col .socials {
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: wrap !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	direction: rtl !important;
+	gap: 10px !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 12px 0 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+}
+
+body[data-page="clients"] .site-footer .footer-brand-col .socials > a,
+body[data-page="faq"] .site-footer .footer-brand-col .socials > a,
+body[data-page="methodology"] .site-footer .footer-brand-col .socials > a,
+body[data-page="why-choose-us"] .site-footer .footer-brand-col .socials > a {
+	flex: 0 0 38px !important;
+	width: 38px !important;
+	height: 38px !important;
+	min-width: 38px !important;
+	max-width: 38px !important;
+	margin: 0 !important;
+	transform: none !important;
+}
