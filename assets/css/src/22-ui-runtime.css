@@ -2131,3 +2131,31 @@ html[lang="en"] .footer-bottom span {
 		max-width: 38px !important;
 	}
 }
+
+/* Footer phone layout: some Android devices expose a 720px CSS viewport.
+   Keep these shared footers single-column before the two-column tablet layout. */
+@media (max-width: 767px) {
+	.site-footer .footer-grid,
+	.footer-light .footer-grid,
+	.footer-grid {
+		grid-template-columns: minmax(0, 1fr) !important;
+		gap: 24px !important;
+	}
+
+	.site-footer .footer-grid > section,
+	.footer-light .footer-grid > section,
+	.footer-grid > section,
+	.footer-brand-col {
+		grid-column: auto !important;
+		width: 100% !important;
+		min-width: 0 !important;
+	}
+
+	html[dir="rtl"] .site-footer .socials,
+	html[lang="ar"] .site-footer .socials,
+	.site-footer .socials {
+		justify-content: flex-start !important;
+		direction: rtl !important;
+		width: 100% !important;
+	}
+}

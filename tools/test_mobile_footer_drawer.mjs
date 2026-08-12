@@ -4,6 +4,9 @@ const BASE = process.env.FRONTEND || 'http://127.0.0.1:8085';
 const pages = [
   'about/about.html',
   'about/clients.html',
+  'about/methodology.html',
+  'about/why-choose-us.html',
+  'support/faq.html',
   'gallery/gallery.html',
   'policies/policies.html',
   'registration/registration-success.html',
