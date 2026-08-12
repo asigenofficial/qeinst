@@ -489,13 +489,17 @@
 			toast("تم حفظ بياناتك، يمكنك المتابعة لاحقًا");
 			setTimeout(() => api.go("index.html"), 900);
 		},
-		regSubmit() {
-			const checkboxes = $$(".rgr-consent input[type='checkbox']");
-			checkboxes.forEach(cb => {
-				cb.checked = true; // Ensure consent is checked
-			});
+			regSubmit() {
+				const checkboxes = $$(".rgr-consent input[type='checkbox']");
+				const allConsentsChecked = checkboxes.length > 0 && checkboxes.every(cb => cb.checked);
+				if (!allConsentsChecked) {
+					const consentSection = $(".rgr-consent");
+					if (consentSection) consentSection.setAttribute("aria-invalid", "true");
+					toast("يرجى الموافقة على جميع التعهدات قبل إرسال الطلب", "error");
+					return false;
+				}
 
-			const submitBtn = $(".rgr-actions button.submit, button.submit, .submit");
+				const submitBtn = $(".rgr-actions button.submit, button.submit, .submit");
 			if (submitBtn) {
 				submitBtn.disabled = true;
 				submitBtn.textContent = "جارٍ إرسال الطلب... ⏳";
@@ -540,30 +544,45 @@
 
 			store.write({ submittedAt: new Date().toISOString() });
 
-			const doRedirect = (regNum) => {
-				const finalNum = regNum || ('QEI-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000 + 10000)));
-				store.write({ registration_number: finalNum, program_name: progName });
-				try {
-					sessionStorage.setItem("qei_selected_program_name", progName || '');
-				} catch (e) { }
-				const destUrl = url(REG.success) + '?registration_number=' + encodeURIComponent(finalNum);
-				location.href = destUrl;
-			};
+							const restoreSubmitButton = () => {
+					if (submitBtn) {
+						submitBtn.disabled = false;
+						submitBtn.textContent = "✈ إرسال طلب التسجيل";
+					}
+				};
+				const showSubmitError = () => {
+					restoreSubmitButton();
+					toast("تعذر حفظ طلب التسجيل في الخادم. يرجى المحاولة مرة أخرى بعد التحقق من الاتصال.", "error");
+				};
+				const doRedirect = (regNum) => {
+					if (!regNum) {
+						showSubmitError();
+						return false;
+					}
+					store.write({ registration_number: regNum, program_name: progName });
+					try {
+						sessionStorage.setItem("qei_selected_program_name", progName || '');
+					} catch (e) { }
+					const destUrl = url(REG.success) + '?registration_number=' + encodeURIComponent(regNum);
+					location.href = destUrl;
+					return true;
+				};
 
-			if (window.QEIAPI && typeof window.QEIAPI.submitRegistration === "function") {
-				window.QEIAPI.submitRegistration(data).then(res => {
-					console.log('Successfully saved to Laravel backend:', res);
-					const regNum = (res && (res.registration_number || (res.data && res.data.registration_number))) || null;
-					if (res && res.summary_token) store.write({ summary_token: res.summary_token });
-					doRedirect(regNum);
-				}).catch(err => {
-					console.warn('Laravel API error, proceeding with local registration:', err);
-					doRedirect(null);
-				});
-			} else {
-				const localNum = 'QEI-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 90000 + 10000));
-				doRedirect(localNum);
-			}
+				if (window.QEIAPI && typeof window.QEIAPI.submitRegistration === "function") {
+					window.QEIAPI.submitRegistration(data).then(res => {
+						console.log('Successfully saved to Laravel backend:', res);
+						const regNum = (res && (res.registration_number || (res.data && res.data.registration_number))) || null;
+						if (!res || res.status !== true || !regNum) throw new Error("Invalid registration response");
+						if (res.summary_token) store.write({ summary_token: res.summary_token });
+						doRedirect(regNum);
+					}).catch(err => {
+						console.warn('Laravel API error, registration was not redirected:', err);
+						showSubmitError();
+					});
+				} else {
+					showSubmitError();
+				}
+
 		},
 		downloadRegistrationSummary() {
 			const saved = store.read() || {}
@@ -3616,7 +3635,7 @@
 						const images = res.data.filter(i => i.type === 'image').slice(0, 8);
 						hGalleryGrid.innerHTML = images.map(img => {
 							const src = img.media_path || img.cover_image || 'assets/images/gallery/gallery-main.jpg';
-							return `<a class="home-gallery-item" href="${url('gallery/gallery.html')}"><img src="${/^https?:\/\//i.test(src) ? src : url(src)}" alt="${escapeHtml(img.title || 'فعالية تدريبية')}" loading="lazy" decoding="async" /></a>`;
+							return `<a class="home-gallery-item" href="${url('gallery/gallery.html')}"><img src="${/^https?:\/\//i.test(src) ? src : url(src)}" alt="${qeiEscapeHTML(img.title || 'فعالية تدريبية')}" loading="lazy" decoding="async" /></a>`;
 						}).join('');
 					}
 				}).catch(err => {
@@ -3632,10 +3651,16 @@
 	function wireProgramDetails() {
 		if (!/program-details/i.test(location.pathname)) return;
 		const params = new URLSearchParams(location.search);
-		const slug = params.get('slug') || params.get('id') || params.get('program') || 'specialized-program-1';
+		const requestedSlug = params.get('slug') || params.get('id') || params.get('program');
 
-		if (window.QEIAPI && typeof window.QEIAPI.getProgramBySlug === "function") {
-			window.QEIAPI.getProgramBySlug(slug).then(res => {
+		if (window.QEIAPI && typeof window.QEIAPI.getPrograms === "function") {
+			const programRequest = requestedSlug && typeof window.QEIAPI.getProgramBySlug === "function"
+				? window.QEIAPI.getProgramBySlug(requestedSlug)
+				: window.QEIAPI.getPrograms({ limit: 1 }).then(res => {
+						if (!res || !Array.isArray(res.data) || !res.data.length) throw new Error("لا توجد برامج تدريبية نشطة");
+						return { status: true, data: res.data[0] };
+					});
+			programRequest.then(res => {
 				if (!res || !res.data) return;
 				const p = res.data;
 
@@ -3812,7 +3837,6 @@
 		wireChipToggles()
 		wireLightboxFallback()
 		wireSelectFilters()
-		wireRegFormRestore();
 		populateReview();
 		wireGlobalNavigation();
 		wireProgramDetails();

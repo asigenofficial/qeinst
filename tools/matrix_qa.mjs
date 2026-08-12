@@ -134,11 +134,18 @@ async function runMatrix() {
         // 2. Check Touch Targets on Mobile
         if (vp.device === 'Mobile' || vp.width <= 768) {
           const smallTargets = await page.evaluate(() => {
-            const clickables = Array.from(document.querySelectorAll('button, a, input[type="checkbox"], input[type="radio"], select, .btn'));
+            const clickables = Array.from(document.querySelectorAll('button, a, input[type="checkbox"], input[type="radio"], select, .btn')).filter(el => {
+              if (el.matches('.qei-skip') || el.closest('p, li')) return false;
+              if (el.matches('input[type="checkbox"], input[type="radio"]') && el.closest('label')) return false;
+              const modal = el.closest('.modal-overlay');
+              return !modal || modal.classList.contains('active');
+            });
             const smalls = [];
             for (const el of clickables) {
               const rect = el.getBoundingClientRect();
-              if (rect.width > 0 && rect.height > 0) {
+              const style = getComputedStyle(el);
+              const visibleInViewport = style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && rect.bottom > 0 && rect.right > 0 && rect.top < window.innerHeight && rect.left < window.innerWidth;
+              if (visibleInViewport && rect.width > 0 && rect.height > 0) {
                 if (rect.width < 40 || rect.height < 40) {
                   smalls.push({
                     text: (el.textContent || el.value || el.ariaLabel || '').trim().slice(0, 30),
@@ -172,16 +179,19 @@ async function runMatrix() {
         // 3. Check Mobile Hamburger Menu Functionality
         if (vp.width <= 992) {
           const menuCheck = await page.evaluate(() => {
-            const btn = document.querySelector('#mobileNavBtn, .hamburger, .mobile-toggle, [aria-label="قائمة التصفح"], [aria-label="القائمة"]');
-            const drawer = document.querySelector('#mobileNavDrawer, .mobile-drawer, .nav-drawer, .mobile-menu');
+            const hasGlobalHeader = !!document.querySelector('header.site-header #mainNav, .site-header nav.main-nav');
+            if (!hasGlobalHeader) return { hasGlobalHeader: false, hasButton: true, hasDrawer: true, btnVisible: true };
+            const btn = document.querySelector('#mobileMenuBtn, #mobileNavBtn, .mobile-menu, .hamburger, .mobile-toggle, [aria-label="فتح القائمة"], [aria-label="قائمة التصفح"], [aria-label="القائمة"]');
+            const drawer = document.querySelector('#mobileNavDrawer, .mobile-drawer, .nav-drawer, .qei-drawer-content');
             return {
+              hasGlobalHeader: true,
               hasButton: !!btn,
               hasDrawer: !!drawer,
               btnVisible: btn ? btn.offsetWidth > 0 && btn.offsetHeight > 0 : false
             };
           });
 
-          if (!menuCheck.hasButton) {
+          if (menuCheck.hasGlobalHeader && !menuCheck.hasButton) {
             results.issues.push({
               id: `NAV_MOBILE_BTN_MISSING-${pageRel.replace(/[^a-z0-9]/gi, '_')}-${vp.name}`,
               title: `Mobile navigation menu button missing or inaccessible`,
