@@ -76,7 +76,9 @@
 	}
 
 	function toast(msg, type) {
-		if (window.QEI && typeof QEI.showToast === "function") return QEI.showToast(msg, type || "success")
+		if (window.QEI && typeof QEI.showToast === "function" && QEI.showToast !== toast) {
+			return QEI.showToast(msg, type || "success")
+		}
 		let c = $("#toastContainer")
 		if (!c) {
 			c = document.createElement("div")
@@ -1390,23 +1392,96 @@
 			linkData.push({ text, absHref, isActive, icon: getIcon(text, absHref) })
 		}
 
-		// Fallback list
-		if (linkData.length === 0) {
-			const pairs = [
-				["الرئيسية", url("index.html")],
-				["البرامج التدريبية", url("programs/programs.html")],
-				["حلول المؤسسات", url("solutions/solutions.html")],
-				["المديرون", url("about/about.html#management")],
-				["عن المعهد", url("about/about.html")],
-				["معرض الصور", url("gallery/gallery.html")],
-				["تواصل معنا", url("support/contact.html")],
-			]
-			for (const [text, absHref] of pairs) {
+		// Ensure all standard site navigation links exist in the drawer across all pages
+		const standardLinks = [
+			["الرئيسية", url("index.html")],
+			["عن المعهد", url("about/about.html")],
+			["البرامج التدريبية", url("programs/programs.html")],
+			["حلول المؤسسات", url("solutions/solutions.html")],
+			["عملاؤنا وشركاؤنا", url("about/clients.html")],
+			["تواصل معنا", url("support/contact.html")],
+			["المركز القانوني", url("policies/policies.html")],
+			["لماذا تختارنا", url("about/why-choose-us.html")],
+			["منهجية التدريب", url("about/methodology.html")],
+			["الأثر المستدام", url("about/impact.html")],
+			["الأسئلة الشائعة", url("support/faq.html")],
+			["معرض الصور", url("gallery/gallery.html")],
+		]
+
+		for (const [text, absHref] of standardLinks) {
+			if (!seen.has(absHref)) {
+				seen.add(absHref)
 				let isActive = false
 				try { isActive = currentPath === new URL(absHref).pathname.toLowerCase() } catch (e) { }
 				linkData.push({ text, absHref, isActive, icon: getIcon(text, absHref) })
 			}
 		}
+
+		// ---- 100% Reliable Active Link Resolution based on location.href ----
+		const normalizeUrlPath = (p) => {
+			try {
+				let s = new URL(p, location.href).pathname.toLowerCase().split("?")[0].split("#")[0]
+				if (s.endsWith("/index.html")) s = s.slice(0, -10)
+				if (s.length > 1 && s.endsWith("/")) s = s.slice(0, -1)
+				return s || "/"
+			} catch (e) {
+				return ""
+			}
+		}
+
+		const currNormPath = normalizeUrlPath(location.href)
+
+		let bestMatchIndex = -1
+		let bestMatchScore = -1
+
+		linkData.forEach((item, idx) => {
+			const itemNormPath = normalizeUrlPath(item.absHref)
+			let score = 0
+
+			if (currNormPath === itemNormPath && itemNormPath !== "/") {
+				// Exact match on non-home page (e.g. /about/why-choose-us.html)
+				score = 100
+			} else if ((currNormPath === "/" || currNormPath === "" || currNormPath.endsWith("/index.html")) && (itemNormPath === "/" || itemNormPath === "" || itemNormPath.endsWith("/index.html"))) {
+				// Exact match on home page
+				score = 100
+			} else if (item.isActive && score < 80) {
+				// HTML explicit active class score
+				score = 80
+			} else if (currNormPath.includes("/policies/") && itemNormPath.includes("/policies/")) {
+				// Section match for policy pages -> "المركز القانوني"
+				score = 50
+			} else if (currNormPath.includes("/programs/") && itemNormPath.includes("/programs/")) {
+				// Section match for program pages -> "البرامج التدريبية"
+				score = 50
+			} else if (currNormPath.includes("/solutions/") && itemNormPath.includes("/solutions/")) {
+				// Section match for solution pages -> "حلول المؤسسات"
+				score = 50
+			} else if (currNormPath.includes("/about/") && (itemNormPath.includes("/about/about.html") || itemNormPath === "/about")) {
+				// Section match for about subpages -> "عن المعهد"
+				score = 30
+			} else if (currNormPath.includes("/support/faq") && itemNormPath.includes("/support/faq")) {
+				score = 100
+			} else if (currNormPath.includes("/support/contact") && itemNormPath.includes("/support/contact")) {
+				score = 100
+			} else if (currNormPath.includes("/gallery/") && itemNormPath.includes("/gallery/")) {
+				score = 100
+			}
+
+			if (score > bestMatchScore) {
+				bestMatchScore = score
+				bestMatchIndex = idx
+			}
+		})
+
+		// Fallback: If no match found and we are at root/home, default to Home
+		if (bestMatchIndex === -1 && (currNormPath === "/" || currNormPath === "" || currNormPath.endsWith("/index.html"))) {
+			bestMatchIndex = linkData.findIndex((l) => /رئيسية|index|home/i.test(l.text + " " + l.absHref))
+		}
+
+		// Apply final isActive to linkData
+		linkData.forEach((item, idx) => {
+			item.isActive = (idx === bestMatchIndex)
+		})
 
 		// ---- Remove old drawer, rebuild as DOM nodes ----
 		const oldDrawer = nav.querySelector(".qei-drawer-content")

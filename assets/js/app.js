@@ -244,6 +244,9 @@ const QEI = {
 			} catch (err) {
 				console.warn('[QEI] تعذر تحميل البرامج من واجهة API.', err)
 				if (targetGrid && window.restoreSkeleton) window.restoreSkeleton(targetGrid);
+				if (targetGrid && !this.programs.length) {
+					this.renderFallbackErrorState(targetGrid, "تعذر تحميل البرامج التدريبية من خادم البيانات");
+				}
 			}
 		}
 
@@ -979,10 +982,6 @@ const QEI = {
 	},
 
 	showToast(message, type = "success") {
-		if (window.QEIUI && window.QEIUI.toast) {
-			window.QEIUI.toast(message, type)
-			return
-		}
 		let container = document.getElementById("toastContainer")
 		if (!container) {
 			container = document.createElement("div")
@@ -992,9 +991,22 @@ const QEI = {
 		}
 		const toast = document.createElement("div")
 		toast.className = `toast toast-${type}`
-		toast.innerHTML = `<span>✓</span> <span>${message}</span>`
+		const icon = type === "error" ? "✕" : type === "warning" ? "⚠" : "✓"
+		toast.innerHTML = `<span>${icon}</span> <span>${qeiEscapeHTML(message)}</span>`
 		container.appendChild(toast)
 		setTimeout(() => { toast.remove() }, 4000)
+	},
+
+	renderFallbackErrorState(targetElement, message = "تعذر تحميل البيانات حالياً") {
+		if (!targetElement) return;
+		targetElement.innerHTML = `
+			<div class="qei-error-fallback" style="grid-column: 1 / -1; padding: 2.5rem 1.5rem; text-align: center; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; margin: 1rem 0;">
+				<div style="font-size: 2rem; margin-bottom: 0.5rem;">⚠️</div>
+				<h4 style="font-size: 1.1rem; color: #1e293b; margin: 0 0 0.5rem; font-weight: 700;">${qeiEscapeHTML(message)}</h4>
+				<p style="font-size: 0.88rem; color: #64748b; margin: 0 0 1rem;">يرجى التحقق من اتصال شبكة الإنترنت أو إعادة التحديث.</p>
+				<button type="button" class="btn btn-secondary" onclick="location.reload()" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: 6px; cursor: pointer; background: #0c3866; color: #ffffff; border: 0;">إعادة المحاولة ↻</button>
+			</div>
+		`;
 	},
 }
 

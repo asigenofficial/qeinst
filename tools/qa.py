@@ -65,7 +65,7 @@ def local_target(page: Path, raw: str) -> Path | None:
 
 
 def check_html() -> None:
-    html_files = sorted(p for p in ROOT.rglob("*.html") if "vendor" not in p.parts and ".review-backup" not in p.parts)
+    html_files = sorted(p for p in ROOT.rglob("*.html") if "vendor" not in p.parts and "node_modules" not in p.parts and ".review-backup" not in p.parts)
     if len(html_files) < 40:
         error(f"Expected a full multi-page site; found only {len(html_files)} HTML files")
     missing: list[str] = []
