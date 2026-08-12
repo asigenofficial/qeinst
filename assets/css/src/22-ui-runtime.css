@@ -2132,9 +2132,9 @@ html[lang="en"] .footer-bottom span {
 	}
 }
 
-/* Footer phone layout: some Android devices expose a 720px CSS viewport.
-   Keep these shared footers single-column before the two-column tablet layout. */
-@media (max-width: 767px) {
+/* Footer phone layout: match the mobile navigation breakpoint. Some Android devices
+   report a larger CSS viewport while still using the compact mobile header. */
+@media (max-width: 991px) {
 	.site-footer .footer-grid,
 	.footer-light .footer-grid,
 	.footer-grid {

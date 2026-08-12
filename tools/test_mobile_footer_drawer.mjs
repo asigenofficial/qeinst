@@ -16,6 +16,7 @@ const viewports = [
   { name: '390x844', width: 390, height: 844 },
   { name: '412x915', width: 412, height: 915 },
   { name: '768x1024', width: 768, height: 1024 },
+  { name: '900x1200', width: 900, height: 1200 },
 ];
 
 const browser = await chromium.launch({ headless: true });
