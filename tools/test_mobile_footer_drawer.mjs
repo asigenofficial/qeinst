@@ -26,7 +26,8 @@ for (const viewport of viewports) {
   const context = await browser.newContext({ viewport });
   for (const pagePath of pages) {
     const page = await context.newPage();
-    await page.goto(`${BASE}/${pagePath}`, { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/${pagePath}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(120);
 
     const closed = await page.evaluate(() => ({
       viewport: window.innerWidth,

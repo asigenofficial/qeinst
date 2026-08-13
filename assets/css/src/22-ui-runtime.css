@@ -2192,3 +2192,70 @@ body[data-page="why-choose-us"] .site-footer .footer-brand-col .socials > a {
 	margin: 0 !important;
 	transform: none !important;
 }
+
+/* Compact-layout containment: keep content, CTA and footer inside the same
+   mobile geometry used by the compact navigation. This fixes the parent layout,
+   rather than hiding a horizontal scrollbar. */
+@media (max-width: 991px) {
+	body[data-page="clients"] main,
+	body[data-page="faq"] main,
+	body[data-page="methodology"] main,
+	body[data-page="why-choose-us"] main,
+	body[data-page="clients"] .page-view,
+	body[data-page="faq"] .page-view,
+	body[data-page="methodology"] .page-view,
+	body[data-page="why-choose-us"] .page-view,
+	body[data-page="clients"] .container,
+	body[data-page="faq"] .container,
+	body[data-page="methodology"] .container,
+	body[data-page="why-choose-us"] .container {
+		inline-size: 100%;
+		max-inline-size: 100%;
+		min-inline-size: 0;
+		box-sizing: border-box;
+	}
+
+	body[data-page="why-choose-us"] .wcu-shell,
+	body[data-page="why-choose-us"] .wcu-shell > section,
+	body[data-page="why-choose-us"] .wcu-cta > * {
+		min-inline-size: 0;
+		max-inline-size: 100%;
+		box-sizing: border-box;
+	}
+
+	body[data-page="why-choose-us"] .wcu-shell {
+		padding-inline: 20px;
+	}
+
+	body[data-page="why-choose-us"] .wcu-cta {
+		inline-size: 100%;
+		max-inline-size: 100%;
+		height: auto;
+		min-height: 0;
+		margin-inline: 0;
+		padding: 28px 20px;
+		direction: rtl;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 22px;
+		text-align: center;
+	}
+
+	body[data-page="why-choose-us"] .wcu-cta > div {
+		text-align: center;
+	}
+
+	body[data-page="why-choose-us"] .wcu-cta > a {
+		align-self: center;
+		max-inline-size: 100%;
+		overflow-wrap: anywhere;
+	}
+
+	body[data-page="why-choose-us"] .wcu-cta p,
+	body[data-page="clients"] .footer-brand-col p,
+	body[data-page="faq"] .footer-brand-col p,
+	body[data-page="methodology"] .footer-brand-col p,
+	body[data-page="why-choose-us"] .footer-brand-col p {
+		overflow-wrap: anywhere;
+	}
+}

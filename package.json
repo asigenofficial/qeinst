@@ -13,6 +13,7 @@
 		"test:e2e": "node tools/e2e_registration.mjs",
 		"test:matrix": "node tools/matrix_qa.mjs",
 		"test:mobile-layout": "node tools/test_mobile_footer_drawer.mjs",
+		"test:responsive": "node tools/responsive_overflow_audit.mjs",
 		"dev": "npx serve . -l 8080",
 		"start": "npx serve . -l 8080"
 	},
