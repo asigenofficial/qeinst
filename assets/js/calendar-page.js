@@ -107,21 +107,19 @@
 
   function renderCard(item) {
     const p = item.program, s = item.schedule, meta = statusMeta(s);
-    const start = parseDate(s.start_date), end = parseDate(s.end_date);
-    const dateText = start ? (end && keyOf(end) !== keyOf(start) ? `${shortFmt.format(start)} — ${shortFmt.format(end)}` : fullFmt.format(start)) : 'موعد متاح';
     return `<article class="tc-program-card">
       <a class="tc-program-thumb" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}"><img src="${esc(imagePath(p.image))}" alt="${esc(p.title)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.jpeg'" /></a>
       <div class="tc-program-main"><div class="tc-program-title-row"><h3>${esc(p.title)}</h3><span class="tc-status ${meta.cls}">${meta.text}</span></div><p>${esc(p.category?.name || 'برنامج تدريبي')}</p></div>
-      <div class="tc-program-meta"><strong>${esc(dateText)}</strong><span>${esc(s.location || '')}</span><span>${esc(s.execution_mode || '')}${p.duration_days ? ` · ${Number(p.duration_days)} أيام` : ''}</span></div>
-      <div class="tc-program-actions"><a class="btn btn-primary" href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}">التسجيل</a><a class="btn btn-outline" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}">التفاصيل</a></div>
+      <div class="tc-program-meta"><span>${esc(s.location || '')}</span><span>${esc(s.execution_mode || '')}${p.duration_days ? ` · ${Number(p.duration_days)} أيام` : ''}</span></div>
+      <div class="tc-program-actions"><a class="btn btn-primary" href="../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}">التسجيل</a><a class="btn btn-outline" href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}">التفاصيل</a></div>
     </article>`;
   }
 
   function renderList() {
     let items = state.selectedDay ? filteredItems().filter(x => keyOf(x.date) === state.selectedDay) : monthItems();
-    if (upcomingEl) upcomingEl.textContent = state.selectedDay ? `برامج ${fullFmt.format(parseDate(state.selectedDay))}` : 'البرامج القادمة';
+    if (upcomingEl) upcomingEl.textContent = state.selectedDay ? 'البرامج المحددة' : 'البرامج القادمة';
     if (selectionBar) selectionBar.hidden = !state.selectedDay;
-    if (state.selectedDay && selectionText) selectionText.textContent = `تم اختيار ${fullFmt.format(parseDate(state.selectedDay))}`;
+    if (state.selectedDay && selectionText) selectionText.textContent = 'تم اختيار برامج اليوم';
     if (!state.loaded) {
       listEl.innerHTML = '<div class="tc-empty-state">جاري تحميل المواعيد من قاعدة البيانات…</div>';
       return;

@@ -73,6 +73,15 @@
 				/* private mode: registration still works, it just will not be remembered */
 			}
 		},
+		remove(keys) {
+			try {
+				const data = this.read()
+				keys.forEach(key => delete data[key])
+				localStorage.setItem(this.key, JSON.stringify(data))
+			} catch (e) {
+				/* private mode: registration still works, it just will not be remembered */
+			}
+		},
 	}
 
 	function toast(msg, type) {
@@ -258,7 +267,7 @@
 	const REG = {
 		personal: "registration/registration-personal.html",
 		work: "registration/registration-work.html",
-		schedule: "registration/registration-schedule.html",
+		schedule: "registration/registration-review.html",
 		review: "registration/registration-review.html",
 		success: "registration/registration-success.html",
 		requestSuccess: "registration/request-success.html",
@@ -432,20 +441,8 @@
 				saveRegForm(form);
 			}
 
-			// Capture schedule choice if on schedule page
-			const selectedRadio = $("input[name='course-date']:checked, .rgs-date-card.active input, .rgs-date-card.selected input");
-			if (selectedRadio) {
-				const card = selectedRadio.closest(".rgs-date-card, label");
-				const schedId = selectedRadio.value;
-				const dateP = card ? $("p", card) : null;
-				const locH3 = card ? $("h3", card) : null;
-				store.write({
-					schedule_id: schedId,
-					scheduleId: schedId,
-					selectedDate: dateP ? dateP.textContent.trim() : null,
-					selectedLocation: locH3 ? locH3.textContent.trim() : null
-				});
-			}
+			// Program schedules remain administrative data only; registration does not
+			// collect a date or a schedule choice from the applicant.
 
 			if (target === 'requestSuccess') {
 				const data = store.read() || {};
@@ -533,16 +530,30 @@
 			if (!data.jobTitle && data.job_title) data.jobTitle = data.job_title;
 
 			const params = new URLSearchParams(location.search);
-			if (params.get("program")) {
-				data.program_id = params.get("program");
-				data.programId = params.get("program");
-			}
-			if (params.get("schedule")) {
-				data.schedule_id = params.get("schedule");
-				data.scheduleId = params.get("schedule");
+			const urlProgramId = params.get("program_id") || params.get("program");
+			if (urlProgramId) {
+				data.program_id = urlProgramId;
+				data.programId = urlProgramId;
 			}
 
-			store.write({ submittedAt: new Date().toISOString() });
+			// Do not carry a previously selected schedule or program date into a new request.
+			delete data.schedule_id;
+			delete data.scheduleId;
+			delete data.selectedDate;
+			delete data.selectedScheduleIndex;
+			delete data.selectedScheduleText;
+			store.remove(["schedule_id", "scheduleId", "selectedDate", "selectedScheduleIndex", "selectedScheduleText"]);
+
+			if (!data.program_id) {
+				if (submitBtn) {
+					submitBtn.disabled = false;
+					submitBtn.textContent = "✈ إرسال طلب التسجيل";
+				}
+				toast("لا يمكن إرسال الطلب دون برنامج تدريبي صالح.", "error");
+				return false;
+			}
+
+			store.write({ submittedAt: new Date().toISOString(), program_id: data.program_id, programId: data.programId });
 
 							const restoreSubmitButton = () => {
 					if (submitBtn) {
@@ -1596,7 +1607,7 @@
 			navList.appendChild(a)
 		}
 
-		const ctaHref = url("registration/registration-personal.html")
+			const ctaHref = url("programs/programs.html")
 		const cta = document.createElement("a")
 		cta.href = ctaHref
 		cta.className = "qei-drawer-cta"
@@ -2673,7 +2684,7 @@
 								<span>⏱️ ${p.duration_days || 5} أيام (${p.duration_hours || 25} ساعة)</span>
 							</div>
 							<div class="card-footer" style="display: flex; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid #f1f5f9;">
-								<a href="../registration/registration-personal.html?program=${p.id}${p.schedules && p.schedules.length ? '&schedule=' + p.schedules[0].id : ''}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
+								<a href="../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
 							</div>
 							<span style="display:none;" class="hidden-filter-terms">${p.category ? p.category.name : ''} حضوري عن بُعد</span>
 						</div>
@@ -2987,10 +2998,7 @@
 								badgeText = "مقاعد محدودة";
 							}
 
-							const cleanStart = s.start_date ? String(s.start_date).split('T')[0] : '';
-							const cleanEnd = s.end_date ? String(s.end_date).split('T')[0] : '';
-							const dateRange = cleanStart && cleanEnd ? `${cleanStart} - ${cleanEnd}` : (cleanStart || 'موعد متاح');
-							const imgPath = p.image ? (p.image.startsWith('http') || p.image.startsWith('/') || p.image.startsWith('assets') ? (p.image.startsWith('assets') ? '../' + p.image : p.image) : '../' + p.image) : '../assets/images/programs/courses/course-001.jpeg';
+								const imgPath = p.image ? (p.image.startsWith('http') || p.image.startsWith('/') || p.image.startsWith('assets') ? (p.image.startsWith('assets') ? '../' + p.image : p.image) : '../' + p.image) : '../assets/images/programs/courses/course-001.jpeg';
 
 							const card = document.createElement("article");
 							card.className = "tc-program-card";
@@ -3008,16 +3016,15 @@
 									<span style="background:${badgeBg}; color:${badgeColor}; font-weight:700; padding:4px 14px; border-radius:20px; font-size:0.78rem; white-space:nowrap;">${badgeText}</span>
 								</div>
 
-								<!-- Middle Meta: Date, Location, Duration -->
-								<div style="text-align:center; flex:1; min-width:190px; color:#94a3b8; font-size:0.85rem; line-height:1.6;">
-									<div style="font-weight:600; color:#64748b; font-size:0.85rem;">${dateRange}</div>
-									<div style="font-size:0.82rem; color:#94a3b8; margin:2px 0;">${s.location || 'الرياض - المملكة العربية السعودية'}</div>
-									<div style="font-size:0.8rem; color:#cbd5e1;">معهد خبراء الجودة · ${p.duration_days || 5} أيام</div>
-								</div>
+									<!-- Middle Meta: Location and duration only; the schedule date is not part of registration. -->
+									<div style="text-align:center; flex:1; min-width:190px; color:#94a3b8; font-size:0.85rem; line-height:1.6;">
+										<div style="font-size:0.82rem; color:#94a3b8; margin:2px 0;">${s.location || 'الرياض - المملكة العربية السعودية'}</div>
+										<div style="font-size:0.8rem; color:#cbd5e1;">معهد خبراء الجودة · ${p.duration_days || 5} أيام</div>
+									</div>
 
 								<!-- Left side: Buttons -->
 								<div style="display:flex; align-items:center; gap:0.75rem; margin-right:auto;">
-									<a href="../registration/registration-personal.html?program=${p.id}&schedule=${s.id}" class="btn" style="background:#0c3866; color:#ffffff; padding:0.65rem 1.6rem; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 4px 10px rgba(12,56,102,0.18);">التسجيل</a>
+									<a href="../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}" class="btn" style="background:#0c3866; color:#ffffff; padding:0.65rem 1.6rem; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 4px 10px rgba(12,56,102,0.18);">التسجيل</a>
 									<a href="program-details.html?slug=${p.slug || p.id}" class="btn" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:0.65rem 1.25rem; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none;">التفاصيل</a>
 								</div>
 							`;
@@ -3194,8 +3201,6 @@
 
 		function renderProgramCard(item) {
 			const p = item.program, s = item.schedule, meta = statusMeta(s);
-			const cleanStart = parseDate(s.start_date), cleanEnd = parseDate(s.end_date);
-			const dateText = cleanStart ? (cleanEnd && !sameDay(cleanStart, cleanEnd) ? `${shortDateFmt.format(cleanStart)} — ${shortDateFmt.format(cleanEnd)}` : fullDateFmt.format(cleanStart)) : 'موعد متاح';
 			const pImg = p.image ? imagePath(p.image) : (p.image_url || '../assets/images/programs/course-placeholder.jpg');
 			return `<article class="program-card pl-card card" style="height: auto !important; min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
 						<a href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}" class="card-image-wrap" style="position: relative; height: 180px; width: 100%; border-radius: 10px; overflow: hidden; background: #f8fafc; display: block;">
@@ -3204,12 +3209,12 @@
 						</a>
 						<div class="card-content" style="padding-top: 14px; display: flex; flex-direction: column; flex: 1;">
 							<h3 class="card-title" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 12px 0; line-height: 1.4;">${esc(p.title)}</h3>
-							<div class="card-meta" style="font-size: 0.82rem; color: #0284c7; font-weight: 600; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
-								<span>⏱️ ${esc(dateText)}</span>
-								<span>📍 ${esc(s.location || '')} · ${esc(s.execution_mode || '')}</span>
-							</div>
+															<div class="card-meta" style="font-size: 0.82rem; color: #0284c7; font-weight: 600; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
+									<span>📍 ${esc(s.location || '')} · ${esc(s.execution_mode || '')}</span>
+								</div>
+
 							<div class="card-footer" style="display: flex; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid #f1f5f9;">
-								<a href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
+								<a href="../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
 							</div>
 						</div>
 					</article>`;
@@ -3437,185 +3442,95 @@
 		}
 	}
 
-	function wireRegistrationProgramCard() {
-		if (!/registration/i.test(location.pathname)) return;
+		function wireRegistrationProgramCard() {
+			if (!/registration-(personal|work|review|schedule)\.html/i.test(location.pathname)) return;
 
-		const params = new URLSearchParams(location.search);
-		const savedData = store.read() || {};
+			const params = new URLSearchParams(location.search);
+			const programId = params.get("program_id") || params.get("program"); // legacy `program` URLs remain readable.
+			const summaryAside = $(".reg-summary") || $(".rgs-hero") || $(".rgs-layout") || $("aside");
 
-		let programId = params.get("program") || params.get("id") || params.get("slug") || params.get("program_id") || params.get("programId");
-		let scheduleId = params.get("schedule") || params.get("schedule_id") || params.get("scheduleId");
-		let urlProgramName = params.get("program_name") || params.get("programName") || params.get("title");
-
-		if (programId && programId !== 'p1' && programId !== 'default') {
-			try {
-				sessionStorage.setItem("qei_selected_program", programId);
-				if (scheduleId) sessionStorage.setItem("qei_selected_schedule", scheduleId);
-			} catch (e) { }
-		} else {
-			try { programId = sessionStorage.getItem("qei_selected_program") || savedData.program_id || savedData.programId; } catch (e) { }
-			try { scheduleId = sessionStorage.getItem("qei_selected_schedule") || savedData.schedule_id || savedData.scheduleId; } catch (e) { }
-		}
-
-		const summaryAside = $(".reg-summary") || $(".rgs-hero") || $(".rgs-layout") || $("aside");
-
-		const initialTitle = urlProgramName || savedData.program_name || savedData.programName || savedData.selectedProgram;
-		if (initialTitle && summaryAside && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
-			const titleEl = $("h3", summaryAside) || $(".selected-program-title");
-			if (titleEl) titleEl.textContent = initialTitle;
-
-			const actionP = $(".selected-program-action", summaryAside);
-			if (actionP) actionP.style.display = "none";
-
-			const descP = $(".selected-program-desc", summaryAside);
-			if (descP) descP.textContent = "▦ موعد معتمد · ◷ 25 ساعة تدريبية (5 أيام)";
-		}
-
-		if (/registration-review/i.test(location.pathname)) {
-			const actionP = $(".selected-program-action", summaryAside);
-			if (actionP) actionP.style.display = "none";
-		}
-
-		ensureAPI(() => {
-			window.QEIAPI.getPrograms().then(res => {
-				if (!res || !res.data || !res.data.length) return;
-				const programs = res.data;
-
-				let p = null;
-				if (programId && programId !== 'p1' && programId !== 'default') {
-					p = programs.find(item => String(item.id) === String(programId) || item.slug === programId || (initialTitle && item.title === initialTitle));
+			const setRegistrationError = (message) => {
+				store.remove(["program_id", "programId", "program_name", "programName", "selectedProgram", "schedule_id", "scheduleId", "selectedDate", "selectedScheduleIndex", "selectedScheduleText"]);
+				try {
+					sessionStorage.removeItem("qei_selected_program");
+					sessionStorage.removeItem("qei_selected_schedule");
+				} catch (e) { }
+				if (summaryAside) {
+					const titleEl = $("h3", summaryAside) || $(".selected-program-title");
+					if (titleEl) titleEl.textContent = "تعذر تحديد البرنامج التدريبي";
+					const descP = $(".selected-program-desc", summaryAside) || $("p", summaryAside);
+					if (descP) descP.textContent = message;
+					const actionP = $(".selected-program-action", summaryAside);
+					if (actionP) {
+						actionP.style.display = "block";
+						actionP.innerHTML = '<a href="../programs/programs.html" class="btn" style="display:inline-block; margin-top:8px; padding:0.65rem 1.25rem; font-weight:700; font-size:0.9rem; text-decoration:none; color:#ffffff; background:#0c3866; border-radius:10px;">استعرض البرامج المتاحة ←</a>';
+					}
 				}
-				if (!p && initialTitle && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
-					p = programs.find(item => item.title === initialTitle || item.title.includes(initialTitle) || initialTitle.includes(item.title));
-				}
-				if (!p && initialTitle && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
-					p = {
-						id: programId || 1,
-						title: initialTitle,
-						duration_hours: 25,
-						duration_days: 5,
-						schedules: []
-					};
-				}
+				$$(".reg-actions .next, .rgw-actions .next, .rgr-actions .submit").forEach(button => {
+					button.disabled = true;
+					button.setAttribute("aria-disabled", "true");
+				});
+			};
 
-				const renderProgramSummary = (selectedProg) => {
-					if (!summaryAside) return;
+			if (/registration-schedule/i.test(location.pathname)) {
+				const nextUrl = programId && programId !== "p1" && programId !== "default"
+					? url(REG.review) + `?program_id=${encodeURIComponent(programId)}`
+					: "../programs/programs.html";
+				location.replace(nextUrl);
+				return;
+			}
 
-					let selectedSched = null;
-					if (selectedProg.schedules && selectedProg.schedules.length) {
-						if (scheduleId) {
-							selectedSched = selectedProg.schedules.find(s => String(s.id) === String(scheduleId));
-						}
-						if (!selectedSched) selectedSched = selectedProg.schedules[0];
+			if (!programId || programId === "p1" || programId === "default") {
+				setRegistrationError("اختر برنامجًا تدريبيًا من قائمة البرامج قبل بدء التسجيل.");
+				return;
+			}
+
+			ensureAPI(() => {
+				window.QEIAPI.getPrograms().then(res => {
+					const programs = (res && Array.isArray(res.data)) ? res.data : [];
+					const selectedProg = programs.find(item => String(item.id) === String(programId));
+					if (!selectedProg) {
+						setRegistrationError("البرنامج المطلوب غير موجود أو غير متاح للتسجيل حاليًا.");
+						return;
 					}
 
+					store.remove(["schedule_id", "scheduleId", "selectedDate", "selectedScheduleIndex", "selectedScheduleText"]);
 					store.write({
 						program_id: selectedProg.id,
 						programId: selectedProg.id,
 						program_name: selectedProg.title,
 						programName: selectedProg.title,
-						selectedProgram: selectedProg.title,
-						schedule_id: selectedSched ? selectedSched.id : (scheduleId || null),
-						scheduleId: selectedSched ? selectedSched.id : (scheduleId || null),
-						selectedDate: selectedSched && selectedSched.start_date ? String(selectedSched.start_date).split("T")[0] : null
+						selectedProgram: selectedProg.title
 					});
-
 					try {
-						sessionStorage.setItem("qei_selected_program", selectedProg.id);
-						if (selectedSched) sessionStorage.setItem("qei_selected_schedule", selectedSched.id);
+						sessionStorage.setItem("qei_selected_program", String(selectedProg.id));
+						sessionStorage.removeItem("qei_selected_schedule");
 					} catch (e) { }
 
+					if (!summaryAside) return;
 					const imgEl = $("img", summaryAside);
-					if (imgEl) {
+					if (imgEl && selectedProg.image) {
+						let imgPath = selectedProg.image;
+						if (imgPath.startsWith("assets/")) imgPath = "../" + imgPath;
+						else if (!imgPath.startsWith("http") && !imgPath.startsWith("/") && !imgPath.startsWith(".")) imgPath = "../" + imgPath;
 						imgEl.style.display = "block";
-						if (selectedProg.image) {
-							let imgPath = selectedProg.image;
-							if (imgPath.startsWith("assets/")) imgPath = "../" + imgPath;
-							else if (!imgPath.startsWith("http") && !imgPath.startsWith("/") && !imgPath.startsWith(".")) imgPath = "../" + imgPath;
-							imgEl.src = imgPath;
-							imgEl.alt = selectedProg.title;
-						}
+						imgEl.src = imgPath;
+						imgEl.alt = selectedProg.title;
 					}
 
-					const titleEl = $("h3", summaryAside) || $("h2", summaryAside) || $(".selected-program-title");
-					if (titleEl && selectedProg.title) {
-						titleEl.textContent = selectedProg.title;
-					}
-
+					const titleEl = $("h3", summaryAside) || $(".selected-program-title");
+					if (titleEl) titleEl.textContent = selectedProg.title;
+					const descP = $(".selected-program-desc", summaryAside);
+					if (descP) descP.textContent = `◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
 					const actionP = $(".selected-program-action", summaryAside);
 					if (actionP) actionP.style.display = "none";
-					const pickerWrap = document.getElementById("qeiProgramPickerWrap");
-					if (pickerWrap) pickerWrap.style.display = "none";
-
-					const descP = $(".selected-program-desc", summaryAside);
-					if (descP) {
-						if (selectedSched && selectedSched.start_date) {
-							const cleanStart = String(selectedSched.start_date).split("T")[0];
-							const cleanEnd = selectedSched.end_date ? String(selectedSched.end_date).split("T")[0] : "";
-							descP.textContent = `▦ ${cleanStart} ${cleanEnd ? "إلى " + cleanEnd : ""}`;
-						} else {
-							descP.textContent = `▦ موعد متاح · ◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
-						}
-					} else {
-						const pTags = $$("p", summaryAside);
-						if (pTags && pTags.length >= 1) {
-							pTags[0].textContent = `▦ موعد متاح · ◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
-						}
-					}
-
 					const infoTitle = $(".info-val-title") || $(".program-title-val");
 					if (infoTitle) infoTitle.textContent = selectedProg.title;
-
 					const heroTitle = $(".rgs-hero h1");
-					if (heroTitle && selectedProg.title) heroTitle.textContent = selectedProg.title;
-				};
-
-				if (p) {
-					renderProgramSummary(p);
-				} else {
-					if (summaryAside && !/registration-review/i.test(location.pathname)) {
-						const titleEl = $("h3", summaryAside) || $(".selected-program-title");
-						if (titleEl) titleEl.textContent = "اختر البرنامج التدريبي";
-
-						const pDesc = $(".selected-program-desc") || $("p", summaryAside);
-						if (pDesc) pDesc.textContent = "يرجى تحديد الدورة التدريبية التي ترغب بالالتحاق بها:";
-
-						let selectWrap = document.getElementById("qeiProgramPickerWrap");
-						if (!selectWrap) {
-							selectWrap = document.createElement("div");
-							selectWrap.id = "qeiProgramPickerWrap";
-							selectWrap.style.marginTop = "12px";
-							selectWrap.style.marginBottom = "16px";
-							selectWrap.innerHTML = `
-								<select id="qeiProgramQuickSelect" class="input-field" style="width:100%; font-weight:700; font-size:0.9rem; padding:0.6rem 0.8rem; border-radius:8px; border:2px solid #0c3866; background:#f8fafc; color:#0c3866; cursor:pointer;">
-									<option value="" disabled selected>-- اضغط لاختيار دورة تدريبية --</option>
-									${programs.map(prog => `<option value="${prog.id}">${prog.title}</option>`).join("")}
-								</select>
-							`;
-							const actionP = $(".selected-program-action") || (pDesc ? pDesc.nextElementSibling : null);
-							if (actionP) {
-								actionP.innerHTML = "";
-								actionP.appendChild(selectWrap);
-							} else if (pDesc && pDesc.parentNode) {
-								pDesc.parentNode.insertBefore(selectWrap, pDesc.nextSibling);
-							}
-						}
-
-						const quickSelect = document.getElementById("qeiProgramQuickSelect");
-						if (quickSelect) {
-							quickSelect.addEventListener("change", (e) => {
-								const chosenId = e.target.value;
-								const chosenProg = programs.find(item => String(item.id) === String(chosenId));
-								if (chosenProg) {
-									renderProgramSummary(chosenProg);
-								}
-							});
-						}
-					}
-				}
-			}).catch(err => console.warn("[QEINST API] Registration sidebar update error:", err));
-		});
-	}
+					if (heroTitle) heroTitle.textContent = selectedProg.title;
+				}).catch(() => setRegistrationError("تعذر التحقق من البرنامج الآن. يرجى المحاولة لاحقًا."));
+			});
+		}
 
 	/* ---------------------------------------------------------------- bootstrap */
 
@@ -3683,7 +3598,7 @@
 
 				const regBtns = $$("a[href*='registration-personal']");
 				regBtns.forEach(btn => {
-					btn.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}`;
+						btn.href = `../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}`;
 				});
 
 				const enrollButtons = $$("#page-program-details .pd-actions button, #page-program-details .pd-enroll button, .pd-actions button, .pd-enroll button");
@@ -3691,8 +3606,7 @@
 					if (/سجل/.test(btn.textContent)) {
 						btn.onclick = (e) => {
 							e.preventDefault();
-							const schedId = p.schedules && p.schedules.length ? p.schedules[0].id : '';
-							window.location.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}${schedId ? '&schedule=' + schedId : ''}`;
+								window.location.href = `../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}`;
 						};
 					}
 				});

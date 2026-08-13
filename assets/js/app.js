@@ -675,9 +675,8 @@ const QEI = {
 		const locEl = document.getElementById("pdLocationTag");
 		if (locEl) locEl.textContent = `الموقع: ${prog.location || 'يحدد حسب الدفعة'}`;
 
-		const scheduleId = prog.schedules && prog.schedules.length ? prog.schedules[0].id : "";
 		document.querySelectorAll("#page-program-details .pd-actions button:first-child, #page-program-details .pd-enroll > button:first-of-type").forEach(button => {
-			button.onclick = () => this.startRegistration(prog.id, scheduleId);
+			button.onclick = () => this.startRegistration(prog.id);
 		});
 
 		const imgEl = document.getElementById("pdHeroImage");
@@ -701,11 +700,11 @@ const QEI = {
 					<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
 						<div>
 							<div style="font-weight: 700; color: #1e293b; font-size: 15px;">${qeiEscapeHTML(b.location || '')}</div>
-							<div style="font-size: 13px; color: #64748b; margin-top: 4px;">التاريخ: <b>${qeiEscapeHTML(b.date || '')}</b>${b.time ? ` · ${qeiEscapeHTML(b.time)}` : ''}</div>
+							<div style="font-size: 13px; color: #64748b; margin-top: 4px;">برنامج تدريبي متاح للتسجيل</div>
 						</div>
 						<div style="display: flex; align-items: center; gap: 10px;">
 							<span style="background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 99px;">${b.status}</span>
-							<button onclick="QEI.startRegistration('${prog.id}', '${b.id}')" style="background: #0f766e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">سجل في هذه الدفعة</button>
+								<button onclick="QEI.startRegistration('${prog.id}')" style="background: #0f766e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">سجل في البرنامج</button>
 						</div>
 					</div>
 				`).join("");
@@ -817,8 +816,7 @@ const QEI = {
 	createProgramCardHTML(p, variant = 'home') {
 		const image = p.imageUrl || qeiUrl(p.image || 'assets/images/programs/course-placeholder.jpg')
 		const detailsHref = qeiUrl(`programs/program-details.html?slug=${encodeURIComponent(p.slug || p.id)}`)
-		const schedule = p.schedules && p.schedules.length ? p.schedules[0] : null
-		const registerHref = qeiUrl(`registration/registration-personal.html?program=${encodeURIComponent(p.id)}&program_name=${encodeURIComponent(p.title)}${schedule ? '&schedule=' + encodeURIComponent(schedule.id) : ''}`)
+			const registerHref = qeiUrl(`registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}`)
 		return `
 			<article class="program-card qei-course-card ${variant === 'listing' ? 'qei-course-card--listing' : 'qei-course-card--home'}">
 				<div class="card-img-wrap">
@@ -899,22 +897,16 @@ const QEI = {
 		if (item) item.classList.toggle("open")
 	},
 
-	startRegistration(programId, scheduleId) {
+	startRegistration(programId) {
 		const currentParams = new URLSearchParams(window.location.search);
 		if (!programId || programId === 'p1' || programId === 'default') {
-			programId = currentParams.get('slug') || currentParams.get('id') || currentParams.get('program');
+			programId = currentParams.get('program_id') || currentParams.get('slug') || currentParams.get('id') || currentParams.get('program');
 		}
-		if (!scheduleId) {
-			scheduleId = currentParams.get('schedule');
+		if (!programId || programId === 'p1' || programId === 'default') {
+			window.location.href = qeiUrl("programs/programs.html");
+			return;
 		}
-		const params = new URLSearchParams();
-		if (programId && programId !== 'p1' && programId !== 'default') {
-			params.set('program', programId);
-		}
-		if (scheduleId) {
-			params.set('schedule', scheduleId);
-		}
-		window.location.href = qeiUrl("registration/registration-personal.html") + (params.toString() ? '?' + params.toString() : '');
+		window.location.href = qeiUrl("registration/registration-personal.html") + '?program_id=' + encodeURIComponent(programId);
 	},
 
 	setWizardStep(step) {
