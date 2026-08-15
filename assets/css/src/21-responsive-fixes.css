@@ -708,25 +708,43 @@ main,
 }
 
 .socials,
-.g-social {
+.g-social,
+.site-footer .socials,
+.footer-light .socials,
+.footer-brand-col .socials {
 	display: flex !important;
 	flex-wrap: wrap !important;
 	align-items: center !important;
 	justify-content: flex-start !important;
-	gap: 12px !important;
-	margin-top: 16px !important;
-	direction: inherit !important;
+	gap: 10px !important;
+	margin-top: 14px !important;
+	direction: rtl !important;
+	text-align: right !important;
+	width: 100% !important;
 	max-width: 100% !important;
 	box-sizing: border-box !important;
 }
 
+html[dir="ltr"] .socials,
+html[lang="en"] .socials {
+	direction: ltr !important;
+	text-align: left !important;
+}
+
 .socials a,
-.g-social a {
+.g-social a,
+.site-footer .socials a,
+.footer-light .socials a,
+.footer-brand-col .socials a {
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
 	width: 38px !important;
 	height: 38px !important;
+	min-width: 38px !important;
+	max-width: 38px !important;
+	min-height: 38px !important;
+	max-height: 38px !important;
 	border-radius: 50% !important;
 	flex-shrink: 0 !important;
 	position: static !important;
