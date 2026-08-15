@@ -83,13 +83,13 @@ const QEI = {
 	policies: {
 		general_privacy: {
 			title: "سياسة الخصوصية العامة",
-			updated: "2024-05-01",
 			content: `<p>يلتزم معهد خبراء الجودة للتدريب وحماية خصوصية بيانات جميع زوار المستفيدين والمتدربين وفقًا للأنظمة واللوائح الخاصة بحماية البيانات الشخصية في المملكة العربية السعودية.</p>`,
 		},
 	},
 
 	init() {
 		this.setupNavigation()
+		this.hydrateFallbackProgramCatalog()
 		this.setupProgramFilters()
 		this.fetchLiveCategoriesFromDatabase()
 		this.fetchLiveProgramsFromDatabase()
@@ -111,6 +111,17 @@ const QEI = {
 			window.addEventListener("hashchange", () => this.handleRoute())
 			this.handleRoute()
 		}
+	},
+
+	hydrateFallbackProgramCatalog() {
+		const fallback = window.QEI_PROGRAM_CATALOG_FALLBACK
+		if (!Array.isArray(fallback) || !fallback.length || this.programs.length) return
+		this.programs = fallback.map(program => ({ ...program, imageUrl: qeiProgramImageUrl(program.imageUrl || program.image) }))
+		// Paint useful program content immediately. The API refreshes it in-place later.
+		this.renderFeaturedPrograms()
+		this.renderAllPrograms()
+		this.renderProgramDetailsPage()
+		this.renderScheduleSelection()
 	},
 
 	async fetchLiveCategoriesFromDatabase() {
@@ -173,7 +184,7 @@ const QEI = {
 		const number = Number(value)
 		if (!Number.isFinite(number)) return
 		document.querySelectorAll(`[data-qei-metric="${name}"]`).forEach(el => {
-			el.textContent = new Intl.NumberFormat('ar-SA').format(number)
+			el.textContent = new Intl.NumberFormat('en-US', { useGrouping: false }).format(number)
 		})
 	},
 
@@ -223,7 +234,6 @@ const QEI = {
 						schedules,
 						batches: schedules.map(schedule => ({
 							id: schedule.id,
-							date: `${String(schedule.start_date || '').split('T')[0]} - ${String(schedule.end_date || '').split('T')[0]}`,
 							time: '',
 							location: schedule.location || schedule.execution_mode || '',
 							execution_mode: schedule.execution_mode || '',
@@ -307,7 +317,7 @@ const QEI = {
 					const image = String(rawImage).startsWith('http') ? rawImage : qeiUrl(rawImage)
 					return `
 						<article>
-							<img src="${qeiEscapeHTML(image)}" alt="${qeiEscapeHTML(story.title)}" loading="lazy" />
+							<img src="${qeiEscapeHTML(image)}" alt="${qeiEscapeHTML(story.title)}" loading="lazy" fetchpriority="low" />
 							<h3>${qeiEscapeHTML(story.title)}</h3>
 							<p>${qeiEscapeHTML(story.quote_or_description || '')}</p>
 						</article>
@@ -342,7 +352,7 @@ const QEI = {
 					const raw = item.media_path || item.cover_image || ''
 					const src = String(raw).startsWith('http') ? raw : qeiUrl(raw)
 					return `<a class="home-gallery-item" href="${qeiUrl('gallery/gallery.html')}">
-						<img src="${qeiEscapeHTML(src)}" alt="${qeiEscapeHTML(item.title || 'من أجواء التدريب')}" loading="lazy" decoding="async">
+						<img src="${qeiEscapeHTML(src)}" alt="${qeiEscapeHTML(item.title || 'من أجواء التدريب')}" loading="lazy" decoding="async" fetchpriority="low">
 					</a>`
 				}).join('')
 			} catch (err) {
@@ -367,7 +377,7 @@ const QEI = {
 			const raw = client.logo || client.logo_url || ''
 			const src = String(raw).startsWith('http') ? raw : qeiUrl(raw)
 			return `<article data-category="${qeiEscapeHTML(client.type || 'عميل')}" title="${qeiEscapeHTML(client.name)}">
-				<img class="partner-logo-img" src="${qeiEscapeHTML(src)}" alt="${qeiEscapeHTML(client.name)}" loading="lazy" decoding="async">
+				<img class="partner-logo-img" src="${qeiEscapeHTML(src)}" alt="${qeiEscapeHTML(client.name)}" loading="lazy" decoding="async" fetchpriority="low">
 			</article>`
 		}).join('')
 	},
@@ -381,12 +391,20 @@ const QEI = {
 		const page = document.getElementById('corporateSolutionDetails')
 		if (!page) return
 		const slug = new URLSearchParams(window.location.search).get('slug') || 'training-needs'
+		const localSolutions = {
+			'training-needs': {slug:'training-needs', title:'تحليل الاحتياج التدريبي', summary:'نحدد فجوات الأداء والأولويات التدريبية لبناء تدخلات دقيقة.', description:'تحليل منظم للاحتياجات على مستوى الجهة والإدارات والوظائف، مع ترتيب الأولويات وتقديم توصيات قابلة للتنفيذ.', image:'assets/images/solutions/training-needs-hero.jpg'},
+			'program-design': {slug:'program-design', title:'تصميم البرامج التدريبية', summary:'نصمم برامج مخصصة ترتبط بأهداف الجهة والفئات المستهدفة.', description:'نحول الاحتياج إلى برنامج واضح الأهداف والمحاور والأنشطة وأدوات القياس بما يلائم بيئة الجهة.', image:'assets/images/solutions/sol-design.jpg'},
+			'training-packages': {slug:'training-packages', title:'تصميم الحقائب التدريبية', summary:'نطور حقائب تدريبية عملية تشمل المحتوى والأنشطة وأدوات المدرب والمتدرب.', description:'بناء حقائب قابلة للتنفيذ والتحديث وفق منهجية تدريب واضحة ومعايير جودة متسقة.', image:'assets/images/solutions/training-packages-final.jpg'},
+			'consulting-solutions': {slug:'consulting-solutions', title:'الاستشارات والحلول المؤسسية', summary:'نقدم حلولًا في الجودة والتميز والأداء والحوكمة وتطوير العمليات.', description:'حلول استشارية مصممة بحسب واقع الجهة وأولويات التحسين مع نطاق ومخرجات واضحة.', image:'assets/images/solutions/sol-consulting.jpg'},
+			'measuring-impact': {slug:'measuring-impact', title:'قياس أثر التدريب', summary:'نساعد الجهات على قياس انتقال التعلم إلى الأداء وتحديد فرص التحسين.', description:'تصميم مؤشرات وأدوات متابعة لقياس نتائج التدريب بعد التنفيذ وربطها بالأداء المستهدف.', image:'assets/images/solutions/measuring-impact-final.jpg'}
+		}
 		const render = (solution) => {
 			if (!solution) return
 			const title = document.getElementById('csTitle')
 			const summary = document.getElementById('csSummary')
 			const description = document.getElementById('csDescription')
 			const image = document.getElementById('csImage')
+			const requestCta = document.getElementById('csRequestCta')
 			if (title) title.textContent = solution.title || ''
 			if (summary) summary.textContent = solution.summary || ''
 			if (description) description.textContent = solution.description || solution.summary || ''
@@ -395,22 +413,24 @@ const QEI = {
 				image.src = String(raw).startsWith('http') ? raw : qeiUrl(raw)
 				image.alt = solution.title || 'حل مؤسسي'
 			}
+			if (requestCta) requestCta.href = `custom-training.html?source=solution-details&solution=${encodeURIComponent(solution.slug || slug)}`
 			document.title = `${solution.title || 'حلول المؤسسات'} | QEI — معهد خبراء الجودة للتدريب`
 			page.classList.add('qei-data-ready')
 		}
+		// Render local content immediately so the page never waits on the API.
+		render(localSolutions[slug] || localSolutions['training-needs'])
 		const executeFetch = async () => {
 			if (!window.QEIAPI || typeof window.QEIAPI.getCorporateSolutions !== 'function') return
 			try {
 				const res = await window.QEIAPI.getCorporateSolutions()
 				const item = res && res.status && Array.isArray(res.data) ? res.data.find(x => String(x.slug) === String(slug)) : null
-				render(item)
+				if (item) render(item)
 			} catch (err) {
-				console.warn('[QEI] تعذر تحميل تفاصيل الحل المؤسسي.', err)
+				console.warn('[QEI] تعذر تحديث تفاصيل الحل المؤسسي من API؛ تم الإبقاء على النسخة المحلية السريعة.', err)
 			}
 		}
 		const api = await qeiWaitForAPI()
 		if (api) executeFetch()
-		else page.classList.add('qei-data-ready') // keep the built-in fallback visible offline
 	},
 
 	renderHomePartners(clients) {
@@ -419,7 +439,7 @@ const QEI = {
 		const itemHTML = clients.map(client => {
 			const rawLogo = client.logo || client.logo_url || ''
 			const logo = String(rawLogo).startsWith('http') ? rawLogo : qeiUrl(rawLogo)
-			return `<div class="partner-ticker-item"><img src="${qeiEscapeHTML(logo)}" alt="${qeiEscapeHTML(client.name)}" loading="lazy" /></div>`
+			return `<div class="partner-ticker-item"><img src="${qeiEscapeHTML(logo)}" alt="${qeiEscapeHTML(client.name)}" loading="lazy" fetchpriority="low" /></div>`
 		}).join('')
 		track.innerHTML = itemHTML + itemHTML
 	},
@@ -701,7 +721,7 @@ const QEI = {
 					<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
 						<div>
 							<div style="font-weight: 700; color: #1e293b; font-size: 15px;">${qeiEscapeHTML(b.location || '')}</div>
-							<div style="font-size: 13px; color: #64748b; margin-top: 4px;">التاريخ: <b>${qeiEscapeHTML(b.date || '')}</b>${b.time ? ` · ${qeiEscapeHTML(b.time)}` : ''}</div>
+							<div style="font-size: 13px; color: #64748b; margin-top: 4px;">دفعة متاحة للتسجيل</div>
 						</div>
 						<div style="display: flex; align-items: center; gap: 10px;">
 							<span style="background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 99px;">${b.status}</span>
@@ -732,9 +752,8 @@ const QEI = {
 				return `
 				<label style="cursor: pointer;"><input type="radio" name="course-date" value="${qeiEscapeHTML(b.id)}" ${isSelected ? 'checked' : ''} /><i></i>
 					<h3>${b.location || 'المركز'}</h3>
-					<p>${b.date}</p>
-					<p>${b.time || ''}</p>
-					<span>${qeiEscapeHTML(b.execution_mode || 'يحدد عند الجدولة')}</span><b class="status-open">● ${qeiEscapeHTML(b.status)}</b>
+					<p class="rgs-option-note">يتم تأكيد تفاصيل التنفيذ بعد اكتمال التسجيل.</p>
+					<span>${qeiEscapeHTML(b.execution_mode || 'يحدد عند التنسيق')}</span><b class="status-open">● ${qeiEscapeHTML(b.status)}</b>
 				</label>`;
 			}).join("");
 		} else {
@@ -754,6 +773,12 @@ const QEI = {
 			};
 			return icons[slug] || '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16v16H4z"/></svg>';
 		};
+		const solutionDestination = (s, forHome = false) => {
+			const slug = String((s && s.slug) || '').trim()
+			if (slug === 'request-program') return qeiUrl('solutions/custom-training.html')
+			if (slug) return qeiUrl(`solutions/solution-details.html?slug=${encodeURIComponent(slug)}`)
+			return qeiUrl((s && s.link) || 'solutions/solutions.html')
+		}
 		const renderDOM = (solutionsData) => {
 			this.updateCatalogMetric('solutions', solutionsData.length)
 			const homeGrid = document.getElementById("homeCorporateSolutionsGrid");
@@ -761,8 +786,8 @@ const QEI = {
 				if (window.restoreSkeleton) window.restoreSkeleton(homeGrid);
 				const homeSolutions = solutionsData.slice(0, 6);
 				homeGrid.innerHTML = homeSolutions.map(s => `
-					<article style="cursor: pointer;" onclick="window.location.href='${qeiUrl(s.link)}'">
-						<img src="${qeiUrl(s.image || s.img)}" alt="${qeiEscapeHTML(s.title)}" loading="lazy" />
+					<article style="cursor: pointer;" onclick="window.location.href='${solutionDestination(s, true)}'">
+						<img src="${qeiUrl(s.image || s.img)}" alt="${qeiEscapeHTML(s.title)}" loading="lazy" fetchpriority="low" />
 						<div class="home-solution-icon" aria-hidden="true">${solutionIcon(s.slug)}</div>
 						<h3>${qeiEscapeHTML(s.title)}</h3>
 						<p>${s.summary || s.desc}</p>
@@ -774,17 +799,16 @@ const QEI = {
 			if (solutionsGrid) {
 				if (window.restoreSkeleton) window.restoreSkeleton(solutionsGrid);
 				solutionsGrid.innerHTML = solutionsData.map(s => {
-					const target = qeiUrl(s.link || `solutions/solution-details.html?slug=${encodeURIComponent(s.slug || '')}`)
+					const target = solutionDestination(s)
 					const rawImage = s.image || s.img || 'assets/images/solutions/solutions-hero.jpeg'
 					const image = String(rawImage).startsWith('http') ? rawImage : qeiUrl(rawImage)
 					return `
 						<a href="${qeiEscapeHTML(target)}" class="solution-card-link">
 							<article>
-								<img class="solution-card-image" src="${qeiEscapeHTML(image)}" alt="${qeiEscapeHTML(s.title)}" loading="lazy" decoding="async">
+								<img class="solution-card-image" src="${qeiEscapeHTML(image)}" alt="${qeiEscapeHTML(s.title)}" loading="lazy" decoding="async" fetchpriority="low">
 								<div class="icon-wrap" aria-hidden="true">${solutionIcon(s.slug)}</div>
 								<h3>${qeiEscapeHTML(s.title)}</h3>
 								<p>${qeiEscapeHTML(s.summary || s.desc || '')}</p>
-								<div class="card-click-hint"><span>عرض التفاصيل ←</span></div>
 							</article>
 						</a>`
 				}).join("");
@@ -818,11 +842,11 @@ const QEI = {
 		const image = p.imageUrl || qeiUrl(p.image || 'assets/images/programs/course-placeholder.jpg')
 		const detailsHref = qeiUrl(`programs/program-details.html?slug=${encodeURIComponent(p.slug || p.id)}`)
 		const schedule = p.schedules && p.schedules.length ? p.schedules[0] : null
-		const registerHref = qeiUrl(`registration/registration-personal.html?program=${encodeURIComponent(p.id)}&program_name=${encodeURIComponent(p.title)}${schedule ? '&schedule=' + encodeURIComponent(schedule.id) : ''}`)
+		const registerHref = qeiUrl(`registration/registration-personal.html?program=${encodeURIComponent(p.id)}&program_name=${encodeURIComponent(p.title)}`)
 		return `
 			<article class="program-card qei-course-card ${variant === 'listing' ? 'qei-course-card--listing' : 'qei-course-card--home'}">
 				<div class="card-img-wrap">
-					<img src="${qeiEscapeHTML(image)}" alt="${qeiEscapeHTML(p.title)}" loading="lazy" decoding="async">
+					<img src="${qeiEscapeHTML(image)}" alt="${qeiEscapeHTML(p.title)}" loading="lazy" decoding="async" fetchpriority="low">
 					<span class="card-category-tag">${qeiEscapeHTML(p.category)}</span>
 				</div>
 				<div class="card-body">
@@ -911,9 +935,7 @@ const QEI = {
 		if (programId && programId !== 'p1' && programId !== 'default') {
 			params.set('program', programId);
 		}
-		if (scheduleId) {
-			params.set('schedule', scheduleId);
-		}
+		// Program dates are intentionally not exposed in registration URLs.
 		window.location.href = qeiUrl("registration/registration-personal.html") + (params.toString() ? '?' + params.toString() : '');
 	},
 
@@ -975,7 +997,6 @@ const QEI = {
 		if (box) {
 			box.innerHTML = `
         <h3>${policy.title}</h3>
-        <small style="color: var(--slate-500); display: block; margin-bottom: 1.5rem;">تاريخ التحديث: ${policy.updated}</small>
         <div>${policy.content}</div>
       `
 		}
@@ -1031,9 +1052,6 @@ QEI.setupMultipage = function () {
 	})
 }
 
-QEI.startRegistration = function (programId, scheduleId) {
-	QEI.startRegistration.call(QEI, programId, scheduleId);
-}
 
 window.QEI = QEI;
 

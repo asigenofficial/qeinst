@@ -41,7 +41,7 @@ class CorporateRequestController extends Controller
                 'title' => 'تحليل الاحتياج التدريبي',
                 'summary' => 'نحدد الفجوات ونحلل الاحتياجات لتصميم حلول تدريبية دقيقة وفعالة.',
                 'image' => 'assets/images/gallery/gallery-list-1.jpg',
-                'link' => 'solutions/training-needs.html'
+                'link' => 'solutions/solution-details.html?slug=training-needs'
             ],
             [
                 'id' => 2,
@@ -49,7 +49,7 @@ class CorporateRequestController extends Controller
                 'title' => 'تصميم البرامج التدريبية',
                 'summary' => 'نصمم برامج مخصصة تلبي أهداف مؤسستك وتحقق نتائج ملموسة.',
                 'image' => 'assets/images/gallery/gallery-related-design.jpg',
-                'link' => 'solutions/program-design.html'
+                'link' => 'solutions/solution-details.html?slug=program-design'
             ],
             [
                 'id' => 3,
@@ -57,7 +57,7 @@ class CorporateRequestController extends Controller
                 'title' => 'تصميم الحقائب التدريبية',
                 'summary' => 'نطور حقائب تدريبية احترافية تواكب أفضل الممارسات العالمية.',
                 'image' => 'assets/images/gallery/gallery-list-2.jpg',
-                'link' => 'solutions/training-packages.html'
+                'link' => 'solutions/solution-details.html?slug=training-packages'
             ],
             [
                 'id' => 4,
@@ -65,7 +65,7 @@ class CorporateRequestController extends Controller
                 'title' => 'الاستشارات والحلول المؤسسية',
                 'summary' => 'نقدم استشارات استراتيجية وحلول تدريبية تعزز الأداء وتحقق الأثر.',
                 'image' => 'assets/images/gallery/gallery-list-8.jpg',
-                'link' => 'solutions/consulting-solutions.html'
+                'link' => 'solutions/solution-details.html?slug=consulting-solutions'
             ],
             [
                 'id' => 5,
@@ -73,7 +73,7 @@ class CorporateRequestController extends Controller
                 'title' => 'قياس أثر التدريب',
                 'summary' => 'نضمن أثر التدريب على الأداء لضمان تحقيق العائد الاستثماري.',
                 'image' => 'assets/images/gallery/gallery-list-5.jpg',
-                'link' => 'solutions/measuring-impact.html'
+                'link' => 'solutions/solution-details.html?slug=measuring-impact'
             ],
             [
                 'id' => 6,
@@ -81,7 +81,7 @@ class CorporateRequestController extends Controller
                 'title' => 'طلب برنامج خاص للمؤسسات',
                 'summary' => 'نصمم برنامجاً خاصاً يلبي احتياجاتك النوعية وأهدافك المؤسسية.',
                 'image' => 'assets/images/gallery/gallery-list-6.jpg',
-                'link' => 'solutions/request-program.html'
+                'link' => 'solutions/custom-training.html'
             ]
         ];
 
@@ -101,6 +101,9 @@ class CorporateRequestController extends Controller
         $phone           = $request->phone;
         $email           = $request->email;
         $needDescription = $request->need_description ?? $request->needDescription ?? $request->description ?? 'طلب تدريب خاص للمؤسسات';
+        $requestType     = $request->request_type ?? $request->requestType ?? 'custom-program';
+        $solutionSlug    = $request->solution_slug ?? $request->solutionSlug;
+        $solutionTitle   = $request->solution_title ?? $request->solutionTitle;
 
         $validator = Validator::make([
             'applicant_name'   => $applicantName,
@@ -109,6 +112,9 @@ class CorporateRequestController extends Controller
             'email'            => $email,
             'need_description' => $needDescription,
             'execution_mode'   => $request->execution_mode ?? $request->executionMode,
+            'request_type'     => $requestType,
+            'solution_slug'    => $solutionSlug,
+            'solution_title'   => $solutionTitle,
         ], [
             'applicant_name'   => 'required|string|max:255',
             'company_name'     => 'required|string|max:255',
@@ -116,6 +122,9 @@ class CorporateRequestController extends Controller
             'email'            => 'required|email:rfc|max:255',
             'need_description' => 'required|string|max:2000',
             'execution_mode'   => 'nullable|in:حضوري,عن بُعد,مدمج',
+            'request_type'     => 'nullable|in:custom-program,corporate-solution',
+            'solution_slug'    => 'nullable|string|max:100',
+            'solution_title'   => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -134,6 +143,9 @@ class CorporateRequestController extends Controller
         $prefDate = $request->preferred_date ?? $request->preferredDate;
 
         $corporateRequest = CorporateRequest::create([
+            'request_type'     => $requestType,
+            'solution_slug'    => $solutionSlug,
+            'solution_title'   => $solutionTitle,
             'applicant_name'   => $applicantName,
             'company_name'     => $companyName,
             'phone'            => $phone,
@@ -149,7 +161,9 @@ class CorporateRequestController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'تم استقبال طلب التدريب الخاص لجهتك بنجاح برقم #' . $corporateRequest->id . '، وسيقوم مستشارنا بالتواصل معكم قريباً.',
+            'message' => ($requestType === 'corporate-solution'
+                ? 'تم استقبال طلب الحل المؤسسي' . ($solutionTitle ? ' «' . $solutionTitle . '»' : '')
+                : 'تم استقبال طلب البرنامج التدريبي الخاص') . ' بنجاح برقم #' . $corporateRequest->id . '، وسيقوم مستشارنا بالتواصل معكم قريباً.',
             'data'   => $corporateRequest
         ], 201);
     }

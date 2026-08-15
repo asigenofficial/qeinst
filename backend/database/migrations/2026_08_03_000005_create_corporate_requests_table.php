@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('corporate_requests', function (Blueprint $table) {
             $table->id();
+            $table->string('request_type', 40)->default('custom-program');
+            $table->string('solution_slug', 100)->nullable();
+            $table->string('solution_title')->nullable();
             $table->string('applicant_name');
             $table->string('company_name');
             $table->string('phone');

@@ -29,7 +29,6 @@ const PAGES = [
   'about/why-choose-us.html',
   'programs/programs.html',
   'programs/program-details.html',
-  'programs/calendar.html',
   'programs/closed-program.html',
   'solutions/solutions.html',
   'solutions/solution-details.html',

@@ -37,7 +37,7 @@ class Program extends Model
     {
         $img = $this->image;
         if (empty($img)) {
-            return asset('assets/images/programs/courses/course-001.jpeg');
+            return asset('assets/images/programs/courses/course-001.webp');
         }
 
         if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {

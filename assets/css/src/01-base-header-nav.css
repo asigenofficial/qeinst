@@ -532,7 +532,7 @@ nav.main-nav a.active::after {
 .hero-bg-overlay {
 	position: absolute;
 	inset: 0;
-	background-image: url("../images/programs/courses/course-001.jpeg");
+	background-image: url("../images/programs/courses/course-001.webp");
 	background-size: cover;
 	background-position: center;
 	opacity: 0.22;

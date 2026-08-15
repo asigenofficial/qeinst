@@ -10,6 +10,9 @@ class CorporateRequest extends Model
     use HasFactory;
 
     protected $fillable = [
+        'request_type',
+        'solution_slug',
+        'solution_title',
         'applicant_name',
         'company_name',
         'phone',

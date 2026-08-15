@@ -429,6 +429,25 @@
 					toast(isEn ? "Please fill out all required fields before proceeding" : "يرجى تعبئة جميع الحقول المطلوبة قبل المتابعة");
 					return false;
 				}
+
+				// A registration opened directly from the header starts without a course.
+				// Require an explicit course choice before leaving the personal-data step.
+				if (target === "work" && /registration-personal/i.test(location.pathname)) {
+					const current = store.read() || {};
+					const picker = document.getElementById("qeiProgramQuickSelect");
+					const chosenProgram = (picker && picker.value) || current.program_id || current.programId;
+					if (!chosenProgram) {
+						const isEn = (localStorage.getItem("qei.lang") || "ar") === "en";
+						if (picker) {
+							picker.classList.add("qei-field-error");
+							picker.setAttribute("aria-invalid", "true");
+							picker.focus({ preventScroll: true });
+							picker.scrollIntoView({ behavior: "smooth", block: "center" });
+						}
+						toast(isEn ? "Please choose a training program before continuing" : "يرجى اختيار البرنامج التدريبي قبل المتابعة", "error");
+						return false;
+					}
+				}
 				saveRegForm(form);
 			}
 
@@ -442,7 +461,7 @@
 				store.write({
 					schedule_id: schedId,
 					scheduleId: schedId,
-					selectedDate: dateP ? dateP.textContent.trim() : null,
+					selectedDate: null,
 					selectedLocation: locH3 ? locH3.textContent.trim() : null
 				});
 			}
@@ -459,12 +478,14 @@
 			}
 			const destination = REG[target] || target;
 			const destUrl = url(destination);
-			const search = location.search;
-			if (search && !destUrl.includes("?")) {
-				location.href = destUrl + search;
-			} else {
-				location.href = destUrl;
-			}
+			const current = store.read() || {};
+			const q = new URLSearchParams(location.search);
+			const chosenProgramId = current.program_id || current.programId;
+			const chosenProgramName = current.program_name || current.programName || current.selectedProgram;
+			if (chosenProgramId) q.set("program", chosenProgramId);
+			if (chosenProgramName) q.set("program_name", chosenProgramName);
+			["schedule", "schedule_id", "scheduleId", "date", "start_date", "end_date"].forEach(key => q.delete(key));
+			location.href = destUrl + (q.toString() ? "?" + q.toString() : "");
 			return true;
 		},
 		regBack(target) {
@@ -474,12 +495,14 @@
 			}
 			const destination = REG[target] || target;
 			const destUrl = url(destination);
-			const search = location.search;
-			if (search && !destUrl.includes("?")) {
-				location.href = destUrl + search;
-			} else {
-				location.href = destUrl;
-			}
+			const current = store.read() || {};
+			const q = new URLSearchParams(location.search);
+			const chosenProgramId = current.program_id || current.programId;
+			const chosenProgramName = current.program_name || current.programName || current.selectedProgram;
+			if (chosenProgramId) q.set("program", chosenProgramId);
+			if (chosenProgramName) q.set("program_name", chosenProgramName);
+			["schedule", "schedule_id", "scheduleId", "date", "start_date", "end_date"].forEach(key => q.delete(key));
+			location.href = destUrl + (q.toString() ? "?" + q.toString() : "");
 		},
 		regSaveExit() {
 			const form = $("main form, form.reg-form, .reg-main form");
@@ -533,11 +556,11 @@
 			if (!data.jobTitle && data.job_title) data.jobTitle = data.job_title;
 
 			const params = new URLSearchParams(location.search);
-			if (params.get("program")) {
+			if (!data.program_id && !data.programId && params.get("program")) {
 				data.program_id = params.get("program");
 				data.programId = params.get("program");
 			}
-			if (params.get("schedule")) {
+			if (!data.schedule_id && !data.scheduleId && params.get("schedule")) {
 				data.schedule_id = params.get("schedule");
 				data.scheduleId = params.get("schedule");
 			}
@@ -1105,6 +1128,35 @@
 		}
 	}
 
+
+	function qeiRuntimeTranslation(text, dict) {
+		const normalized = String(text || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim()
+		if (!normalized) return null
+		if (dict[normalized]) return dict[normalized]
+		// Dynamic catalog description template: guarantee a complete English UI
+		// even when the API returns an Arabic-only description.
+		const programMatch = normalized.match(/^يقدم برنامج «(.+?)» تجربة تدريبية تطبيقية/)
+		if (programMatch) {
+			const enTitle = dict[programMatch[1]] || programMatch[1]
+			return `The “${enTitle}” program provides a practical learning experience that helps participants turn concepts into workplace practices through applied exercises, case studies, and guided discussions tailored to organizational needs.`
+		}
+		let m = normalized.match(/^(\d+)\s*أيام?\s*[•·]\s*(\d+)\s*ساعة$/)
+		if (m) return `${m[1]} days • ${m[2]} hours`
+		m = normalized.match(/^(\d+)\s*ساعة تدريبية\s*\((\d+)\s*أيام?\)$/)
+		if (m) return `${m[1]} training hours (${m[2]} days)`
+		m = normalized.match(/^(\d+)\s*ساعة تدريبية$/)
+		if (m) return `${m[1]} training hours`
+		m = normalized.match(/^(\d+)\s*برنامجًا تدريبيًا$/)
+		if (m) return `${m[1]} training programs`
+		m = normalized.match(/^(\d+)\s*مجالًا تدريبيًا$/)
+		if (m) return `${m[1]} training domains`
+		m = normalized.match(/^(\d+)\s*عميلًا وشريكًا$/)
+		if (m) return `${m[1]} clients & partners`
+		m = normalized.match(/^تغطية مصورة من فعاليات معهد الجودة رقم\s*(\d+)$/)
+		if (m) return `QEI Institute event gallery #${m[1]}`
+		return null
+	}
+
 	function applyLang(lang) {
 		if (!window.QEI_I18N) {
 			ensureI18nDict(() => applyLang(lang))
@@ -1147,6 +1199,7 @@
 
 			const cleanNorm = normalized.replace(/[أإآ]/g, "ا").replace(/[\u064B-\u0652]/g, "")
 			let translation = dict[original] || dict[normalized] || dict[cleanNorm]
+			if (!translation) translation = qeiRuntimeTranslation(normalized, dict)
 			if (!translation) {
 				const symbolRegex = /^[▧▣▶★☏♙♟♣♧⚠✈✉✎✓➤⟳⬇🌐🎓🏛🏦👤💡💼📍📱🔒🛡‹›←→↑↓↔⇐⇒•\s?؟!.:-]+|[▧▣▶★☏♙♟♣♧⚠✈✉✎✓➤⟳⬇🌐🎓🏛🏦👤💡💼📍📱🔒🛡‹›←→↑↓↔⇐⇒•\s?؟!.:-]+$/g
 				const strippedSymbol = normalized.replace(symbolRegex, "").trim()
@@ -1188,7 +1241,7 @@
 			const originalPh = input.dataset.qeiArPh
 			const normPh = originalPh.replace(/\s+/g, " ").trim()
 			const cleanPh = normPh.replace(/[أإآ]/g, "ا").replace(/[\u064B-\u0652]/g, "")
-			const phTranslation = dict[originalPh] || dict[normPh] || dict[cleanPh]
+			const phTranslation = dict[originalPh] || dict[normPh] || dict[cleanPh] || qeiRuntimeTranslation(normPh, dict)
 			if (en && phTranslation) {
 				input.placeholder = phTranslation
 			} else if (!en) {
@@ -1207,6 +1260,21 @@
 				input.value = valTranslation
 			} else if (!en) {
 				input.value = originalVal
+			}
+		}
+
+
+		// Translate user-visible attributes as well as text nodes.
+		for (const el of $$('[title], [aria-label], img[alt]')) {
+			for (const attr of ['title', 'aria-label', 'alt']) {
+				if (!el.hasAttribute(attr)) continue
+				const dataKey = 'qeiAr' + attr.replace(/(^|-)([a-z])/g, (_,a,b) => b.toUpperCase())
+				if (!el.dataset[dataKey]) el.dataset[dataKey] = el.getAttribute(attr) || ''
+				const originalAttr = el.dataset[dataKey]
+				const normAttr = originalAttr.replace(/\s+/g, ' ').trim()
+				const transAttr = dict[originalAttr] || dict[normAttr] || qeiRuntimeTranslation(normAttr, dict)
+				if (en && transAttr) el.setAttribute(attr, transAttr)
+				else if (!en) el.setAttribute(attr, originalAttr)
 			}
 		}
 
@@ -1415,6 +1483,7 @@
 		const standardLinks = [
 			["الرئيسية", url("index.html")],
 			["عن المعهد", url("about/about.html")],
+			["رؤيتنا ورسالتنا", url("about/vision.html")],
 			["البرامج التدريبية", url("programs/programs.html")],
 			["حلول المؤسسات", url("solutions/solutions.html")],
 			["عملاؤنا وشركاؤنا", url("about/clients.html")],
@@ -1596,7 +1665,7 @@
 			navList.appendChild(a)
 		}
 
-		const ctaHref = url("registration/registration-personal.html")
+		const ctaHref = url("registration/registration-personal.html?source=header")
 		const cta = document.createElement("a")
 		cta.href = ctaHref
 		cta.className = "qei-drawer-cta"
@@ -2376,13 +2445,14 @@
 		document.addEventListener("submit", function (e) {
 			const form = e.target;
 			if (!form || !form.matches("form")) return;
+			if (form.dataset.qeiCorporateWizard === "1") return; // handled by dedicated wizard
 
 			// تجنب نماذج تسجيل الدخول أو النشرة البريدية
 			if (form.closest("#modal-login, .modal-box") || /login|تسجيل الدخول/i.test(form.innerHTML)) return;
 			if (form.id === "newsletter-form") return;
 
 			// 1. نموذج تواصل معنا / اتصل بنا (Contact Form)
-			const isContactForm = form.id === "contact-form" || /contact|تواصل|اتصل/i.test(location.pathname + location.search) || /رسالة|موضوع|الملاحظات/i.test(form.innerHTML);
+			const isContactForm = form.id === "contact-form" || form.id === "contactForm" || form.classList.contains("contact-form");
 			if (isContactForm) {
 				e.preventDefault();
 				if (!validate(form)) return;
@@ -2409,7 +2479,7 @@
 			}
 
 			// 2. نموذج طلب برنامج خاص / صمم برنامجك (Corporate / Custom Training Form)
-			const isCorporateForm = form.id === "corporate-request-form" || /corporate|custom-training|solutions/i.test(location.pathname) || /الشركة|اسم الجهة|عدد المتدربين|مجال التدريب/i.test(form.innerHTML);
+			const isCorporateForm = form.id === "corporate-request-form" || form.classList.contains("custom-request-form");
 			if (isCorporateForm) {
 				e.preventDefault();
 				if (!validate(form)) return;
@@ -2440,6 +2510,227 @@
 				return;
 			}
 		});
+	}
+
+	function wireCorporateRequestWizard() {
+		const form = document.querySelector('form[data-qei-corporate-wizard="1"]');
+		if (!form || form.dataset.qeiWizardWired === "1") return;
+		form.dataset.qeiWizardWired = "1";
+
+		const panels = Array.from(form.querySelectorAll('[data-corporate-step]'));
+		const topSteps = Array.from(document.querySelectorAll('.request-stepper > div'));
+		const sideSteps = Array.from(document.querySelectorAll('.request-steps li'));
+		const review = form.querySelector('[data-corp-review]');
+		const status = form.querySelector('[data-corp-status]');
+		const textarea = form.querySelector('textarea[name="need_description"]');
+		const counter = form.querySelector('[data-corp-counter]');
+		let step = 1;
+
+		// A single corporate request form supports two clear journeys:
+		// 1) a new custom training program, 2) a specific corporate solution selected earlier.
+		const requestParams = new URLSearchParams(location.search);
+		const solutionSlug = String(requestParams.get('solution') || '').trim();
+		const solutionTitles = {
+			'training-needs': 'تحليل الاحتياج التدريبي',
+			'program-design': 'تصميم البرامج التدريبية',
+			'training-packages': 'تصميم الحقائب التدريبية',
+			'consulting-solutions': 'الاستشارات والحلول المؤسسية',
+			'measuring-impact': 'قياس أثر التدريب'
+		};
+		if (solutionSlug && solutionTitles[solutionSlug]) {
+			const solutionTitle = solutionTitles[solutionSlug];
+			const typeField = form.elements['request_type'];
+			const slugField = form.elements['solution_slug'];
+			const titleField = form.elements['solution_title'];
+			if (typeField) typeField.value = 'corporate-solution';
+			if (slugField) slugField.value = solutionSlug;
+			if (titleField) titleField.value = solutionTitle;
+			const ctx = document.getElementById('selectedCorporateSolution');
+			const ctxTitle = document.getElementById('selectedSolutionTitle');
+			if (ctx) ctx.hidden = false;
+			if (ctxTitle) ctxTitle.textContent = solutionTitle;
+			const pageTitle = document.getElementById('corporateRequestTitle');
+			const pageLead = document.getElementById('corporateRequestLead');
+			const breadcrumb = document.getElementById('corporateRequestBreadcrumb');
+			if (pageTitle) pageTitle.textContent = 'اطلب حلاً مؤسسياً لجهتك';
+			if (pageLead) pageLead.textContent = `أكمل بيانات الجهة لبدء طلب «${solutionTitle}» وتحديد نطاق التنفيذ والمخرجات المطلوبة.`;
+			if (breadcrumb) breadcrumb.textContent = 'طلب حل مؤسسي';
+			const step2Title = document.getElementById('corpStep2Title');
+			const step2Help = document.getElementById('corpStep2Help');
+			const needDescription = document.getElementById('corpNeedDescription');
+			if (step2Title) step2Title.textContent = 'نطاق الحل ومتطلبات الجهة';
+			if (step2Help) step2Help.textContent = `أضف تفاصيل النطاق والأهداف المرتبطة بحل «${solutionTitle}» حتى يعد الفريق المقترح المناسب.`;
+			if (needDescription) needDescription.placeholder = 'اكتب المشكلة الحالية، الهدف المطلوب، الفئات أو الإدارات المعنية، وأي مخرجات تتوقعها من الحل';
+			document.title = `طلب ${solutionTitle} | QEI — معهد خبراء الجودة للتدريب`;
+		}
+
+		const fieldValue = (name) => {
+			const el = form.elements[name];
+			if (!el) return '';
+			if (el.type === 'file') return el.files && el.files[0] ? el.files[0].name : '';
+			return String(el.value || '').trim();
+		};
+
+		const validatePanel = (num, announce = true) => {
+			const panel = panels.find(p => Number(p.dataset.corporateStep) === num);
+			if (!panel) return true;
+			let firstInvalid = null;
+			for (const el of Array.from(panel.querySelectorAll('input, select, textarea'))) {
+				if (el.type === 'file' && el.files && el.files[0] && el.files[0].size > 10 * 1024 * 1024) {
+					el.setCustomValidity('حجم الملف يجب ألا يتجاوز 10MB');
+				} else {
+					el.setCustomValidity('');
+				}
+				const valid = el.checkValidity();
+				el.classList.toggle('is-invalid', !valid);
+				if (!valid && !firstInvalid) firstInvalid = el;
+			}
+			if (firstInvalid) {
+				if (announce) {
+					if (typeof firstInvalid.reportValidity === 'function') firstInvalid.reportValidity();
+					firstInvalid.focus({ preventScroll: true });
+					firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					toast('يرجى استكمال الحقول المطلوبة في هذه الخطوة', 'error');
+				}
+				return false;
+			}
+			return true;
+		};
+
+		const escapeText = (value) => String(value || '—').replace(/[<>]/g, '');
+		const renderReview = () => {
+			if (!review) return;
+			const rows = [
+				...(fieldValue('solution_title') ? [['الحل المؤسسي المطلوب', fieldValue('solution_title')]] : []),
+				['اسم مقدم الطلب', fieldValue('applicant_name')],
+				['اسم الجهة', fieldValue('company_name')],
+				['رقم الجوال', fieldValue('phone')],
+				['البريد الإلكتروني', fieldValue('email')],
+				['عدد المتدربين', fieldValue('trainees_count')],
+				['المجال التدريبي', fieldValue('training_field')],
+				['نمط التنفيذ', fieldValue('execution_mode')],
+				['التاريخ المفضل', fieldValue('preferred_date') || 'مرن / يحدد لاحقاً'],
+				['الملف المرفق', fieldValue('attachment') || 'لا يوجد'],
+			];
+			review.innerHTML = rows.map(([label, value]) => `<div><span>${label}</span><b>${escapeText(value)}</b></div>`).join('') +
+				`<div class="corporate-review-note"><span>وصف الاحتياج</span><p>${escapeText(fieldValue('need_description'))}</p></div>`;
+		};
+
+		const showStep = (num, scroll = true) => {
+			step = Math.max(1, Math.min(3, num));
+			panels.forEach(panel => {
+				const active = Number(panel.dataset.corporateStep) === step;
+				panel.hidden = !active;
+				panel.classList.toggle('active', active);
+			});
+			[topSteps, sideSteps].forEach(group => group.forEach((el, idx) => {
+				el.classList.toggle('active', idx + 1 === step);
+				el.classList.toggle('done', idx + 1 < step);
+			}));
+			if (step === 3) renderReview();
+			const target = panels.find(p => Number(p.dataset.corporateStep) === step);
+			if (scroll && target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		};
+
+		form.addEventListener('click', (e) => {
+			const next = e.target.closest('[data-corp-next]');
+			const back = e.target.closest('[data-corp-back]');
+			if (next) {
+				e.preventDefault();
+				if (validatePanel(step)) showStep(step + 1);
+				return;
+			}
+			if (back) {
+				e.preventDefault();
+				showStep(step - 1);
+			}
+		});
+
+		form.addEventListener('input', (e) => {
+			e.target.classList.remove('is-invalid');
+			if (e.target === textarea && counter) counter.textContent = `${textarea.value.length} / 1000`;
+		});
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			const valid1 = validatePanel(1, false);
+			const valid2 = validatePanel(2, false);
+			const valid3 = validatePanel(3, false);
+			if (!valid1 || !valid2 || !valid3) {
+				const invalidStep = !valid1 ? 1 : (!valid2 ? 2 : 3);
+				showStep(invalidStep);
+				validatePanel(invalidStep, true);
+				return;
+			}
+
+			const submitBtn = form.querySelector('.request-submit');
+			if (submitBtn) {
+				submitBtn.disabled = true;
+				submitBtn.dataset.originalText = submitBtn.textContent;
+				submitBtn.textContent = 'جارٍ إرسال الطلب...';
+			}
+			if (status) {
+				status.textContent = 'يتم الآن إرسال الطلب وحفظه...';
+				status.className = 'request-submit-status loading';
+			}
+
+			const fd = new FormData(form);
+			fd.delete('privacy_consent');
+			let phone = String(fd.get('phone') || '').replace(/\s+/g, '');
+			if (/^05\d{8}$/.test(phone)) phone = '+966' + phone.slice(1);
+			else if (/^5\d{8}$/.test(phone)) phone = '+966' + phone;
+			fd.set('phone', phone);
+
+			try {
+				if (!window.QEIAPI || typeof window.QEIAPI.submitCorporateRequest !== 'function') {
+					throw new Error('خدمة استقبال الطلبات غير متاحة حالياً');
+				}
+				const res = await window.QEIAPI.submitCorporateRequest(fd);
+				const id = res && res.data ? res.data.id : null;
+				const requestNumber = id ? `QEI-CORP-${new Date().getFullYear()}-${String(id).padStart(5, '0')}` : `QEI-CORP-${new Date().getFullYear()}`;
+				const saved = {};
+				for (const [key, value] of fd.entries()) if (!(value instanceof File)) saved[key] = value;
+				saved.request_id = id;
+				saved.request_number = requestNumber;
+				saved.submitted_at = new Date().toISOString();
+				try { sessionStorage.setItem('qei_corporate_request', JSON.stringify(saved)); } catch (err) { }
+				if (status) {
+					status.textContent = 'تم استلام الطلب بنجاح. جارٍ فتح صفحة التأكيد...';
+					status.className = 'request-submit-status success';
+				}
+				toast(res.message || 'تم إرسال طلبك بنجاح');
+				setTimeout(() => api.go(`registration/request-success.html${id ? '?request_id=' + encodeURIComponent(id) : ''}`), 350);
+			} catch (err) {
+				if (status) {
+					status.textContent = err.message || 'تعذر إرسال الطلب. يرجى المحاولة مرة أخرى.';
+					status.className = 'request-submit-status error';
+				}
+				toast(err.message || 'تعذر إرسال الطلب، يرجى إعادة المحاولة', 'error');
+				if (submitBtn) {
+					submitBtn.disabled = false;
+					submitBtn.textContent = submitBtn.dataset.originalText || 'إرسال الطلب';
+				}
+			}
+		});
+
+		showStep(1, false);
+	}
+
+	function wireCorporateRequestSuccess() {
+		if (!document.body || document.body.dataset.page !== 'request-success') return;
+		let saved = {};
+		try { saved = JSON.parse(sessionStorage.getItem('qei_corporate_request') || '{}') || {}; } catch (e) { }
+		const params = new URLSearchParams(location.search);
+		const id = params.get('request_id') || saved.request_id;
+		const requestNumber = saved.request_number || (id ? `QEI-CORP-${new Date().getFullYear()}-${String(id).padStart(5, '0')}` : 'QEI-CORP');
+		const numberEl = document.querySelector('.rqs-hero strong');
+		if (numberEl) numberEl.textContent = requestNumber;
+		const dds = Array.from(document.querySelectorAll('.rqs-summary dd'));
+		if (dds[0] && saved.company_name) dds[0].textContent = saved.company_name;
+		if (dds[1]) dds[1].textContent = saved.solution_title || (saved.request_type === 'corporate-solution' ? 'حل مؤسسي' : 'برنامج تدريبي مؤسسي');
+		if (dds[2]) dds[2].textContent = saved.training_field || 'يحدد بعد مراجعة الاحتياج';
+		if (dds[3]) dds[3].textContent = saved.trainees_count || 'يحدد مع مستشار المعهد';
 	}
 
 	function getLogoPath() {
@@ -2664,7 +2955,7 @@
 					const pImg = p.image ? url(p.image) : (p.image_url || url('assets/images/programs/course-placeholder.jpg'));
 					card.innerHTML = `
 						<div class="card-image-wrap" style="position: relative; height: 180px; width: 100%; border-radius: 10px; overflow: hidden; background: #f8fafc;">
-							<img src="${pImg}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy" />
+							<img src="${pImg}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy" fetchpriority="low" />
 							<span class="card-tag" style="position: absolute; top: 10px; right: 10px; background: rgba(12, 56, 102, 0.88); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; backdrop-filter: blur(4px);">${p.level || 'جميع المستويات'}</span>
 						</div>
 						<div class="card-content" style="padding-top: 14px; display: flex; flex-direction: column; flex: 1;">
@@ -2673,7 +2964,7 @@
 								<span>⏱️ ${p.duration_days || 5} أيام (${p.duration_hours || 25} ساعة)</span>
 							</div>
 							<div class="card-footer" style="display: flex; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid #f1f5f9;">
-								<a href="../registration/registration-personal.html?program=${p.id}${p.schedules && p.schedules.length ? '&schedule=' + p.schedules[0].id : ''}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
+								<a href="../registration/registration-personal.html?program=${p.id}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
 							</div>
 							<span style="display:none;" class="hidden-filter-terms">${p.category ? p.category.name : ''} حضوري عن بُعد</span>
 						</div>
@@ -2737,7 +3028,7 @@
 						const logoSrc = /^https?:\/\//.test(rawLogo) ? rawLogo : ROOT + String(rawLogo).replace(/^\/+/, '');
 
 						article.innerHTML = `
-							<img class="partner-logo-img" src="${logoSrc}" alt="${client.name}" title="${client.name}" loading="lazy" />
+							<img class="partner-logo-img" src="${logoSrc}" alt="${client.name}" title="${client.name}" loading="lazy" fetchpriority="low" />
 						`;
 						partnerGrid.appendChild(article);
 					});
@@ -2770,7 +3061,6 @@
 								<p style="color:#475569; font-size:0.95rem; line-height:1.6;">${story.quote_or_description || ''}</p>
 								<footer style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f1f5f9; padding-top:0.75rem;">
 									<span style="font-size:0.85rem; color:#0284c7; font-weight:600;">${story.client_name || story.position_or_company || 'شراكة استراتيجية'}</span>
-									<a href="../support/contact.html" style="font-size:0.9rem; font-weight:700; color:#0c3866;">عرض التفاصيل ←</a>
 								</footer>
 							</div>
 						`;
@@ -2990,7 +3280,7 @@
 							const cleanStart = s.start_date ? String(s.start_date).split('T')[0] : '';
 							const cleanEnd = s.end_date ? String(s.end_date).split('T')[0] : '';
 							const dateRange = cleanStart && cleanEnd ? `${cleanStart} - ${cleanEnd}` : (cleanStart || 'موعد متاح');
-							const imgPath = p.image ? (p.image.startsWith('http') || p.image.startsWith('/') || p.image.startsWith('assets') ? (p.image.startsWith('assets') ? '../' + p.image : p.image) : '../' + p.image) : '../assets/images/programs/courses/course-001.jpeg';
+							const imgPath = p.image ? (p.image.startsWith('http') || p.image.startsWith('/') || p.image.startsWith('assets') ? (p.image.startsWith('assets') ? '../' + p.image : p.image) : '../' + p.image) : '../assets/images/programs/courses/course-001.webp';
 
 							const card = document.createElement("article");
 							card.className = "tc-program-card";
@@ -2999,7 +3289,7 @@
 							card.innerHTML = `
 								<!-- Right side: Image thumbnail -->
 								<div style="width:140px; height:90px; border-radius:12px; overflow:hidden; background:#f8fafc; border:1px solid #e2e8f0; flex-shrink:0;">
-									<img src="${imgPath}" alt="${p.title}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
+									<img src="${imgPath}" alt="${p.title}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" fetchpriority="low" />
 								</div>
 
 								<!-- Program Title + Status Badge -->
@@ -3017,7 +3307,7 @@
 
 								<!-- Left side: Buttons -->
 								<div style="display:flex; align-items:center; gap:0.75rem; margin-right:auto;">
-									<a href="../registration/registration-personal.html?program=${p.id}&schedule=${s.id}" class="btn" style="background:#0c3866; color:#ffffff; padding:0.65rem 1.6rem; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 4px 10px rgba(12,56,102,0.18);">التسجيل</a>
+									<a href="../registration/registration-personal.html?program=${p.id}" class="btn" style="background:#0c3866; color:#ffffff; padding:0.65rem 1.6rem; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 4px 10px rgba(12,56,102,0.18);">التسجيل</a>
 									<a href="program-details.html?slug=${p.slug || p.id}" class="btn" style="background:#ffffff; border:1px solid #cbd5e1; color:#475569; padding:0.65rem 1.25rem; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none;">التفاصيل</a>
 								</div>
 							`;
@@ -3102,7 +3392,7 @@
 		};
 
 		function imagePath(raw) {
-			if (!raw) return '../assets/images/programs/courses/course-001.jpeg';
+			if (!raw) return '../assets/images/programs/courses/course-001.webp';
 			let value = String(raw).trim();
 			try {
 				if (/^https?:\/\//i.test(value)) {
@@ -3199,7 +3489,7 @@
 			const pImg = p.image ? imagePath(p.image) : (p.image_url || '../assets/images/programs/course-placeholder.jpg');
 			return `<article class="program-card pl-card card" style="height: auto !important; min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
 						<a href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}" class="card-image-wrap" style="position: relative; height: 180px; width: 100%; border-radius: 10px; overflow: hidden; background: #f8fafc; display: block;">
-							<img src="${esc(pImg)}" alt="${esc(p.title)}" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.jpeg'" />
+							<img src="${esc(pImg)}" alt="${esc(p.title)}" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy" fetchpriority="low" onerror="this.onerror=null;this.src='../assets/images/programs/courses/course-001.webp'" />
 							<span class="card-tag" style="position: absolute; top: 10px; right: 10px; background: rgba(12, 56, 102, 0.88); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; backdrop-filter: blur(4px);">${p.level || 'جميع المستويات'}</span>
 						</a>
 						<div class="card-content" style="padding-top: 14px; display: flex; flex-direction: column; flex: 1;">
@@ -3209,7 +3499,7 @@
 								<span>📍 ${esc(s.location || '')} · ${esc(s.execution_mode || '')}</span>
 							</div>
 							<div class="card-footer" style="display: flex; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid #f1f5f9;">
-								<a href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}&schedule=${encodeURIComponent(s.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
+								<a href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
 							</div>
 						</div>
 					</article>`;
@@ -3405,21 +3695,32 @@
 			renderItems(filtered);
 		}
 
-		showSkeleton(grid);
-
+		// Keep the local gallery fallback visible immediately. Live database content
+		// replaces it only after a successful response, so visitors never stare at a loader.
+		const staticFallbackHTML = grid.innerHTML;
+		const staticFallbackCards = $$('.qei-gallery-fallback-card', grid);
+		if (staticFallbackCards.length) {
+			const localLightbox = staticFallbackCards.map(card => {
+				const img = card.querySelector('img');
+				return { src: img ? img.src : card.getAttribute('href'), alt: img ? img.alt : 'من أجواء التدريب', type: 'image' };
+			});
+			staticFallbackCards.forEach((card, index) => card.addEventListener('click', (ev) => {
+				ev.preventDefault();
+				openLb(localLightbox, index);
+			}));
+		}
 		ensureAPI(() => {
 			window.QEIAPI.getGalleries().then(res => {
-				restoreSkeleton(grid);
 				if (res && res.status && Array.isArray(res.data) && res.data.length > 0) {
 					allItems = res.data.filter(item => item.type === 'image');
-					renderItems(allItems);
+					if (allItems.length) renderItems(allItems);
+					else grid.innerHTML = staticFallbackHTML;
 				} else {
-					allItems = [];
-					renderItems([]);
+					grid.innerHTML = staticFallbackHTML;
 				}
 			}).catch(err => {
-				restoreSkeleton(grid);
-				console.warn("[QEINST API] Galleries load error:", err);
+				grid.innerHTML = staticFallbackHTML;
+				console.warn("[QEINST API] Galleries load error; local fallback retained:", err);
 			});
 		});
 
@@ -3438,182 +3739,286 @@
 	}
 
 	function wireRegistrationProgramCard() {
-		if (!/registration/i.test(location.pathname)) return;
+		if (!/registration/i.test(location.pathname) || /registration-success/i.test(location.pathname)) return;
 
 		const params = new URLSearchParams(location.search);
-		const savedData = store.read() || {};
-
-		let programId = params.get("program") || params.get("id") || params.get("slug") || params.get("program_id") || params.get("programId");
-		let scheduleId = params.get("schedule") || params.get("schedule_id") || params.get("scheduleId");
-		let urlProgramName = params.get("program_name") || params.get("programName") || params.get("title");
-
-		if (programId && programId !== 'p1' && programId !== 'default') {
+		let savedData = store.read() || {};
+		const directHeaderEntry = /registration-personal/i.test(location.pathname) && params.get("source") === "header";
+		if (directHeaderEntry) {
+			store.write({ program_id: null, programId: null, program_name: "", programName: "", selectedProgram: "", schedule_id: null, scheduleId: null, selectedDate: null });
+			savedData = store.read() || {};
 			try {
-				sessionStorage.setItem("qei_selected_program", programId);
-				if (scheduleId) sessionStorage.setItem("qei_selected_schedule", scheduleId);
-			} catch (e) { }
-		} else {
-			try { programId = sessionStorage.getItem("qei_selected_program") || savedData.program_id || savedData.programId; } catch (e) { }
-			try { scheduleId = sessionStorage.getItem("qei_selected_schedule") || savedData.schedule_id || savedData.scheduleId; } catch (e) { }
+				sessionStorage.removeItem("qei_selected_program");
+				sessionStorage.removeItem("qei_selected_program_name");
+				sessionStorage.removeItem("qei_selected_schedule");
+			} catch (e) {}
 		}
+		let programId = directHeaderEntry ? null : (params.get("program") || params.get("id") || params.get("slug") || params.get("program_id") || params.get("programId"));
+		let scheduleId = directHeaderEntry ? null : (params.get("schedule") || params.get("schedule_id") || params.get("scheduleId"));
+		const urlProgramName = directHeaderEntry ? "" : (params.get("program_name") || params.get("programName") || params.get("title"));
 
-		const summaryAside = $(".reg-summary") || $(".rgs-hero") || $(".rgs-layout") || $("aside");
+		try {
+			if (!directHeaderEntry && (!programId || programId === 'p1' || programId === 'default')) programId = sessionStorage.getItem("qei_selected_program") || savedData.program_id || savedData.programId;
+			if (!directHeaderEntry && !scheduleId) scheduleId = sessionStorage.getItem("qei_selected_schedule") || savedData.schedule_id || savedData.scheduleId;
+		} catch (e) { }
 
-		const initialTitle = urlProgramName || savedData.program_name || savedData.programName || savedData.selectedProgram;
-		if (initialTitle && summaryAside && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
-			const titleEl = $("h3", summaryAside) || $(".selected-program-title");
-			if (titleEl) titleEl.textContent = initialTitle;
+		const summaryAside = document.querySelector('.reg-summary') || document.querySelector('.rgs-program-summary') || document.querySelector('.rgr-program') || document.querySelector('aside.reg-summary');
+		if (!summaryAside) return;
 
-			const actionP = $(".selected-program-action", summaryAside);
-			if (actionP) actionP.style.display = "none";
+		const initialTitle = urlProgramName || savedData.program_name || savedData.programName || savedData.selectedProgram || '';
 
-			const descP = $(".selected-program-desc", summaryAside);
-			if (descP) descP.textContent = "▦ موعد معتمد · ◷ 25 ساعة تدريبية (5 أيام)";
-		}
+		// The selector is rendered in HTML as a resilient fallback, so changing the
+		// program works immediately even when the API is still loading.
+		const staticSelect = document.getElementById('qeiProgramQuickSelect');
+		if (staticSelect && !staticSelect.dataset.qeiStaticWired) {
+			staticSelect.dataset.qeiStaticWired = '1';
 
-		if (/registration-review/i.test(location.pathname)) {
-			const actionP = $(".selected-program-action", summaryAside);
-			if (actionP) actionP.style.display = "none";
+			// Compact QEI picker: avoids the browser's very tall native program menu
+			// while preserving the original select as the single source of truth.
+			if (!staticSelect.dataset.qeiCompactPicker) {
+				staticSelect.dataset.qeiCompactPicker = '1';
+				staticSelect.classList.add('qei-native-select-enhanced');
+				const combo = document.createElement('div');
+				combo.className = 'qei-program-combobox';
+				combo.innerHTML = `<button type="button" class="qei-program-combobox-btn" aria-haspopup="listbox" aria-expanded="false"><span class="qei-combo-label">اختر البرنامج التدريبي</span><span class="qei-combo-chevron" aria-hidden="true">⌄</span></button><div class="qei-program-combobox-panel" role="listbox"></div>`;
+				staticSelect.insertAdjacentElement('afterend', combo);
+				const comboBtn = combo.querySelector('.qei-program-combobox-btn');
+				const comboLabel = combo.querySelector('.qei-combo-label');
+				const comboPanel = combo.querySelector('.qei-program-combobox-panel');
+				const addCompactOption = (opt) => {
+					const optionBtn = document.createElement('button');
+					optionBtn.type = 'button';
+					optionBtn.className = 'qei-program-combobox-option';
+					optionBtn.dataset.value = opt.value;
+					optionBtn.textContent = opt.textContent.trim();
+					optionBtn.setAttribute('role', 'option');
+					optionBtn.addEventListener('click', () => {
+						staticSelect.value = opt.value;
+						staticSelect.dispatchEvent(new Event('change', { bubbles: true }));
+						combo.classList.remove('open');
+						comboBtn.setAttribute('aria-expanded', 'false');
+					});
+					comboPanel.appendChild(optionBtn);
+				};
+				const buildCompactPanel = () => {
+					comboPanel.innerHTML = '';
+					Array.from(staticSelect.children).forEach(node => {
+						if (node.tagName === 'OPTGROUP') {
+							const group = document.createElement('div');
+							group.className = 'qei-program-combobox-group';
+							group.textContent = node.label;
+							comboPanel.appendChild(group);
+							Array.from(node.children).forEach(addCompactOption);
+						} else if (node.tagName === 'OPTION' && node.value) {
+							addCompactOption(node);
+						}
+					});
+				};
+				const syncCompactPicker = () => {
+					const selected = staticSelect.options[staticSelect.selectedIndex];
+					comboLabel.textContent = selected && selected.value ? selected.textContent.trim() : 'اختر البرنامج التدريبي';
+					comboPanel.querySelectorAll('.qei-program-combobox-option').forEach(el => {
+						el.setAttribute('aria-selected', String(el.dataset.value === staticSelect.value));
+					});
+				};
+				comboBtn.addEventListener('click', () => {
+					const open = !combo.classList.contains('open');
+					combo.classList.toggle('open', open);
+					comboBtn.setAttribute('aria-expanded', String(open));
+				});
+				document.addEventListener('click', (ev) => {
+					if (!combo.contains(ev.target)) {
+						combo.classList.remove('open');
+						comboBtn.setAttribute('aria-expanded', 'false');
+					}
+				});
+				staticSelect.addEventListener('change', syncCompactPicker);
+				staticSelect.addEventListener('qei-sync', syncCompactPicker);
+				buildCompactPanel();
+				syncCompactPicker();
+			}
+
+			const initialId = programId || savedData.program_id || savedData.programId || '';
+			if (initialId) {
+				staticSelect.value = String(initialId);
+				staticSelect.dispatchEvent(new Event('qei-sync'));
+				const immediateName = urlProgramName || staticSelect.options[staticSelect.selectedIndex]?.textContent?.trim() || initialTitle;
+				if (immediateName) {
+					const titleEl = summaryAside.querySelector('.selected-program-title') || summaryAside.querySelector('h3');
+					if (titleEl) titleEl.textContent = immediateName;
+					const descP = summaryAside.querySelector('.selected-program-desc');
+					if (descP) descP.textContent = 'يمكنك تغيير البرنامج من القائمة أدناه قبل إرسال الطلب.';
+				}
+			}
+			const fallbackPrograms = Array.isArray(window.QEI_PROGRAM_CATALOG_FALLBACK) ? window.QEI_PROGRAM_CATALOG_FALLBACK : [];
+			const renderFallbackSummary = (id) => {
+				const prog = fallbackPrograms.find(item => String(item.id) === String(id));
+				if (!prog) return;
+				const imgEl = summaryAside.querySelector('img');
+				if (imgEl && (prog.imageUrl || prog.image)) {
+					let src = prog.imageUrl || prog.image;
+					if (src.startsWith('assets/')) src = '../' + src;
+					imgEl.src = src;
+					imgEl.alt = prog.title || '';
+					imgEl.loading = 'eager';
+					imgEl.decoding = 'async';
+					imgEl.style.display = 'block';
+				}
+				const titleEl = summaryAside.querySelector('.selected-program-title') || summaryAside.querySelector('h3');
+				if (titleEl) titleEl.textContent = prog.title || '';
+				const descP = summaryAside.querySelector('.selected-program-desc');
+				if (descP) {
+					const duration = prog.duration || [prog.durationDays ? `${prog.durationDays} أيام` : '', prog.durationHours ? `${prog.durationHours} ساعة` : ''].filter(Boolean).join(' • ');
+					descP.textContent = duration ? `${duration} — يمكنك تغيير البرنامج قبل إرسال الطلب.` : 'يمكنك تغيير البرنامج قبل إرسال الطلب.';
+				}
+			};
+			if (initialId) renderFallbackSummary(initialId);
+
+			staticSelect.addEventListener('change', () => {
+				const id = String(staticSelect.value || '');
+				staticSelect.classList.remove('qei-field-error');
+				staticSelect.removeAttribute('aria-invalid');
+				if (!id) {
+					programId = null;
+					store.write({ program_id: null, programId: null, program_name: '', programName: '', selectedProgram: '', schedule_id: null, scheduleId: null, selectedDate: null });
+					const imgEl = summaryAside.querySelector('img');
+					if (imgEl) { imgEl.removeAttribute('src'); imgEl.alt = ''; imgEl.style.display = 'none'; }
+					const titleEl = summaryAside.querySelector('.selected-program-title') || summaryAside.querySelector('h3');
+					if (titleEl) titleEl.textContent = 'اختر البرنامج التدريبي';
+					const descP = summaryAside.querySelector('.selected-program-desc');
+					if (descP) descP.textContent = 'اختر البرنامج الذي ترغب بالتسجيل فيه للمتابعة.';
+					return;
+				}
+				const name = staticSelect.options[staticSelect.selectedIndex]?.textContent?.trim() || '';
+				programId = id;
+				renderFallbackSummary(id);
+				scheduleId = null;
+				store.write({ program_id: id, programId: id, program_name: name, programName: name, selectedProgram: name, schedule_id: null, scheduleId: null, selectedDate: null });
+				try { sessionStorage.setItem('qei_selected_program', id); sessionStorage.setItem('qei_selected_program_name', name); sessionStorage.removeItem('qei_selected_schedule'); } catch (e) {}
+				const titleEl = summaryAside.querySelector('.selected-program-title') || summaryAside.querySelector('h3');
+				if (titleEl) titleEl.textContent = name;
+				const descP = summaryAside.querySelector('.selected-program-desc');
+				if (descP) descP.textContent = 'تم تغيير البرنامج. يمكنك تعديله مرة أخرى قبل إرسال الطلب.';
+				const q = new URLSearchParams(location.search);
+				q.set('program', id);
+				q.set('program_name', name);
+				['schedule','schedule_id','scheduleId','date','start_date','end_date'].forEach(key => q.delete(key));
+				history.replaceState(null, '', location.pathname + '?' + q.toString());
+			});
 		}
 
 		ensureAPI(() => {
 			window.QEIAPI.getPrograms().then(res => {
-				if (!res || !res.data || !res.data.length) return;
+				if (!res || !Array.isArray(res.data) || !res.data.length) return;
 				const programs = res.data;
 
-				let p = null;
-				if (programId && programId !== 'p1' && programId !== 'default') {
-					p = programs.find(item => String(item.id) === String(programId) || item.slug === programId || (initialTitle && item.title === initialTitle));
-				}
-				if (!p && initialTitle && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
-					p = programs.find(item => item.title === initialTitle || item.title.includes(initialTitle) || initialTitle.includes(item.title));
-				}
-				if (!p && initialTitle && initialTitle !== "لم يتم اختيار برنامج تدريبي") {
-					p = {
-						id: programId || 1,
-						title: initialTitle,
-						duration_hours: 25,
-						duration_days: 5,
-						schedules: []
-					};
-				}
+				const findProgram = () => {
+					if (programId && programId !== 'p1' && programId !== 'default') {
+						const byId = programs.find(item => String(item.id) === String(programId) || item.slug === programId);
+						if (byId) return byId;
+					}
+					if (initialTitle && initialTitle !== 'لم يتم اختيار برنامج تدريبي') {
+						return programs.find(item => item.title === initialTitle || item.title.includes(initialTitle) || initialTitle.includes(item.title)) || null;
+					}
+					return null;
+				};
 
 				const renderProgramSummary = (selectedProg) => {
-					if (!summaryAside) return;
-
+					if (!selectedProg) return;
 					let selectedSched = null;
-					if (selectedProg.schedules && selectedProg.schedules.length) {
-						if (scheduleId) {
-							selectedSched = selectedProg.schedules.find(s => String(s.id) === String(scheduleId));
-						}
-						if (!selectedSched) selectedSched = selectedProg.schedules[0];
+					if (Array.isArray(selectedProg.schedules) && selectedProg.schedules.length) {
+						selectedSched = selectedProg.schedules.find(s => String(s.id) === String(scheduleId)) || selectedProg.schedules[0];
 					}
-
+					programId = selectedProg.id;
+					scheduleId = selectedSched ? selectedSched.id : null;
 					store.write({
 						program_id: selectedProg.id,
 						programId: selectedProg.id,
 						program_name: selectedProg.title,
 						programName: selectedProg.title,
 						selectedProgram: selectedProg.title,
-						schedule_id: selectedSched ? selectedSched.id : (scheduleId || null),
-						scheduleId: selectedSched ? selectedSched.id : (scheduleId || null),
-						selectedDate: selectedSched && selectedSched.start_date ? String(selectedSched.start_date).split("T")[0] : null
+						schedule_id: scheduleId,
+						scheduleId: scheduleId,
+						selectedDate: null
 					});
-
 					try {
-						sessionStorage.setItem("qei_selected_program", selectedProg.id);
-						if (selectedSched) sessionStorage.setItem("qei_selected_schedule", selectedSched.id);
+						sessionStorage.setItem('qei_selected_program', String(selectedProg.id));
+						sessionStorage.setItem('qei_selected_program_name', selectedProg.title);
+						if (scheduleId) sessionStorage.setItem('qei_selected_schedule', String(scheduleId));
 					} catch (e) { }
 
-					const imgEl = $("img", summaryAside);
-					if (imgEl) {
-						imgEl.style.display = "block";
-						if (selectedProg.image) {
-							let imgPath = selectedProg.image;
-							if (imgPath.startsWith("assets/")) imgPath = "../" + imgPath;
-							else if (!imgPath.startsWith("http") && !imgPath.startsWith("/") && !imgPath.startsWith(".")) imgPath = "../" + imgPath;
-							imgEl.src = imgPath;
-							imgEl.alt = selectedProg.title;
-						}
+					const imgEl = summaryAside.querySelector('img');
+					if (imgEl && selectedProg.image) {
+						let imgPath = selectedProg.image;
+						if (imgPath.startsWith('assets/')) imgPath = '../' + imgPath;
+						else if (!imgPath.startsWith('http') && !imgPath.startsWith('/') && !imgPath.startsWith('.')) imgPath = '../' + imgPath;
+						imgEl.src = imgPath;
+						imgEl.alt = selectedProg.title;
+						imgEl.loading = 'lazy';
+						imgEl.decoding = 'async';
+						imgEl.style.display = 'block';
 					}
 
-					const titleEl = $("h3", summaryAside) || $("h2", summaryAside) || $(".selected-program-title");
-					if (titleEl && selectedProg.title) {
-						titleEl.textContent = selectedProg.title;
-					}
-
-					const actionP = $(".selected-program-action", summaryAside);
-					if (actionP) actionP.style.display = "none";
-					const pickerWrap = document.getElementById("qeiProgramPickerWrap");
-					if (pickerWrap) pickerWrap.style.display = "none";
-
-					const descP = $(".selected-program-desc", summaryAside);
+					const titleEl = summaryAside.querySelector('.selected-program-title') || summaryAside.querySelector('h3');
+					if (titleEl) titleEl.textContent = selectedProg.title;
+					const descP = summaryAside.querySelector('.selected-program-desc');
 					if (descP) {
-						if (selectedSched && selectedSched.start_date) {
-							const cleanStart = String(selectedSched.start_date).split("T")[0];
-							const cleanEnd = selectedSched.end_date ? String(selectedSched.end_date).split("T")[0] : "";
-							descP.textContent = `▦ ${cleanStart} ${cleanEnd ? "إلى " + cleanEnd : ""}`;
-						} else {
-							descP.textContent = `▦ موعد متاح · ◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
-						}
-					} else {
-						const pTags = $$("p", summaryAside);
-						if (pTags && pTags.length >= 1) {
-							pTags[0].textContent = `▦ موعد متاح · ◷ ${selectedProg.duration_hours || 25} ساعة تدريبية (${selectedProg.duration_days || 5} أيام)`;
-						}
+						const hours = selectedProg.duration_hours || 25;
+						const days = selectedProg.duration_days || 5;
+						descP.textContent = `◷ ${hours} ساعة تدريبية (${days} أيام) — يمكنك تغيير البرنامج من القائمة أدناه.`;
 					}
-
-					const infoTitle = $(".info-val-title") || $(".program-title-val");
-					if (infoTitle) infoTitle.textContent = selectedProg.title;
-
-					const heroTitle = $(".rgs-hero h1");
-					if (heroTitle && selectedProg.title) heroTitle.textContent = selectedProg.title;
+					const quickSelect = document.getElementById('qeiProgramQuickSelect');
+					if (quickSelect) { quickSelect.value = String(selectedProg.id); quickSelect.dispatchEvent(new Event('qei-sync')); }
 				};
 
-				if (p) {
-					renderProgramSummary(p);
-				} else {
-					if (summaryAside && !/registration-review/i.test(location.pathname)) {
-						const titleEl = $("h3", summaryAside) || $(".selected-program-title");
-						if (titleEl) titleEl.textContent = "اختر البرنامج التدريبي";
-
-						const pDesc = $(".selected-program-desc") || $("p", summaryAside);
-						if (pDesc) pDesc.textContent = "يرجى تحديد الدورة التدريبية التي ترغب بالالتحاق بها:";
-
-						let selectWrap = document.getElementById("qeiProgramPickerWrap");
-						if (!selectWrap) {
-							selectWrap = document.createElement("div");
-							selectWrap.id = "qeiProgramPickerWrap";
-							selectWrap.style.marginTop = "12px";
-							selectWrap.style.marginBottom = "16px";
-							selectWrap.innerHTML = `
-								<select id="qeiProgramQuickSelect" class="input-field" style="width:100%; font-weight:700; font-size:0.9rem; padding:0.6rem 0.8rem; border-radius:8px; border:2px solid #0c3866; background:#f8fafc; color:#0c3866; cursor:pointer;">
-									<option value="" disabled selected>-- اضغط لاختيار دورة تدريبية --</option>
-									${programs.map(prog => `<option value="${prog.id}">${prog.title}</option>`).join("")}
-								</select>
-							`;
-							const actionP = $(".selected-program-action") || (pDesc ? pDesc.nextElementSibling : null);
-							if (actionP) {
-								actionP.innerHTML = "";
-								actionP.appendChild(selectWrap);
-							} else if (pDesc && pDesc.parentNode) {
-								pDesc.parentNode.insertBefore(selectWrap, pDesc.nextSibling);
-							}
-						}
-
-						const quickSelect = document.getElementById("qeiProgramQuickSelect");
-						if (quickSelect) {
-							quickSelect.addEventListener("change", (e) => {
-								const chosenId = e.target.value;
-								const chosenProg = programs.find(item => String(item.id) === String(chosenId));
-								if (chosenProg) {
-									renderProgramSummary(chosenProg);
-								}
-							});
-						}
+				let pickerWrap = document.getElementById('qeiProgramPickerWrap');
+				if (!pickerWrap) {
+					pickerWrap = document.createElement('div');
+					pickerWrap.id = 'qeiProgramPickerWrap';
+					pickerWrap.className = 'qei-program-picker-wrap';
+					pickerWrap.innerHTML = `
+						<label for="qeiProgramQuickSelect">البرنامج التدريبي</label>
+						<select id="qeiProgramQuickSelect" class="input-field" aria-label="اختر أو غيّر البرنامج التدريبي">
+							<option value="">اختر البرنامج التدريبي</option>
+							${programs.map(prog => `<option value="${prog.id}">${prog.title}</option>`).join('')}
+						</select>`;
+					const actionP = summaryAside.querySelector('.selected-program-action');
+					if (actionP) {
+						actionP.innerHTML = '';
+						actionP.style.display = 'block';
+						actionP.appendChild(pickerWrap);
+					} else {
+						const desc = summaryAside.querySelector('.selected-program-desc');
+						(desc || summaryAside.lastElementChild || summaryAside).insertAdjacentElement('afterend', pickerWrap);
 					}
 				}
-			}).catch(err => console.warn("[QEINST API] Registration sidebar update error:", err));
+
+				const quickSelect = document.getElementById('qeiProgramQuickSelect');
+				if (quickSelect && !quickSelect.dataset.qeiWired) {
+					quickSelect.dataset.qeiWired = '1';
+					quickSelect.addEventListener('change', (e) => {
+						const chosenProg = programs.find(item => String(item.id) === String(e.target.value));
+						if (!chosenProg) return;
+						scheduleId = Array.isArray(chosenProg.schedules) && chosenProg.schedules.length ? chosenProg.schedules[0].id : null;
+						renderProgramSummary(chosenProg);
+						const q = new URLSearchParams(location.search);
+						q.set('program', chosenProg.id);
+						q.set('program_name', chosenProg.title);
+						['schedule','schedule_id','scheduleId','date','start_date','end_date'].forEach(key => q.delete(key));
+						if (/registration-schedule/i.test(location.pathname)) location.href = location.pathname + '?' + q.toString();
+						else history.replaceState(null, '', location.pathname + '?' + q.toString());
+					});
+				}
+
+				const selected = findProgram();
+				if (selected) renderProgramSummary(selected);
+				else {
+					const titleEl = summaryAside.querySelector('.selected-program-title') || summaryAside.querySelector('h3');
+					if (titleEl) titleEl.textContent = 'اختر البرنامج التدريبي';
+					const descP = summaryAside.querySelector('.selected-program-desc');
+					if (descP) descP.textContent = 'اختر البرنامج الذي ترغب بالتسجيل فيه، ويمكنك تغييره في أي وقت قبل إرسال الطلب.';
+				}
+			}).catch(err => console.warn('[QEINST API] Registration program selector error:', err));
 		});
 	}
 
@@ -3692,7 +4097,7 @@
 						btn.onclick = (e) => {
 							e.preventDefault();
 							const schedId = p.schedules && p.schedules.length ? p.schedules[0].id : '';
-							window.location.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}${schedId ? '&schedule=' + schedId : ''}`;
+							window.location.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}`;
 						};
 					}
 				});
@@ -3815,6 +4220,8 @@
 		wireLang()
 		wireNewsletter()
 		wireForms()
+		wireCorporateRequestWizard()
+		wireCorporateRequestSuccess()
 		wireFilterGroups()
 		wireResetFilters()
 		wirePagination()

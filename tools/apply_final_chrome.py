@@ -1,0 +1,124 @@
+from pathlib import Path
+import re
+
+ROOT=Path(__file__).resolve().parents[1]
+
+SOCIALS='''<div class="socials" aria-label="روابط التواصل الاجتماعي">
+<a href="https://www.youtube.com/@qeinst" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.8 12l-6.2 3.6Z"/></svg></a>
+<a href="https://wa.me/966567167988" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.8 9.8 0 0 0-8.4 14.9L2 22l5.3-1.5A9.9 9.9 0 1 0 12 2Zm0 17.8a7.8 7.8 0 0 1-4-1.1l-.3-.2-3.1.9.9-3-.2-.3A7.8 7.8 0 1 1 12 19.8Zm4.3-5.8c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-1.4-.7-2.4-1.3-3.4-2.9-.3-.5.3-.5.7-1.6.1-.2 0-.4 0-.5L9.4 8c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.1-.2-.2-.4-.3Z"/></svg></a>
+<a href="https://www.linkedin.com/company/%D9%85%D8%B9%D9%87%D8%AF-%D8%AE%D8%A8%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D8%AC%D9%88%D8%AF%D8%A9-%D9%84%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1-.02-5ZM2.8 9.8h4.4V22H2.8V9.8Zm7.2 0h4.2v1.7h.1c.6-1.1 2-2.3 4.1-2.3 4.4 0 5.2 2.9 5.2 6.7V22h-4.4v-5.4c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V22H10V9.8Z"/></svg></a>
+<a href="https://x.com/T100_i" target="_blank" rel="noopener" aria-label="X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.2 2H22l-8.3 9.5L23.5 22h-7.7l-6-7.9L2.9 22H-1l8.9-10.2L-1.5 2h7.9l5.4 7.2L18.2 2Zm-1.3 18h2.1L5.2 3.9H3L16.9 20Z"/></svg></a>
+</div>'''
+
+def header(prefix):
+    return f'''<header class="site-header" id="siteHeader">
+  <div class="container nav-wrap">
+    <a class="brand qei-header-brand" href="{prefix}index.html" aria-label="معهد خبراء الجودة للتدريب — QEI Institute">
+      <img class="brand-logo" src="{prefix}assets/images/brand/qei-logo.png" alt="QEI" width="42" height="42" decoding="async" />
+      <span class="brand-text" aria-hidden="true"><b>QEI</b><small>INSTITUTE</small></span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="التنقل الرئيسي">
+      <a href="{prefix}index.html">الرئيسية</a>
+      <a href="{prefix}about/about.html">عن المعهد</a>
+      <a href="{prefix}about/vision.html">رؤيتنا ورسالتنا</a>
+      <a href="{prefix}programs/programs.html">البرامج التدريبية</a>
+      <a href="{prefix}solutions/solutions.html">حلول المؤسسات</a>
+      <a href="{prefix}about/clients.html">عملاؤنا وشركاؤنا</a>
+      <a href="{prefix}support/contact.html">تواصل معنا</a>
+      <div class="nav-item-dropdown">
+        <a href="javascript:void(0)" class="dropdown-toggle" aria-haspopup="true">المزيد <span class="arrow">▾</span></a>
+        <div class="dropdown-menu">
+          <a href="{prefix}policies/policies.html">المركز القانوني</a>
+          <a href="{prefix}about/why-choose-us.html">لماذا تختارنا</a>
+          <a href="{prefix}about/methodology.html">منهجية التدريب</a>
+          <a href="{prefix}about/impact.html">الأثر المستدام</a>
+          <a href="{prefix}support/faq.html">الأسئلة الشائعة</a>
+          <a href="{prefix}gallery/gallery.html">معرض الصور</a>
+        </div>
+      </div>
+    </nav>
+    <div class="nav-actions">
+      <a href="{prefix}registration/registration-personal.html?source=header" class="btn login-btn">التسجيل</a>
+      <button class="lang-btn" title="English / العربية" type="button" aria-label="تغيير اللغة">EN</button>
+    </div>
+    <button class="mobile-menu" id="mobileMenuBtn" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+  </div>
+</header>'''
+
+def footer(prefix):
+    return f'''<footer class="site-footer footer-light qei-unified-footer">
+  <div class="container footer-main">
+    <div class="footer-grid">
+      <section class="footer-brand-col">
+        <a class="footer-brand" href="{prefix}index.html" aria-label="معهد خبراء الجودة للتدريب — QEI Institute">
+          <img class="brand-logo" src="{prefix}assets/images/brand/qei-logo.png" alt="QEI" width="50" height="50" loading="lazy" decoding="async" />
+          <span><b>QEI</b><small>INSTITUTE</small></span>
+        </a>
+        <p>معهد رائد في تقديم برامج تدريبية معتمدة تسهم في تطوير الكفاءات وبناء القدرات للمستقبل.</p>
+        {SOCIALS}
+      </section>
+      <section class="footer-col-programs">
+        <h3>البرامج التدريبية</h3>
+        <ul class="footer-links">
+          <li><a href="{prefix}programs/programs.html">البرامج القادمة</a></li>
+          <li><a href="{prefix}programs/programs.html">جميع البرامج</a></li>
+          <li><a href="{prefix}solutions/custom-training.html">البرامج المخصصة</a></li>
+          <li><a href="{prefix}programs/programs.html#certificates">الشهادات الاحترافية</a></li>
+        </ul>
+      </section>
+      <section class="footer-col-solutions">
+        <h3>حلول المؤسسات</h3>
+        <ul class="footer-links">
+          <li><a href="{prefix}solutions/solutions.html">الحلول المؤسسية</a></li>
+          <li><a href="{prefix}solutions/training-needs.html">تحليل الاحتياج التدريبي</a></li>
+          <li><a href="{prefix}solutions/custom-training.html">طلب برنامج خاص</a></li>
+        </ul>
+      </section>
+      <section class="footer-col-about">
+        <h3>عن المعهد</h3>
+        <ul class="footer-links">
+          <li><a href="{prefix}about/about.html">عن المعهد</a></li>
+          <li><a href="{prefix}about/vision.html">رؤيتنا ورسالتنا</a></li>
+          <li><a href="{prefix}about/why-choose-us.html">لماذا تختار المعهد</a></li>
+          <li><a href="{prefix}about/clients.html">عملاؤنا وشركاؤنا</a></li>
+        </ul>
+      </section>
+      <section class="contact-col">
+        <h3>تواصل معنا</h3>
+        <ul class="footer-links">
+          <li><a href="tel:+966567167988"><span class="footer-mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z"/></svg></span><span class="ltr-num">+966 56 716 7988</span></a></li>
+          <li><a href="mailto:info@qeinst.com"><span class="footer-mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span dir="ltr">info@qeinst.com</span></a></li>
+          <li><a href="https://wa.me/966567167988" target="_blank" rel="noopener"><span class="footer-mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0-7.7-4.3L3 21l4.5-1.2A9 9 0 0 0 12 21Z"/><path d="M8.8 8.6c.2 2.8 2.5 5.1 5.3 5.4"/><path d="M8.5 7.6 7.7 9c.5 3.2 3 5.7 6.2 6.2l1.4-.8"/></svg></span>واتساب مباشر</a></li>
+          <li><a href="{prefix}support/contact.html"><span class="footer-mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>7259 طريق الملك عبد العزيز، حي المرسلات، الرياض</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container"><span>ترخيص رقم: 747395253 | رقم السجل: 1010477798 — جميع الحقوق محفوظة © 2026 معهد خبراء الجودة للتدريب | <a href="{prefix}policies/general-privacy.html">سياسة الخصوصية</a> | <a href="{prefix}policies/terms.html">الشروط والأحكام</a></span></div>
+  </div>
+</footer>'''
+
+changed=0
+for p in ROOT.rglob('*.html'):
+    if any(part in {'vendor','node_modules'} for part in p.parts):
+        continue
+    rel=p.relative_to(ROOT)
+    # skip documentation exports if any nested under backend storage
+    depth=len(rel.parent.parts)
+    prefix='../'*depth
+    text=p.read_text(encoding='utf-8', errors='ignore')
+    new=text
+    # site header only when present
+    if re.search(r'<header\s+class="site-header"\s+id="siteHeader">', new):
+        new,n1=re.subn(r'<header\s+class="site-header"\s+id="siteHeader">.*?</header>', header(prefix), new, count=1, flags=re.S)
+    else:
+        n1=0
+    if re.search(r'<footer\s+class="site-footer\s+footer-light\s+qei-unified-footer">', new):
+        new,n2=re.subn(r'<footer\s+class="site-footer\s+footer-light\s+qei-unified-footer">.*?</footer>', footer(prefix), new, count=1, flags=re.S)
+    else:
+        n2=0
+    if new!=text:
+        p.write_text(new,encoding='utf-8')
+        changed+=1
+print('standardized files',changed)
