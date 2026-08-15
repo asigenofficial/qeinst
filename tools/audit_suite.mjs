@@ -199,9 +199,7 @@ try {
         continue;
       }
       const frontPath = path.join(ROOT, p.image);
-      const backPath = path.join(ROOT, 'backend/public', p.image);
-      if (!fs.existsSync(frontPath)) err('DB_IMAGES', `Program #${p.id} missing frontend image: ${p.image}`);
-      if (!fs.existsSync(backPath)) err('DB_IMAGES', `Program #${p.id} missing backend image mirror: ${p.image}`);
+      if (!fs.existsSync(frontPath)) err('DB_IMAGES', `Program #${p.id} missing image: ${p.image}`);
     }
 
     const clients = db.prepare('SELECT id, name, logo FROM clients WHERE is_active = 1').all();
@@ -211,9 +209,7 @@ try {
         continue;
       }
       const frontPath = path.join(ROOT, cl.logo);
-      const backPath = path.join(ROOT, 'backend/public', cl.logo);
-      if (!fs.existsSync(frontPath)) err('DB_IMAGES', `Client #${cl.id} missing frontend logo: ${cl.logo}`);
-      if (!fs.existsSync(backPath)) err('DB_IMAGES', `Client #${cl.id} missing backend logo mirror: ${cl.logo}`);
+      if (!fs.existsSync(frontPath)) err('DB_IMAGES', `Client #${cl.id} missing logo: ${cl.logo}`);
     }
 
     const galleries = db.prepare('SELECT id, media_path, cover_image FROM galleries WHERE is_active = 1').all();
@@ -221,9 +217,7 @@ try {
       const pth = g.media_path || g.cover_image;
       if (pth) {
         const frontPath = path.join(ROOT, pth);
-        const backPath = path.join(ROOT, 'backend/public', pth);
-        if (!fs.existsSync(frontPath)) err('DB_IMAGES', `Gallery #${g.id} missing frontend media: ${pth}`);
-        if (!fs.existsSync(backPath)) err('DB_IMAGES', `Gallery #${g.id} missing backend media mirror: ${pth}`);
+        if (!fs.existsSync(frontPath)) err('DB_IMAGES', `Gallery #${g.id} missing media: ${pth}`);
       }
     }
 

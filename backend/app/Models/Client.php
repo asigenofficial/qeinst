@@ -27,7 +27,7 @@ class Client extends Model
     {
         $img = $this->logo;
         if (empty($img)) {
-            return url('/') . '/database/images/clients/images.png';
+            return url('/') . '/assets/images/brand/favicon.png';
         }
 
         if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
