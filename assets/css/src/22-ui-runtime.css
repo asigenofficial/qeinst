@@ -1251,18 +1251,62 @@ footer.site-footer,
 }
 
 .site-footer .contact-col a,
-.footer-light .contact-col a {
+.footer-light .contact-col a,
+.site-footer .footer-contact-list a,
+.footer-light .footer-contact-list a,
+.footer-contact-list a {
 	white-space: normal !important;
 	word-break: normal !important;
 	overflow-wrap: anywhere !important;
-	display: inline-block !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
 	max-width: 100% !important;
 }
 
 .site-footer .contact-col a .ltr-num,
-.footer-light .contact-col a .ltr-num {
+.footer-light .contact-col a .ltr-num,
+.footer-contact-list a .ltr-num {
 	unicode-bidi: embed !important;
 	direction: ltr !important;
+	display: inline-block !important;
+}
+
+.footer-mini-icon,
+.site-footer .footer-mini-icon,
+.footer-light .footer-mini-icon {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 20px !important;
+	height: 20px !important;
+	min-width: 20px !important;
+	min-height: 20px !important;
+	max-width: 20px !important;
+	max-height: 20px !important;
+	flex-shrink: 0 !important;
+	color: #0c3866 !important;
+	vertical-align: middle !important;
+	line-height: 1 !important;
+}
+
+.footer-mini-icon svg,
+.site-footer .footer-mini-icon svg,
+.footer-light .footer-mini-icon svg,
+.footer-contact-list svg,
+.site-footer .contact-col svg {
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	max-width: 16px !important;
+	max-height: 16px !important;
+	stroke: currentColor !important;
+	fill: none !important;
+	stroke-width: 2 !important;
+	stroke-linecap: round !important;
+	stroke-linejoin: round !important;
+	flex-shrink: 0 !important;
 	display: inline-block !important;
 }
 
