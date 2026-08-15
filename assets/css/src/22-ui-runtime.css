@@ -2493,6 +2493,21 @@ body[data-page="request-success"] > .site-footer {
 	min-width: 0 !important;
 }
 
+.wcu-hero {
+	background: linear-gradient(135deg, #f0f7ff 0%, #e2effe 100%) !important;
+	border: 1px solid #dbeafe !important;
+	border-radius: 20px !important;
+	padding: 36px 40px !important;
+	box-shadow: 0 4px 20px rgba(12, 56, 102, 0.05) !important;
+	box-sizing: border-box !important;
+}
+
+.why-hero-image {
+	border: 3px solid #ffffff !important;
+	box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12) !important;
+	border-radius: 16px !important;
+}
+
 .about-hero-image img,
 .solutions-hero .hero-img-col img,
 .solutions-hero > img,
@@ -2508,8 +2523,9 @@ body[data-page="request-success"] > .site-footer {
 	width: 100% !important;
 	height: 100% !important;
 	object-fit: cover !important;
+	object-position: center !important;
 	display: block !important;
-	border-radius: 16px !important;
+	border-radius: 13px !important;
 }
 
 .about-hero-copy,
