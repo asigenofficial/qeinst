@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Program;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,9 @@ class RegistrationController extends Controller
         $phone      = $request->phone;
 
         $programId = $request->program_id ?? $request->programId;
-        $scheduleId = $request->schedule_id ?? $request->scheduleId;
+        // Schedules remain in the database for administration and calendar views,
+        // but applicants do not choose a date/slot when submitting registration.
+        $scheduleId = null;
 
         $validator = Validator::make([
             'national_id' => $nationalId,
@@ -29,14 +32,12 @@ class RegistrationController extends Controller
             'email'       => $email,
             'phone'       => $phone,
             'program_id'  => $programId,
-            'schedule_id' => $scheduleId,
         ], [
             'national_id' => ['required', 'regex:/^[0-9]{10}$/'],
             'full_name'   => 'required|string|max:255',
             'email'       => 'required|email:rfc|max:255',
             'phone'       => ['required', 'regex:/^\+?[0-9][0-9\s-]{7,18}$/'],
-            'program_id'  => 'nullable|integer|exists:programs,id',
-            'schedule_id' => 'nullable|integer|exists:program_schedules,id',
+            'program_id'  => ['required', 'integer'],
         ]);
 
         if ($validator->fails()) {
@@ -47,33 +48,22 @@ class RegistrationController extends Controller
             ], 422);
         }
 
+        $program = Program::query()
+            ->whereKey((int) $programId)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$program) {
+            return response()->json([
+                'status' => false,
+                'message' => 'البرنامج التدريبي المطلوب غير موجود أو غير متاح للتسجيل حاليًا.',
+                'errors' => ['program_id' => ['البرنامج التدريبي المطلوب غير موجود أو غير متاح للتسجيل حاليًا.']],
+            ], 422);
+        }
+
         $birthDate = $request->birthDate ?? $request->birth_date;
-
-        $programName = $request->program_name ?? $request->programName ?? $request->course_name ?? $request->courseTitle ?? $request->selectedProgram;
-
-        if ($scheduleId && $programId && is_numeric($scheduleId)) {
-            $scheduleMatchesProgram = \App\Models\ProgramSchedule::where('id', (int)$scheduleId)
-                ->where('program_id', (int)$programId)
-                ->exists();
-            if (!$scheduleMatchesProgram) {
-                $fallbackSched = \App\Models\ProgramSchedule::where('program_id', (int)$programId)->first();
-                $scheduleId = $fallbackSched ? $fallbackSched->id : null;
-            }
-        } else {
-            $scheduleId = null;
-        }
-
-        if (empty($programName) && !empty($programId)) {
-            try {
-                $prog = \App\Models\Program::find($programId);
-                if ($prog) {
-                    $programName = $prog->title;
-                }
-            } catch (\Throwable $e) {}
-        }
-        if (empty($programName)) {
-            $programName = 'برنامج تدريبي عام';
-        }
+        // Always take the program name from the verified database record.
+        $programName = $program->title;
 
         $companyName = $request->company_name ?? $request->companyName ?? $request->company ?? $request->employer ?? $request->university;
         $jobTitle    = $request->job_title ?? $request->jobTitle ?? $request->current_job ?? $request->currentJob;

@@ -695,9 +695,8 @@ const QEI = {
 		const locEl = document.getElementById("pdLocationTag");
 		if (locEl) locEl.textContent = `الموقع: ${prog.location || 'يحدد حسب الدفعة'}`;
 
-		const scheduleId = prog.schedules && prog.schedules.length ? prog.schedules[0].id : "";
 		document.querySelectorAll("#page-program-details .pd-actions button:first-child, #page-program-details .pd-enroll > button:first-of-type").forEach(button => {
-			button.onclick = () => this.startRegistration(prog.id, scheduleId);
+			button.onclick = () => this.startRegistration(prog.id);
 		});
 
 		const imgEl = document.getElementById("pdHeroImage");
@@ -725,7 +724,7 @@ const QEI = {
 						</div>
 						<div style="display: flex; align-items: center; gap: 10px;">
 							<span style="background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 99px;">${b.status}</span>
-							<button onclick="QEI.startRegistration('${prog.id}', '${b.id}')" style="background: #0f766e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">سجل في هذه الدفعة</button>
+								<button onclick="QEI.startRegistration('${prog.id}')" style="background: #0f766e; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">سجل في البرنامج</button>
 						</div>
 					</div>
 				`).join("");
@@ -923,13 +922,14 @@ const QEI = {
 		if (item) item.classList.toggle("open")
 	},
 
-	startRegistration(programId, scheduleId) {
+	startRegistration(programId) {
 		const currentParams = new URLSearchParams(window.location.search);
 		if (!programId || programId === 'p1' || programId === 'default') {
-			programId = currentParams.get('slug') || currentParams.get('id') || currentParams.get('program');
+			programId = currentParams.get('program_id') || currentParams.get('slug') || currentParams.get('id') || currentParams.get('program');
 		}
-		if (!scheduleId) {
-			scheduleId = currentParams.get('schedule');
+		if (!programId || programId === 'p1' || programId === 'default') {
+			window.location.href = qeiUrl("programs/programs.html");
+			return;
 		}
 		const params = new URLSearchParams();
 		if (programId && programId !== 'p1' && programId !== 'default') {

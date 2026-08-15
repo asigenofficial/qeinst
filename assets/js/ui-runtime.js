@@ -73,6 +73,15 @@
 				/* private mode: registration still works, it just will not be remembered */
 			}
 		},
+		remove(keys) {
+			try {
+				const data = this.read()
+				keys.forEach(key => delete data[key])
+				localStorage.setItem(this.key, JSON.stringify(data))
+			} catch (e) {
+				/* private mode: registration still works, it just will not be remembered */
+			}
+		},
 	}
 
 	function toast(msg, type) {
@@ -258,7 +267,7 @@
 	const REG = {
 		personal: "registration/registration-personal.html",
 		work: "registration/registration-work.html",
-		schedule: "registration/registration-schedule.html",
+		schedule: "registration/registration-review.html",
 		review: "registration/registration-review.html",
 		success: "registration/registration-success.html",
 		requestSuccess: "registration/request-success.html",
@@ -565,7 +574,24 @@
 				data.scheduleId = params.get("schedule");
 			}
 
-			store.write({ submittedAt: new Date().toISOString() });
+			// Do not carry a previously selected schedule or program date into a new request.
+			delete data.schedule_id;
+			delete data.scheduleId;
+			delete data.selectedDate;
+			delete data.selectedScheduleIndex;
+			delete data.selectedScheduleText;
+			store.remove(["schedule_id", "scheduleId", "selectedDate", "selectedScheduleIndex", "selectedScheduleText"]);
+
+			if (!data.program_id) {
+				if (submitBtn) {
+					submitBtn.disabled = false;
+					submitBtn.textContent = "✈ إرسال طلب التسجيل";
+				}
+				toast("لا يمكن إرسال الطلب دون برنامج تدريبي صالح.", "error");
+				return false;
+			}
+
+			store.write({ submittedAt: new Date().toISOString(), program_id: data.program_id, programId: data.programId });
 
 							const restoreSubmitButton = () => {
 					if (submitBtn) {
@@ -3298,12 +3324,11 @@
 									<span style="background:${badgeBg}; color:${badgeColor}; font-weight:700; padding:4px 14px; border-radius:20px; font-size:0.78rem; white-space:nowrap;">${badgeText}</span>
 								</div>
 
-								<!-- Middle Meta: Date, Location, Duration -->
-								<div style="text-align:center; flex:1; min-width:190px; color:#94a3b8; font-size:0.85rem; line-height:1.6;">
-									<div style="font-weight:600; color:#64748b; font-size:0.85rem;">${dateRange}</div>
-									<div style="font-size:0.82rem; color:#94a3b8; margin:2px 0;">${s.location || 'الرياض - المملكة العربية السعودية'}</div>
-									<div style="font-size:0.8rem; color:#cbd5e1;">معهد خبراء الجودة · ${p.duration_days || 5} أيام</div>
-								</div>
+									<!-- Middle Meta: Location and duration only; the schedule date is not part of registration. -->
+									<div style="text-align:center; flex:1; min-width:190px; color:#94a3b8; font-size:0.85rem; line-height:1.6;">
+										<div style="font-size:0.82rem; color:#94a3b8; margin:2px 0;">${s.location || 'الرياض - المملكة العربية السعودية'}</div>
+										<div style="font-size:0.8rem; color:#cbd5e1;">معهد خبراء الجودة · ${p.duration_days || 5} أيام</div>
+									</div>
 
 								<!-- Left side: Buttons -->
 								<div style="display:flex; align-items:center; gap:0.75rem; margin-right:auto;">
@@ -3484,8 +3509,6 @@
 
 		function renderProgramCard(item) {
 			const p = item.program, s = item.schedule, meta = statusMeta(s);
-			const cleanStart = parseDate(s.start_date), cleanEnd = parseDate(s.end_date);
-			const dateText = cleanStart ? (cleanEnd && !sameDay(cleanStart, cleanEnd) ? `${shortDateFmt.format(cleanStart)} — ${shortDateFmt.format(cleanEnd)}` : fullDateFmt.format(cleanStart)) : 'موعد متاح';
 			const pImg = p.image ? imagePath(p.image) : (p.image_url || '../assets/images/programs/course-placeholder.jpg');
 			return `<article class="program-card pl-card card" style="height: auto !important; min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
 						<a href="program-details.html?slug=${encodeURIComponent(p.slug || p.id)}" class="card-image-wrap" style="position: relative; height: 180px; width: 100%; border-radius: 10px; overflow: hidden; background: #f8fafc; display: block;">
@@ -3494,10 +3517,10 @@
 						</a>
 						<div class="card-content" style="padding-top: 14px; display: flex; flex-direction: column; flex: 1;">
 							<h3 class="card-title" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 12px 0; line-height: 1.4;">${esc(p.title)}</h3>
-							<div class="card-meta" style="font-size: 0.82rem; color: #0284c7; font-weight: 600; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
-								<span>⏱️ ${esc(dateText)}</span>
-								<span>📍 ${esc(s.location || '')} · ${esc(s.execution_mode || '')}</span>
-							</div>
+															<div class="card-meta" style="font-size: 0.82rem; color: #0284c7; font-weight: 600; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px;">
+									<span>📍 ${esc(s.location || '')} · ${esc(s.execution_mode || '')}</span>
+								</div>
+
 							<div class="card-footer" style="display: flex; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid #f1f5f9;">
 								<a href="../registration/registration-personal.html?program=${encodeURIComponent(p.id)}" class="btn btn-primary" style="flex: 1; width: 100%; text-align: center; padding: 10px 14px; background: #0c3866; border-radius: 8px; color: #ffffff; font-weight: 700; font-size: 0.9rem; text-decoration: none;">سجّل الآن</a>
 							</div>
@@ -4088,7 +4111,7 @@
 
 				const regBtns = $$("a[href*='registration-personal']");
 				regBtns.forEach(btn => {
-					btn.href = `../registration/registration-personal.html?program=${p.id}&program_name=${encodeURIComponent(p.title)}`;
+						btn.href = `../registration/registration-personal.html?program_id=${encodeURIComponent(p.id)}`;
 				});
 
 				const enrollButtons = $$("#page-program-details .pd-actions button, #page-program-details .pd-enroll button, .pd-actions button, .pd-enroll button");
