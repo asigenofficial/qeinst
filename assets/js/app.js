@@ -392,7 +392,7 @@ const QEI = {
 		if (!page) return
 		const slug = new URLSearchParams(window.location.search).get('slug') || 'training-needs'
 		const localSolutions = {
-			'training-needs': {slug:'training-needs', title:'تحليل الاحتياج التدريبي', summary:'نحدد فجوات الأداء والأولويات التدريبية لبناء تدخلات دقيقة.', description:'تحليل منظم للاحتياجات على مستوى الجهة والإدارات والوظائف، مع ترتيب الأولويات وتقديم توصيات قابلة للتنفيذ.', image:'assets/images/solutions/training-needs-hero.jpg'},
+			'training-needs': {slug:'training-needs', title:'تحليل الاحتياج التدريبي', summary:'نحدد فجوات الأداء والأولويات التدريبية لبناء تدخلات دقيقة.', description:'تحليل منظم للاحتياجات على مستوى الجهة والإدارات والوظائف، مع ترتيب الأولويات وتقديم توصيات قابلة للتنفيذ.', image:'assets/images/solutions/training-needs-hero.jpeg'},
 			'program-design': {slug:'program-design', title:'تصميم البرامج التدريبية', summary:'نصمم برامج مخصصة ترتبط بأهداف الجهة والفئات المستهدفة.', description:'نحول الاحتياج إلى برنامج واضح الأهداف والمحاور والأنشطة وأدوات القياس بما يلائم بيئة الجهة.', image:'assets/images/solutions/sol-design.jpg'},
 			'training-packages': {slug:'training-packages', title:'تصميم الحقائب التدريبية', summary:'نطور حقائب تدريبية عملية تشمل المحتوى والأنشطة وأدوات المدرب والمتدرب.', description:'بناء حقائب قابلة للتنفيذ والتحديث وفق منهجية تدريب واضحة ومعايير جودة متسقة.', image:'assets/images/solutions/training-packages-final.jpg'},
 			'consulting-solutions': {slug:'consulting-solutions', title:'الاستشارات والحلول المؤسسية', summary:'نقدم حلولًا في الجودة والتميز والأداء والحوكمة وتطوير العمليات.', description:'حلول استشارية مصممة بحسب واقع الجهة وأولويات التحسين مع نطاق ومخرجات واضحة.', image:'assets/images/solutions/sol-consulting.jpg'},

@@ -16,7 +16,7 @@ class SiteContentSeeder extends Seeder
         $now = now();
 
         $solutions = [
-            [1, 'تحليل الاحتياج التدريبي', 'training-needs', 'نحدد فجوات الأداء والأولويات التدريبية لبناء تدخلات دقيقة.', 'تحليل منظم للاحتياجات على مستوى الجهة والإدارات والوظائف.', 'assets/images/solutions/training-needs-hero.jpg', 'solutions/solution-details.html?slug=training-needs', 1],
+            [1, 'تحليل الاحتياج التدريبي', 'training-needs', 'نحدد فجوات الأداء والأولويات التدريبية لبناء تدخلات دقيقة.', 'تحليل منظم للاحتياجات على مستوى الجهة والإدارات والوظائف.', 'assets/images/solutions/training-needs-hero.jpeg', 'solutions/solution-details.html?slug=training-needs', 1],
             [2, 'تصميم البرامج التدريبية', 'program-design', 'نصمم برامج مخصصة ترتبط بأهداف الجهة والفئات المستهدفة.', 'تصميم الأهداف والمحاور والأنشطة وأدوات القياس بما يلائم الاحتياج.', 'assets/images/solutions/sol-design.jpg', 'solutions/solution-details.html?slug=program-design', 1],
             [3, 'تصميم الحقائب التدريبية', 'training-packages', 'نطور حقائب تدريبية عملية تشمل المحتوى والأنشطة وأدوات المدرب والمتدرب.', 'بناء حقائب قابلة للتنفيذ والتحديث وفق منهجية تدريب واضحة.', 'assets/images/solutions/training-packages-final.jpg', 'solutions/solution-details.html?slug=training-packages', 1],
             [4, 'الاستشارات والحلول المؤسسية', 'consulting-solutions', 'نقدم حلولًا في الجودة والتميز والأداء والحوكمة وتطوير العمليات.', 'حلول استشارية مصممة بحسب واقع الجهة وأولويات التحسين.', 'assets/images/solutions/sol-consulting.jpg', 'solutions/solution-details.html?slug=consulting-solutions', 1],

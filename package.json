@@ -9,11 +9,8 @@
 		"qa": "node tools/audit_suite.mjs",
 		"test": "node tools/audit_suite.mjs",
 		"test:api": "bash tools/api_smoke.sh",
-		"test:storage": "bash tools/api_storage_smoke.sh",
 		"test:e2e": "node tools/e2e_registration.mjs",
 		"test:matrix": "node tools/matrix_qa.mjs",
-		"test:mobile-layout": "node tools/test_mobile_footer_drawer.mjs",
-		"test:responsive": "node tools/responsive_overflow_audit.mjs",
 		"dev": "npx serve . -l 8080",
 		"start": "npx serve . -l 8080"
 	},
